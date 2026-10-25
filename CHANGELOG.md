@@ -7,7 +7,13 @@ in one of **Added**, **Changed**, **Fixed**, **Security**, or **Removed**, and
 move under a version heading when a release is tagged
 (see [`docs/operations/release-process.md`](docs/operations/release-process.md)).
 
+Versions up to 0.5.1 were cut before this repository was published, so they
+have no tags or GitHub releases here. Their entries are kept for installs that
+started on them.
+
 ## Unreleased
+
+## v0.5.2 — 2026-10-24
 
 ### Changed
 
@@ -27,12 +33,8 @@ move under a version heading when a release is tagged
 - Docs: the Docker quick start says how to move the web UI off port 3000; the
   developer path says that every checkout shares the `kestrel` Compose project;
   the pnpm prerequisite covers Node builds without corepack; `/readyz` is
-  listed with the unauthenticated endpoints; the 0.4.x changelog entries are
-  marked as predating this repository; and several wording fixes.
-
-Versions up to 0.5.1 were cut before this repository was published, so they
-have no tags or GitHub releases here. Their entries are kept for installs that
-started on them.
+  listed with the unauthenticated endpoints; the changelog says which versions
+  predate this repository; and several wording fixes.
 
 ## v0.5.1 — 2026-10-24
 
