@@ -13,6 +13,19 @@ started on them.
 
 ## Unreleased
 
+### Changed
+
+- Policies are described as policies as code, not detections: each one states
+  the desired configuration of an application and flags what deviates from it.
+  Pack policy titles name the condition instead of starting with "Detect"
+  (for example, "GitHub organization administrators without MFA enabled"), and
+  descriptions start with "Flags". Slugs are unchanged, so installed policies
+  and existing findings keep matching; **Policies → Packs** offers the new
+  titles as a pack update.
+- The posture scorecard's coverage factor reads "policy coverage gaps" /
+  "Policy coverage clear". The `/reports/detection-coverage` endpoint and the
+  `detection_gaps` key are unchanged.
+
 ## v0.5.3 — 2026-10-24
 
 ### Added

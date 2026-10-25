@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-activity-app-installed"
-TITLE = "Detect Slack applications installed into the workspace"
+TITLE = "Slack applications installed into the workspace"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

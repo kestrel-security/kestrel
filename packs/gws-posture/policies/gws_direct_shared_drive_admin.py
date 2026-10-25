@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-direct-shared-drive-admin"
-TITLE = "Detect direct (non-group) admin grants on Google Workspace shared drives"
+TITLE = "Direct (non-group) admin grants on Google Workspace shared drives"
 SEVERITY = "medium"
 RESOURCE_TYPE = "grant"
-DESCRIPTION = "Detect direct (non-group) admin grants on Google Workspace shared drives"
+DESCRIPTION = "Flags direct (non-group) admin grants on Google Workspace shared drives"
 REMEDIATION = "Prefer group-mediated shared-drive organizer grants so access reviews stay centralized."
 COMPLIANCE = {"cisa": ["GWS-04"], "soc2": ["CC6.1"], "cis": ["6.8"], "nist_csf": ["PR.AC-4"]}
 

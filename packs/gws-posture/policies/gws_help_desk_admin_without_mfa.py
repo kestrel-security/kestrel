@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-help-desk-admin-without-mfa"
-TITLE = "Detect Google Workspace Help Desk Admins not enrolled in 2-Step Verification"
+TITLE = "Google Workspace Help Desk Admins not enrolled in 2-Step Verification"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Google Workspace Help Desk Admins not enrolled in 2-Step Verification"
+DESCRIPTION = "Flags Google Workspace Help Desk Admins not enrolled in 2-Step Verification"
 REMEDIATION = (
     "Enroll the Help Desk Admin in 2-Step Verification, or remove the role until MFA is enabled."
     " Help Desk Admins can reset passwords and must be protected."

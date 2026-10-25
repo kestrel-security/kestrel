@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-activity-privilege-grant"
-TITLE = "Detect recent Slack privileged role grants in Audit Logs"
+TITLE = "Recent Slack privileged role grants in Audit Logs"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent Slack privileged role grants recorded in Enterprise Audit Logs."
+DESCRIPTION = "Flags recent Slack privileged role grants recorded in Enterprise Audit Logs."
 REMEDIATION = "Review the privilege grant in Slack Audit Logs; revoke the Owner/Admin or org role if unauthorized."
 COMPLIANCE = {"custom": ["SLACK-01"], "soc2": ["CC6.1", "CC6.2"], "nist_csf": ["PR.AC-4"]}
 

@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-external-org-admin"
-TITLE = "Detect external GitHub identities with the organization administrator role"
+TITLE = "External GitHub identities with the organization administrator role"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect external GitHub identities with the organization administrator role"
+DESCRIPTION = "Flags external GitHub identities with the organization administrator role"
 REMEDIATION = "Remove organization administrator from external identities; use least-privilege collaborator access instead."
 COMPLIANCE = {"custom": ["GH-03"], "soc2": ["CC6.1", "CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-4"]}
 

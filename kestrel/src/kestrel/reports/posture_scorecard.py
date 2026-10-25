@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Org posture scorecard — labeled risk factors only.
 
-Rolls up open criticals, detection gaps, toxic combinations, and stale
+Rolls up open criticals, policy coverage gaps, toxic combinations, and stale
 connectors into explainable factors. Never an opaque
 composite score (see docs/user-experience-principles.md §10; complements
 application posture badges).
@@ -85,7 +85,7 @@ def build_scorecard_factors(
         factors.append(
             _factor(
                 key="detection_gaps",
-                label=f"{detection_gaps} detection gap{'s' if detection_gaps != 1 else ''}",
+                label=f"{detection_gaps} policy coverage gap{'s' if detection_gaps != 1 else ''}",
                 tone="warn",
                 detail=(
                     f"{detection_gaps} connected application instance(s) lack applicable "
@@ -99,7 +99,7 @@ def build_scorecard_factors(
         factors.append(
             _factor(
                 key="detection_gaps",
-                label="Detection coverage clear",
+                label="Policy coverage clear",
                 tone="ok",
                 detail="Every connected instance has applicable policies with prior matches",
                 count=0,

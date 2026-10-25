@@ -170,7 +170,7 @@ def _event_dict(event: ActivityEvent) -> dict[str, Any]:
         "occurred_at": event.occurred_at,
         "summary": event.summary,
         # Provider-specific detail the normalizer preserved. Curated
-        # action taxonomies are coarse by design, so a detection that needs the
+        # action taxonomies are coarse by design, so a policy that needs the
         # branch name, the scope that was added, or the target repo has to read
         # it here. Always a dict, never None, so `event.attributes.get(...)`
         # is safe in a policy without a guard.

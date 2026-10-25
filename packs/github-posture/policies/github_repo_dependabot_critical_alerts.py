@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-dependabot-critical-alerts"
-TITLE = "Detect repositories with open Dependabot alerts"
+TITLE = "Repositories with open Dependabot alerts"
 SEVERITY = "high"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

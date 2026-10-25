@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-behaviors-disabled"
-TITLE = "Detect disabled Okta behavioral detection"
+TITLE = "Okta behavioral detection disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
-    "Detect Okta orgs where behavioral detection rules (anomalousLocation, "
+    "Flags Okta orgs where behavioral detection rules (anomalousLocation, "
     "anomalousDevice, anomalousIP) are inactive or not evaluating on sign-in. "
     "Disabled behaviors do not feed adaptive authentication signals."
 )

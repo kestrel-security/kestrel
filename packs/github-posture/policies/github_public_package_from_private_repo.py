@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-public-package-from-private-repo"
-TITLE = "Detect public GitHub Packages published from private repositories"
+TITLE = "Public GitHub Packages published from private repositories"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

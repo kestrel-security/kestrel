@@ -233,7 +233,7 @@ def _audit_event_object(provider_id: str, *, occurred_at: datetime) -> Normalize
 def test_collecting_audit_rows_writes_activity_events_but_no_feed_rows(db_session: Session):
     """audit-log rows must not become Changes rows.
 
-    They are still upserted -- Findings event detections read them -- but each
+    They are still upserted -- event policies in Findings read them -- but each
     one emitting an EntityChange meant a chatty tenant filled ``events`` with
     ``other`` / ``low`` rows that consume FEED_SCAN_CAP before classification.
     """

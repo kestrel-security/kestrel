@@ -101,7 +101,7 @@ the connector collects, listed so the coverage denominator is the whole pack.
 
 ## Section 8 — Activity monitoring (audit log)
 
-Event detections over the org audit log. Enterprise Cloud plus `read:audit_log`;
+Event policies over the org audit log. Enterprise Cloud plus `read:audit_log`;
 the family degrades visibly when either is absent.
 
 | Control | Title | Profile | Required data | Status | POLICY_ID | Severity |

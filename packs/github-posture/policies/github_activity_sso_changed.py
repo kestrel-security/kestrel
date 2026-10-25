@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-sso-changed"
-TITLE = "Detect SAML single sign-on configuration changes"
+TITLE = "SAML single sign-on configuration changes"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = "SAML SSO was enabled, disabled, or reconfigured, which changes how every member authenticates."

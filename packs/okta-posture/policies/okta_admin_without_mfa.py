@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-admin-without-mfa"
-TITLE = "Detect Okta Super / Org / App / Help Desk / Group admins without MFA"
+TITLE = "Okta Super / Org / App / Help Desk / Group admins without MFA"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Okta Super / Org / App / Help Desk / Group admins without MFA"
+DESCRIPTION = "Flags Okta Super / Org / App / Help Desk / Group admins without MFA"
 REMEDIATION = "Require MFA for the privileged Okta admin, or remove the admin role assignment."
 COMPLIANCE = {"custom": ["OKTA-02"], "soc2": ["CC6.1", "CC6.2"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

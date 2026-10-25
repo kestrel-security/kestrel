@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-external-collaborator-admin"
-TITLE = "Detect external collaborators with admin-level access to a GitHub repository"
+TITLE = "External collaborators with admin-level access to a GitHub repository"
 SEVERITY = "high"
 RESOURCE_TYPE = "grant"
-DESCRIPTION = "Detect external collaborators with admin-level access to a GitHub repository"
+DESCRIPTION = "Flags external collaborators with admin-level access to a GitHub repository"
 REMEDIATION = "Review and remove admin access for external collaborators; grant only the minimum access required."
 COMPLIANCE = {"custom": ["GH-03"], "soc2": ["CC6.1", "CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-4"]}
 

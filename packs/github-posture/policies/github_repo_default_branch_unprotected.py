@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-default-branch-unprotected"
-TITLE = "Detect repositories whose default branch has no protection"
+TITLE = "Repositories whose default branch has no protection"
 SEVERITY = "high"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

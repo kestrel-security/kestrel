@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-password-policy-weak"
-TITLE = "Detect weak Okta password policy (minimum length below 12)"
+TITLE = "Weak Okta password policy (minimum length below 12)"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
-DESCRIPTION = "Detect Okta orgs whose password policy minimum length is below 12 characters."
+DESCRIPTION = "Flags Okta orgs whose password policy minimum length is below 12 characters."
 REMEDIATION = "Increase the Okta password policy minimum length to at least 12 and enable complexity requirements."
 COMPLIANCE = {"custom": ["OKTA-01"], "soc2": ["CC6.1"], "cis": ["5.2"], "nist_csf": ["PR.AC-1"]}
 

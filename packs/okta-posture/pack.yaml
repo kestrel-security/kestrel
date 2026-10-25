@@ -9,7 +9,7 @@ description: >
   MFA, disabled and dormant admins, weak password policies, bookmark/SWA apps,
   unused API tokens, behavioral detection, authorization server token lifetimes
   and wildcard scopes, log stream coverage, super admin count, plus System Log
-  activity detections for policy weakening, impersonation, and zone changes.
+  activity policies for policy weakening, impersonation, and zone changes.
   Mapped to CIS / NIST CSF / SOC2 / CISA SCuBA-style controls.
 application: okta
 categories:
@@ -59,7 +59,7 @@ policies:
   - okta-auth-server-long-token-lifetime
   - okta-auth-server-wildcard-scope
   - okta-super-admin-count-out-of-range
-  # Extended: activity detections
+  # Extended: activity policies
   - okta-activity-policy-weakening
   - okta-activity-impersonation
   - okta-activity-zone-change

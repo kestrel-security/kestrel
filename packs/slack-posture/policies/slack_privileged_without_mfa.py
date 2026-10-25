@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-privileged-without-mfa"
-TITLE = "Detect Slack Primary Owners, Owners, or Admins without two-factor authentication"
+TITLE = "Slack Primary Owners, Owners, or Admins without two-factor authentication"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Slack Primary Owners, Owners, or Admins without two-factor authentication"
+DESCRIPTION = "Flags Slack Primary Owners, Owners, or Admins without two-factor authentication"
 REMEDIATION = "Require 2FA for the privileged Slack account, or demote the user from Admin/Owner."
 COMPLIANCE = {"custom": ["SLACK-01"], "soc2": ["CC6.1", "CC6.2"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

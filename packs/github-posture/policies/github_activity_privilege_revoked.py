@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-privilege-revoked"
-TITLE = "Detect organization admin privileges being removed"
+TITLE = "Organization admin privileges removed"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

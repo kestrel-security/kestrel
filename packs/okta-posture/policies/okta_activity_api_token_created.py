@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-api-token-created"
-TITLE = "Detect Okta API tokens created in the System Log"
+TITLE = "Okta API tokens created in the System Log"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

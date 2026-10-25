@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-mfa-disabled"
-TITLE = "Detect recent Okta MFA factor deactivation in System Log"
+TITLE = "Recent Okta MFA factor deactivation in System Log"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent Okta MFA factor deactivation in System Log"
+DESCRIPTION = "Flags recent Okta MFA factor deactivation in System Log"
 REMEDIATION = "Re-enable MFA for the affected identity and investigate who deactivated the factor."
 COMPLIANCE = {"custom": ["OKTA-04"], "soc2": ["CC6.1"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-trusted-origin-plaintext"
-TITLE = "Detect Okta trusted origins served over plain HTTP"
+TITLE = "Okta trusted origins served over plain HTTP"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

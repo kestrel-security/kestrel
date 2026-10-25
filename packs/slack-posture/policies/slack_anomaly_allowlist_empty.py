@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-anomaly-allowlist-empty"
-TITLE = "Detect Slack Enterprise anomaly allowlist left empty"
+TITLE = "Slack Enterprise anomaly allowlist left empty"
 SEVERITY = "low"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
-    "Detect Enterprise Grid orgs where the Audit Logs anomaly IP/ASN allowlist "
+    "Flags Enterprise Grid orgs where the Audit Logs anomaly IP/ASN allowlist "
     "is empty. An empty allowlist is informational — configure trusted ranges "
     "only when you have known safe CIDRs/ASNs to suppress false positives."
 )

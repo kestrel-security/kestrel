@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-policy-weakening"
-TITLE = "Detect Okta policy weakening in System Log"
+TITLE = "Okta policy weakening in System Log"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (
-    "Detect Okta System Log events indicating a sign-on, MFA enrollment, or "
+    "Flags Okta System Log events indicating a sign-on, MFA enrollment, or "
     "access policy was modified, deactivated, or deleted. Policy changes that "
     "reduce authentication requirements expand the attack surface."
 )

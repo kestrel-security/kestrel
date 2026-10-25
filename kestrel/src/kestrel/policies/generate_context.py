@@ -24,37 +24,37 @@ from kestrel.policies.resource_schemas import RESOURCE_SCHEMAS
 INTENT_CHIP_EXAMPLES: tuple[dict[str, str], ...] = (
     {
         "label": "Okta admins without MFA",
-        "intent": "Detect Okta administrator without MFA enabled",
+        "intent": "Flag Okta administrator without MFA enabled",
         "connector_hint": "okta",
         "resource_type": "identity",
     },
     {
         "label": "Okta MFA enroll not required",
-        "intent": "Detect Okta org MFA enrollment not required",
+        "intent": "Flag Okta org MFA enrollment not required",
         "connector_hint": "okta",
         "resource_type": "tenant_setting",
     },
     {
         "label": "Disabled Okta privileged admin",
-        "intent": "Detect disabled Okta privileged admin still assigned",
+        "intent": "Flag disabled Okta privileged admin still assigned",
         "connector_hint": "okta",
         "resource_type": "identity",
     },
     {
         "label": "Weak Okta password policy",
-        "intent": "Detect weak Okta password policy minimum length",
+        "intent": "Flag weak Okta password policy minimum length",
         "connector_hint": "okta",
         "resource_type": "tenant_setting",
     },
     {
         "label": "Dormant Okta admin",
-        "intent": "Detect dormant Okta privileged admin inactive 90 days",
+        "intent": "Flag dormant Okta privileged admin inactive 90 days",
         "connector_hint": "okta",
         "resource_type": "identity",
     },
     {
         "label": "Okta bookmark/SWA app",
-        "intent": "Detect Okta apps using bookmark sign-on without SSO",
+        "intent": "Flag Okta apps using bookmark sign-on without SSO",
         "connector_hint": "okta",
         "resource_type": "tenant_setting",
     },

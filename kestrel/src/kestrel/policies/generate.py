@@ -35,7 +35,7 @@ from kestrel.policies.testing import run_fixture_test_dict
 logger = logging.getLogger(__name__)
 
 # Use replace() for schema injection — prompts contain literal `{...}` JSON examples.
-_LLM_SYSTEM = """You write Kestrel Python security policies for SaaS posture and event detections.
+_LLM_SYSTEM = """You write Kestrel Python security policies for SaaS configuration posture and audit-log events.
 
 Return ONLY valid Python source (no markdown fences) defining:
 - POLICY_ID (kebab-case slug string)

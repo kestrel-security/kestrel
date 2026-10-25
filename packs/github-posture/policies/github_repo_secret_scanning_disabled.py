@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-secret-scanning-disabled"
-TITLE = "Detect repositories with secret scanning disabled"
+TITLE = "Repositories with secret scanning disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = "Without secret scanning, a credential committed to the repository is not detected at all."

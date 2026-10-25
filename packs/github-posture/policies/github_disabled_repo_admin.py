@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-disabled-repo-admin"
-TITLE = "Detect disabled GitHub identities that still hold repository admin grants"
+TITLE = "Disabled GitHub identities that still hold repository admin grants"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect disabled GitHub identities that still hold repository admin grants"
+DESCRIPTION = "Flags disabled GitHub identities that still hold repository admin grants"
 REMEDIATION = (
     "Remove repository admin grants from the disabled account, or restore and secure the account if "
     "access is still required."

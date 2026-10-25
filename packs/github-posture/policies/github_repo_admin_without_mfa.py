@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-admin-without-mfa"
-TITLE = "Detect GitHub identities with repository admin grants that do not have MFA enabled"
+TITLE = "GitHub identities with repository admin grants that do not have MFA enabled"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect GitHub identities with repository admin grants that do not have MFA enabled"
+DESCRIPTION = "Flags GitHub identities with repository admin grants that do not have MFA enabled"
 REMEDIATION = "Require MFA for the account, or remove repository admin grants until MFA is enrolled."
 COMPLIANCE = {"custom": ["GH-05"], "soc2": ["CC6.1", "CC6.2"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

@@ -9,10 +9,10 @@ import { api } from "@/lib/api";
 import type { ConnectorInstanceSummary, PolicyGenerateCatalog } from "@/lib/types";
 
 const STARTER = `POLICY_ID = "my-custom-policy"
-TITLE = "Describe what this policy detects"
+TITLE = "Name the condition this policy flags"
 SEVERITY = "medium"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Describe what this policy detects"
+DESCRIPTION = "Describe the desired state and what deviates from it"
 REMEDIATION = "Require MFA for this identity."
 
 

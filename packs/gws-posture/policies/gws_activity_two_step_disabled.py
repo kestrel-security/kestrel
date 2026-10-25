@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-activity-two-step-disabled"
-TITLE = "Detect 2-Step Verification turned off in the Google Workspace admin audit log"
+TITLE = "2-Step Verification turned off in the Google Workspace admin audit log"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

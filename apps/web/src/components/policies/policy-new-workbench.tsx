@@ -156,7 +156,7 @@ export function PolicyNewWorkbench({
               />
             </span>
             <span className="mt-1 block text-xs text-muted-foreground">
-              Describe what you want to detect. Known Okta posture intents work offline via
+              Describe the configuration you want to flag. Known Okta posture intents work offline via
               templates; novel intents need{" "}
               <Link href="/settings/ai" className="underline hover:text-foreground">
                 Settings → AI
@@ -188,7 +188,7 @@ export function PolicyNewWorkbench({
               value={intent}
               onChange={(e) => setIntent(e.target.value)}
               rows={4}
-              placeholder="e.g. Detect Okta administrator without MFA enabled"
+              placeholder="e.g. Flag Okta administrator without MFA enabled"
               className="rounded-md border border-border bg-background px-2 py-1.5 font-sans text-sm"
             />
           </label>

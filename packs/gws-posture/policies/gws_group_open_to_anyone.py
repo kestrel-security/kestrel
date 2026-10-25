@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-group-open-to-anyone"
-TITLE = "Detect Google Workspace groups that anyone with a Google account can join"
+TITLE = "Google Workspace groups that anyone with a Google account can join"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

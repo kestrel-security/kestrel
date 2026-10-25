@@ -3,7 +3,7 @@ version: "0.1.0"
 display_name: Cross-app
 summary: Findings that only exist when two applications are read together.
 description: >
-  Detections that require inventory from more than one connector: an account
+  Policies that require inventory from more than one connector: an account
   the identity provider disabled that is still live somewhere else, a company
   account no identity provider knows about, privilege concentrated on one
   person across applications, an OAuth token that outlived the account that

@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-webhook-created"
-TITLE = "Detect organization webhooks created or reconfigured"
+TITLE = "Organization webhooks created or reconfigured"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
 DESCRIPTION = "An organization webhook now delivers org events to an external destination."

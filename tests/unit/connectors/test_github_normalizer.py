@@ -456,7 +456,7 @@ def test_every_mapped_action_has_a_category():
     assert missing == set()
 
 
-def test_the_payload_detail_a_detection_needs_survives_normalization():
+def test_the_payload_detail_a_policy_needs_survives_normalization():
     events = _audit_event(
         "hook.create",
         {"hook_id": 42, "events": ["push"]},

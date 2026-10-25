@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-connect-org-connected"
-TITLE = "Detect Slack Connect organizations connected to the workspace"
+TITLE = "Slack Connect organizations connected to the workspace"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
-DESCRIPTION = "Detect external organizations connected via Slack Connect (shadow collaboration surface)."
+DESCRIPTION = "Flags external organizations connected via Slack Connect (shadow collaboration surface)."
 REMEDIATION = "Review Slack Connect connections in Admin; disconnect organizations that are no longer needed."
 COMPLIANCE = {"custom": ["SLACK-03"], "soc2": ["CC6.1"], "nist_csf": ["PR.AC-3"]}
 

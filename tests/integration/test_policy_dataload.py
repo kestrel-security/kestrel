@@ -7,7 +7,7 @@ without which most per-resource posture is unreachable by policy:
 
 * `RESOURCE_TYPE = "resource"` had no loader, so no policy could iterate a
   repository, channel, drive, or site no matter what a connector collected.
-* `_event_dict` dropped `ActivityEvent.attributes`, so an event detection could
+* `_event_dict` dropped `ActivityEvent.attributes`, so an event policy could
   only see the coarse curated action, never the branch, scope, or target the
   normalizer had preserved.
 * Settings were tenant-wide only, so a branch protection rule had nowhere to

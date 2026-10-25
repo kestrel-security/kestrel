@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-code-scanning-disabled"
-TITLE = "Detect repositories without code scanning configured"
+TITLE = "Repositories without code scanning configured"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

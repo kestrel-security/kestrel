@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-auth-server-long-token-lifetime"
-TITLE = "Detect Okta authorization server with excessive access-token lifetime"
+TITLE = "Okta authorization server with excessive access-token lifetime"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
-    "Detect custom Okta authorization servers where the access-token lifetime "
+    "Flags custom Okta authorization servers where the access-token lifetime "
     "exceeds 60 minutes. Long-lived tokens remain valid after account disable "
     "or password reset, giving attackers a window to use captured tokens."
 )

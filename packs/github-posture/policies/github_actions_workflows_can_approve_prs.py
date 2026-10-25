@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-actions-workflows-can-approve-prs"
-TITLE = "Detect GitHub orgs where workflows can approve pull requests"
+TITLE = "GitHub orgs where workflows can approve pull requests"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

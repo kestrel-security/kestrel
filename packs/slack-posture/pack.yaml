@@ -8,7 +8,7 @@ description: >
   guest expiration, app approval, over-scoped and unused installed apps,
   pending app/invite requests, Slack Connect orgs and externally shared
   channels, information barriers, workflows with external sharing, per-channel
-  retention, anomaly allowlist, plus curated Audit Logs activity detections
+  retention, anomaly allowlist, plus curated Audit Logs activity policies
   (SSO changes, policy changes, config changes). Mapped to NIST CSF and CIS
   Controls v8.1 where collected data supports it (no official CIS Slack
   benchmark).

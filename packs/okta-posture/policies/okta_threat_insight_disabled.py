@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-threat-insight-disabled"
-TITLE = "Detect Okta orgs with Threat Insight disabled"
+TITLE = "Okta orgs with Threat Insight disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
-    "Detect Okta organizations where Threat Insight is disabled. Okta Security "
+    "Flags Okta organizations where Threat Insight is disabled. Okta Security "
     "best practices and CISA SCuBA-style guidance expect Threat Insight (or "
     "equivalent threat detection) to be enabled for the org."
 )

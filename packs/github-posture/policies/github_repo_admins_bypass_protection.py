@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-admins-bypass-protection"
-TITLE = "Detect protected branches that administrators can bypass"
+TITLE = "Protected branches that administrators can bypass"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (
