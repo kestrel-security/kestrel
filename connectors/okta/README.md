@@ -100,8 +100,8 @@ Full setup walkthrough: [`docs/connectors/okta-setup.md`](../../docs/connectors/
   failures fail the sync
 - **System Log** (`GET /api/v1/logs`) is in scope: last ~7 days by default
   (Okta's own default when `since` is omitted), Link-paginated, mapped to
-  activity `event` rows for faster privilege / MFA / threat detections than
-  waiting on the next directory diff. Unmapped types (for example routine
+  activity `event` rows so privilege / MFA / threat events reach policies
+  without waiting on the next directory diff. Unmapped types (for example routine
   `user.session.start`) are not stored.
 - Rate limits: Okta Management API org limits apply; the live transport retries
   **429** a few times (`Retry-After` when present). See
@@ -112,7 +112,7 @@ Enable `packs/okta-posture` for posture findings (`okta-admin-without-mfa`,
 `okta-password-policy-weak`, `okta-password-allows-username`,
 `okta-app-bookmark-or-swa`, `okta-api-token-unused`,
 `okta-device-assurance-without-disk-encryption`,
-`okta-threat-insight-disabled`) and System Log event detections
+`okta-threat-insight-disabled`) and System Log event policies
 (`okta-activity-privilege-grant`, `okta-activity-privilege-revoked`,
 `okta-activity-mfa-disabled`, `okta-activity-threat-detected`,
 `okta-activity-api-token-created`). The full control-by-control mapping,

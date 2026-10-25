@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-dependabot-disabled"
-TITLE = "Detect repositories with Dependabot security updates disabled"
+TITLE = "Repositories with Dependabot security updates disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = "Without Dependabot security updates, a vulnerable dependency stays vulnerable until someone notices."

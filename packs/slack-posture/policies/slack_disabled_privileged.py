@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-disabled-privileged"
-TITLE = "Detect deactivated Slack identities that still hold Owner or Admin roles"
+TITLE = "Deactivated Slack identities that still hold Owner or Admin roles"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect deactivated Slack identities that still hold Owner or Admin roles"
+DESCRIPTION = "Flags deactivated Slack identities that still hold Owner or Admin roles"
 REMEDIATION = "Remove Owner/Admin roles from deactivated Slack accounts."
 COMPLIANCE = {"custom": ["SLACK-02"], "soc2": ["CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-1"]}
 

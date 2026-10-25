@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-groups-admin-without-mfa"
-TITLE = "Detect Google Workspace Groups Admins not enrolled in 2-Step Verification"
+TITLE = "Google Workspace Groups Admins not enrolled in 2-Step Verification"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Google Workspace Groups Admins not enrolled in 2-Step Verification"
+DESCRIPTION = "Flags Google Workspace Groups Admins not enrolled in 2-Step Verification"
 REMEDIATION = (
     "Enroll the Groups Admin in 2-Step Verification, or remove the role until MFA is enabled."
     " Groups Admins can manage membership for sensitive groups."

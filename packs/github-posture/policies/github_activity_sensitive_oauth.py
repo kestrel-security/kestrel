@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-sensitive-oauth"
-TITLE = "Detect recent sensitive OAuth consent events in GitHub audit log"
+TITLE = "Recent sensitive OAuth consent events in GitHub audit log"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent sensitive OAuth consent events in GitHub audit log"
+DESCRIPTION = "Flags recent sensitive OAuth consent events in GitHub audit log"
 REMEDIATION = "Revoke the OAuth authorization if unexpected; restrict sensitive scopes."
 REQUIRES = ["github:audit_events"]
 COMPLIANCE = {"soc2": ["CC6.1"], "nist_csf": ["PR.AC-3"]}

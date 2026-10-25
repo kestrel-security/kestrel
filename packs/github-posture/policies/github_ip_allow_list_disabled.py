@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-ip-allow-list-disabled"
-TITLE = "Detect GitHub organizations with IP allow list disabled"
+TITLE = "GitHub organizations with IP allow list disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

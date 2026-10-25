@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-privileged-grant"
-TITLE = "Detect recent privileged grant activity in GitHub audit log"
+TITLE = "Recent privileged grant activity in GitHub audit log"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent privileged grant activity in GitHub audit log"
+DESCRIPTION = "Flags recent privileged grant activity in GitHub audit log"
 REMEDIATION = "Review the privileged grant in GitHub audit log; revoke if unauthorized."
 REQUIRES = ["github:audit_events"]
 COMPLIANCE = {"soc2": ["CC6.1", "CC6.2"], "nist_csf": ["PR.AC-4"]}

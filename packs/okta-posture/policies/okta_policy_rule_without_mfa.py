@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-policy-rule-without-mfa"
-TITLE = "Detect Okta policies with an active rule that requires no second factor"
+TITLE = "Okta policies with an active rule that requires no second factor"
 SEVERITY = "critical"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

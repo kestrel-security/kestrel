@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-session-lifetime-excessive"
-TITLE = "Detect Okta sign-on policies allowing sessions longer than a working day"
+TITLE = "Okta sign-on policies allowing sessions longer than a working day"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = "A session lifetime measured in days means a device compromised once stays authenticated long after the fact."

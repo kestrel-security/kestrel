@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-repo-made-public"
-TITLE = "Detect repositories changed from private to public"
+TITLE = "Repositories changed from private to public"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = "A repository's visibility changed to public, exposing its full history to anyone."

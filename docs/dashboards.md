@@ -97,7 +97,7 @@ briefly per org.
 ## Posture trend
 
 `posture_trend_snapshots` holds one row per org per UTC day: open findings by
-severity, labeled factor counts (open criticals, detection gaps, toxic
+severity, labeled factor counts (open criticals, policy coverage gaps, toxic
 combinations, stale connectors), and how many factors
 warrant attention. It is deliberately not a composite score and never
 back-filled: missing days stay missing from the series. The worker's beat runs

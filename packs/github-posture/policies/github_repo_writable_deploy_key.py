@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-writable-deploy-key"
-TITLE = "Detect repositories with write-capable deploy keys"
+TITLE = "Repositories with write-capable deploy keys"
 SEVERITY = "high"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

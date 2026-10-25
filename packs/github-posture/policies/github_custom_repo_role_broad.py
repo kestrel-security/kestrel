@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-custom-repo-role-broad"
-TITLE = "Detect custom organization roles with privileged permissions"
+TITLE = "Custom organization roles with privileged permissions"
 SEVERITY = "medium"
 RESOURCE_TYPE = "grant"
 DESCRIPTION = (

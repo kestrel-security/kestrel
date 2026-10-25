@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-activity-guest-created"
-TITLE = "Detect guest accounts created in the Slack audit log"
+TITLE = "Guest accounts created in the Slack audit log"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

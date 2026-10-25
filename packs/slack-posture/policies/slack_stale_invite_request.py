@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-stale-invite-request"
-TITLE = "Detect Slack invite requests pending more than 30 days"
+TITLE = "Slack invite requests pending more than 30 days"
 SEVERITY = "low"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

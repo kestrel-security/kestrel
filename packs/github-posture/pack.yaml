@@ -15,7 +15,7 @@ description: >
   fine-grained PATs with admin permissions, public packages from private repos,
   open Dependabot and code-scanning alert counts, code scanning setup state,
   vulnerability alert enablement, and required status checks. Activity
-  detections cover privilege change, branch-protection removal, repositories
+  policies cover privilege change, branch-protection removal, repositories
   made public, SSO changes, App installs, webhooks, deploy keys, Copilot seat
   changes, OIDC changes, and audit log streaming configuration. Mapped to
   CIS / NIST CSF / SOC2 / CISA SCuBA-style controls where collected data
@@ -65,7 +65,7 @@ policies:
   - github-pat-request-all-repositories
   - github-sso-credential-stale
   - github-app-overpermissioned
-  # Audit taxonomy detections
+  # Audit taxonomy policies
   - github-activity-branch-protection-disabled
   - github-activity-repo-made-public
   - github-activity-sso-changed

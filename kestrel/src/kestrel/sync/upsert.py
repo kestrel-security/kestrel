@@ -73,7 +73,7 @@ APPEND_ONLY_KINDS = frozenset({"event"})
 # view, but ``change_feed`` applies FEED_SCAN_CAP in SQL *before* classification,
 # so they consume the scan budget and push real drift out of the window entirely.
 #
-# Provider audit logs reach operators through Findings event detections and, per
+# Provider audit logs reach operators through event policies in Findings and, per
 # DEC-024, as the optional actor overlay on a diff row -- never as a
 # change row of their own.
 NON_FEED_KINDS = frozenset({"event"})

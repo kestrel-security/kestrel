@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-super-admin-without-mfa"
-TITLE = "Detect Google Workspace Super Admins not enrolled in 2-Step Verification"
+TITLE = "Google Workspace Super Admins not enrolled in 2-Step Verification"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Google Workspace Super Admins not enrolled in 2-Step Verification"
+DESCRIPTION = "Flags Google Workspace Super Admins not enrolled in 2-Step Verification"
 REMEDIATION = "Enroll the Super Admin in 2-Step Verification, or remove Super Admin and use a less privileged role."
 COMPLIANCE = {"cisa": ["GWS-01"], "soc2": ["CC6.1", "CC6.2"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

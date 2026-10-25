@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-channel-retention-missing"
-TITLE = "Detect Slack private or externally shared channels without a custom retention policy"
+TITLE = "Slack private or externally shared channels without a custom retention policy"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

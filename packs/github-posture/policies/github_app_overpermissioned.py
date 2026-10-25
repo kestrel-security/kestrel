@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-app-overpermissioned"
-TITLE = "Detect installed GitHub Apps holding sensitive organization permissions"
+TITLE = "Installed GitHub Apps holding sensitive organization permissions"
 SEVERITY = "high"
 RESOURCE_TYPE = "oauth_application"
 DESCRIPTION = (

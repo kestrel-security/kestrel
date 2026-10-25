@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-no-phishing-resistant-authenticator"
-TITLE = "Detect Okta orgs with no phishing-resistant authenticator enabled"
+TITLE = "Okta orgs with no phishing-resistant authenticator enabled"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

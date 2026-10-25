@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-dormant-admin"
-TITLE = "Detect privileged Slack admins inactive for 90+ days"
+TITLE = "Privileged Slack admins inactive for 90+ days"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect privileged Slack Primary Owners, Owners, or Admins whose last activity is older than 90 days."
+DESCRIPTION = "Flags privileged Slack Primary Owners, Owners, or Admins whose last activity is older than 90 days."
 REMEDIATION = (
     "Review the dormant admin account in Slack, remove unnecessary Owner/Admin privileges, or confirm continued need."
 )

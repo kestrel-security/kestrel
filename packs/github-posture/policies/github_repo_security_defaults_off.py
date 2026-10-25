@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-security-defaults-off"
-TITLE = "Detect repositories with vulnerability alerts disabled"
+TITLE = "Repositories with vulnerability alerts disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

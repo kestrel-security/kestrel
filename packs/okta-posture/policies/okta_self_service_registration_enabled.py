@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-self-service-registration-enabled"
-TITLE = "Detect Okta profile enrollment policies allowing self-service registration"
+TITLE = "Okta profile enrollment policies allowing self-service registration"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = "Self-service registration lets anyone who reaches the sign-in page create an account in the directory."

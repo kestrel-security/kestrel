@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-activity-config-change"
-TITLE = "Detect recent Slack workspace configuration changes in Audit Logs"
+TITLE = "Recent Slack workspace configuration changes in Audit Logs"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

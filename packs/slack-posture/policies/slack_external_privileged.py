@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-external-privileged"
-TITLE = "Detect Slack guest (restricted) identities with Owner or Admin roles"
+TITLE = "Slack guest (restricted) identities with Owner or Admin roles"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Slack guest (restricted) identities with Owner or Admin roles"
+DESCRIPTION = "Flags Slack guest (restricted) identities with Owner or Admin roles"
 REMEDIATION = "Remove privileged workspace roles from guest accounts; guests should never be Owners or Admins."
 COMPLIANCE = {"custom": ["SLACK-03"], "soc2": ["CC6.1", "CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-4"]}
 

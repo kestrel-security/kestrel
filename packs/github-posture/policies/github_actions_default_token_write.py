@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-actions-default-token-write"
-TITLE = "Detect GitHub orgs where workflows get a write-scoped GITHUB_TOKEN by default"
+TITLE = "GitHub orgs where workflows get a write-scoped GITHUB_TOKEN by default"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

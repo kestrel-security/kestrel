@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-sso-credential-stale"
-TITLE = "Detect SAML SSO-authorized credentials that have not been used in months"
+TITLE = "SAML SSO-authorized credentials that have not been used in months"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

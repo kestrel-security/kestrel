@@ -31,7 +31,7 @@ function Fact({ label, children }: { label: string; children: React.ReactNode })
  *
  * Leads with `policy.description`, which the previous layout fetched but never
  * rendered anywhere, leaving the Python source as the only way to learn what a
- * policy actually detects.
+ * policy actually flags.
  */
 export async function PolicyOverviewTab({
   policy,
@@ -55,7 +55,7 @@ export async function PolicyOverviewTab({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>What this detects</CardTitle>
+          <CardTitle>What this policy flags</CardTitle>
         </CardHeader>
         <CardContent>
           {policy.description ? (

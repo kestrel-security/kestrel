@@ -410,7 +410,7 @@ export default async function FindingDetailPage({
       </CardHeader>
       <CardContent>
         <p className="mb-3 text-xs text-muted-foreground">
-          Other findings for this detection across subjects (not the same-subject related list).
+          Other findings for this policy across subjects (not the same-subject related list).
         </p>
         <ul className="space-y-2">
           {finding.same_policy_cohort!.items.map((f) => (

@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-private-repo-forking-allowed"
-TITLE = "Detect GitHub organizations that allow private repositories to be forked"
+TITLE = "GitHub organizations that allow private repositories to be forked"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-group-accepts-external-posts"
-TITLE = "Detect Google Workspace groups that accept messages from outside the organization"
+TITLE = "Google Workspace groups that accept messages from outside the organization"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

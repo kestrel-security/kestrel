@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-privilege-grant"
-TITLE = "Detect recent Okta privileged role grants in System Log"
+TITLE = "Recent Okta privileged role grants in System Log"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent Okta privileged role grants in System Log"
+DESCRIPTION = "Flags recent Okta privileged role grants in System Log"
 REMEDIATION = "Review the privilege grant in Okta System Log; revoke the admin role if unauthorized."
 COMPLIANCE = {"custom": ["OKTA-03"], "soc2": ["CC6.1", "CC6.2"], "nist_csf": ["PR.AC-4"]}
 

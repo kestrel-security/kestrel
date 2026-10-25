@@ -160,16 +160,16 @@ FixtureTransport -- no network access, no secrets required.
    `kestrel.connectors` entry point declared in this connector's
    `pyproject.toml`, so `kestrel sync` and the API can discover it by name
    ("{name}").
-3. See `example_policy.py` for a starting point on detections over this
+3. See `example_policy.py` for a starting point on policies over this
    connector's data (`kestrel policy validate example_policy.py`).
 """
 
 _POLICY_TEMPLATE = """\
 POLICY_ID = "{name}-user-without-mfa"
-TITLE = "Example policy: detect {display_name} users without MFA"
+TITLE = "Example policy: flag {display_name} users without MFA"
 SEVERITY = "medium"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Example policy: detect {display_name} users without MFA -- customize this for your real detection logic"
+DESCRIPTION = "Example policy: flag {display_name} users without MFA -- customize this for your real policy logic"
 REMEDIATION = "Enable MFA for this user."
 
 

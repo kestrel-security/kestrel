@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-external-channel-unrestricted"
-TITLE = "Detect externally shared Slack channels"
+TITLE = "Externally shared Slack channels"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
-DESCRIPTION = "Detect Slack channels that are externally shared via Slack Connect."
+DESCRIPTION = "Flags Slack channels that are externally shared via Slack Connect."
 REMEDIATION = (
     "Review the shared channel membership and IdP group restrictions; disconnect external orgs that should not have access."
 )

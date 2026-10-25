@@ -107,7 +107,7 @@ def check_health(client: GitHubClient) -> HealthCheckResult:
         message = (
             f"Connected to GitHub org '{org_login}' with directory and repository "
             f"access; audit log unavailable ({optional_skipped['audit_log.list']}) — "
-            "event detections will be skipped. The audit log API requires GitHub "
+            "event policies will be skipped. The audit log API requires GitHub "
             "Enterprise Cloud and the read:audit_log scope."
         )
     else:

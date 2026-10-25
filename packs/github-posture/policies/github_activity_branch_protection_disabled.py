@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-branch-protection-disabled"
-TITLE = "Detect branch protection or ruleset removal in the GitHub audit log"
+TITLE = "Branch protection or ruleset removal in the GitHub audit log"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
 DESCRIPTION = "Branch protection was removed, overridden, or weakened, so review and status requirements no longer apply."

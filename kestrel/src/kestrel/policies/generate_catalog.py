@@ -72,7 +72,7 @@ def _okta_admin_without_mfa_source(intent: str) -> str:
     policy_id = _slug_from_intent(intent)
     roles_repr = repr(OKTA_PRIVILEGED_ROLES)
     return f'''POLICY_ID = "{policy_id}"
-TITLE = "Detect Okta privileged administrators without MFA"
+TITLE = "Okta privileged administrators without MFA"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
 DESCRIPTION = {intent.strip()[:500]!r}
@@ -107,7 +107,7 @@ def evidence(resource):
 def _okta_mfa_enroll_not_required_source(intent: str) -> str:
     policy_id = _slug_from_intent(intent)
     return f'''POLICY_ID = "{policy_id}"
-TITLE = "Detect Okta orgs that do not require multifactor enrollment"
+TITLE = "Okta orgs that do not require multifactor enrollment"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = {intent.strip()[:500]!r}
@@ -140,7 +140,7 @@ def _okta_disabled_privileged_admin_source(intent: str) -> str:
     policy_id = _slug_from_intent(intent)
     roles_repr = repr(OKTA_PRIVILEGED_ROLES)
     return f'''POLICY_ID = "{policy_id}"
-TITLE = "Detect disabled Okta users that still hold privileged admin roles"
+TITLE = "Disabled Okta users that still hold privileged admin roles"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
 DESCRIPTION = {intent.strip()[:500]!r}
@@ -176,7 +176,7 @@ def _okta_dormant_admin_source(intent: str) -> str:
     policy_id = _slug_from_intent(intent)
     roles_repr = repr(OKTA_PRIVILEGED_ROLES)
     return f'''POLICY_ID = "{policy_id}"
-TITLE = "Detect privileged Okta admins inactive for 90+ days"
+TITLE = "Privileged Okta admins inactive for 90+ days"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
 DESCRIPTION = {intent.strip()[:500]!r}
@@ -223,7 +223,7 @@ def evidence(resource):
 def _okta_password_policy_weak_source(intent: str) -> str:
     policy_id = _slug_from_intent(intent)
     return f'''POLICY_ID = "{policy_id}"
-TITLE = "Detect weak Okta password policy (minimum length below 12)"
+TITLE = "Weak Okta password policy (minimum length below 12)"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = {intent.strip()[:500]!r}
@@ -263,7 +263,7 @@ def evidence(resource):
 def _okta_app_bookmark_or_swa_source(intent: str) -> str:
     policy_id = _slug_from_intent(intent)
     return f'''POLICY_ID = "{policy_id}"
-TITLE = "Detect Okta apps using bookmark or SWA sign-on (no SSO)"
+TITLE = "Okta apps using bookmark or SWA sign-on (no SSO)"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = {intent.strip()[:500]!r}
@@ -617,7 +617,7 @@ def few_shot_for_connector(connector: str | None, resource_type: str | None) -> 
         return _okta_mfa_enroll_not_required_source("Example: Okta MFA enroll not required")
     if resource_type == "event":
         return """POLICY_ID = "okta-activity-mfa-disabled"
-TITLE = "Detect Okta MFA factor deactivation events"
+TITLE = "Okta MFA factor deactivation events"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = "Alert when MFA is disabled on an Okta account."

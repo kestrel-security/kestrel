@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-network-zone-matches-everything"
-TITLE = "Detect Okta policy network zones that admit every address"
+TITLE = "Okta policy network zones that admit every address"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

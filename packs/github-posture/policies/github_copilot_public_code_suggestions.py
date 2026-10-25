@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-copilot-public-code-suggestions"
-TITLE = "Detect GitHub organizations allowing Copilot to suggest public code matches"
+TITLE = "GitHub organizations allowing Copilot to suggest public code matches"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

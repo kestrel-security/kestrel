@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-copilot-seat-inactive"
-TITLE = "Detect Copilot seats with no recent activity"
+TITLE = "Copilot seats with no recent activity"
 SEVERITY = "low"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

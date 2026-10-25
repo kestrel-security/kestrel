@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-session-never-expires"
-TITLE = "Detect Okta policies with an active rule that never expires a session"
+TITLE = "Okta policies with an active rule that never expires a session"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

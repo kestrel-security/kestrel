@@ -14,7 +14,7 @@ security/access configuration. The ApplicationInstance row itself is still
 created out of band when a connector instance is configured.
 
 Audit-log entries emit normalized `event` rows for deterministic
-activity detections.
+activity policies.
 """
 
 from __future__ import annotations

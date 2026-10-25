@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-deploy-key-created"
-TITLE = "Detect deploy keys added to repositories"
+TITLE = "Deploy keys added to repositories"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (

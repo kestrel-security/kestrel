@@ -63,7 +63,7 @@ def same_policy_cohort(
     """Other findings for the same policy (any version) — investigation cohort.
 
     Distinct from ``related_findings`` (same subject). Helps operators see how
-    widespread a detection is across the org.
+    widespread a policy's findings are across the org.
     """
     cap = max(0, min(limit, SAME_POLICY_COHORT_LIMIT))
     version = db.get(PolicyVersion, finding.policy_version_id)

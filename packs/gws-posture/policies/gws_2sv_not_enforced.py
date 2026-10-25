@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-2sv-not-enforced"
-TITLE = "Detect Google Workspace accounts without 2-Step Verification enforced"
+TITLE = "Google Workspace accounts without 2-Step Verification enforced"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
 DESCRIPTION = (

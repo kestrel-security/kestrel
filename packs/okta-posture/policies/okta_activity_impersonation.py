@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-impersonation"
-TITLE = "Detect Okta administrator session impersonation"
+TITLE = "Okta administrator session impersonation"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (
-    "Detect Okta System Log events where an administrator initiated or granted "
+    "Flags Okta System Log events where an administrator initiated or granted "
     "a session impersonation. Impersonation gives an admin access to another "
     "user's session and is a high-privilege action that should always be reviewed."
 )

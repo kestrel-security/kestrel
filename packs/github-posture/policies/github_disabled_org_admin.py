@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-disabled-org-admin"
-TITLE = "Detect disabled GitHub identities that still hold the organization administrator role"
+TITLE = "Disabled GitHub identities that still hold the organization administrator role"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect disabled GitHub identities that still hold the organization administrator role"
+DESCRIPTION = "Flags disabled GitHub identities that still hold the organization administrator role"
 REMEDIATION = (
     "Remove the organization administrator role from the disabled account, or restore and secure the "
     "account if access is still required."

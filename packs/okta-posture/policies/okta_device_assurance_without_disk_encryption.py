@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-device-assurance-without-disk-encryption"
-TITLE = "Detect Okta device assurance policies that do not require disk encryption"
+TITLE = "Okta device assurance policies that do not require disk encryption"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

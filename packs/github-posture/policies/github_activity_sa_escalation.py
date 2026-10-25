@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-sa-escalation"
-TITLE = "Detect recent service-account privilege escalation events"
+TITLE = "Recent service-account privilege escalation events"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent service-account privilege escalation events"
+DESCRIPTION = "Flags recent service-account privilege escalation events"
 REMEDIATION = "Reduce the service account to least privilege; rotate credentials if compromised."
 REQUIRES = ["github:audit_events"]
 COMPLIANCE = {"soc2": ["CC6.1"], "nist_csf": ["PR.AC-4"]}

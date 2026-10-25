@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-pending-app-requests"
-TITLE = "Detect unresolved Slack app install requests"
+TITLE = "Unresolved Slack app install requests"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
-DESCRIPTION = "Detect pending Slack app install requests that have not been approved or denied."
+DESCRIPTION = "Flags pending Slack app install requests that have not been approved or denied."
 REMEDIATION = "In Slack Admin → Apps → Requests, approve only required apps or deny unused requests."
 COMPLIANCE = {"custom": ["SLACK-10"], "soc2": ["CC6.1"], "nist_csf": ["PR.AC-4"]}
 

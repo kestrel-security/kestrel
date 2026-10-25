@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-workflow-external-sharing"
-TITLE = "Detect Slack workflows that share data with external parties"
+TITLE = "Slack workflows that share data with external parties"
 SEVERITY = "high"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

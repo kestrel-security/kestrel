@@ -64,7 +64,7 @@ Kestrel reports what it could actually read rather than assuming a full sync.
 
 | Data | Requirement | Behaviour when unavailable |
 |------|-------------|----------------------------|
-| Audit log events | GitHub Enterprise Cloud, plus `read:audit_log` | The run completes as **partial coverage**; every other object type still syncs, and Test connection says the audit log is unavailable. Event detections produce no new findings. |
+| Audit log events | GitHub Enterprise Cloud, plus `read:audit_log` | The run completes as **partial coverage**; every other object type still syncs, and Test connection says the audit log is unavailable. Event policies produce no new findings. |
 | Member 2FA state | Organization **owner** (a non-owner org admin gets 403) | `mfa_enabled` becomes unknown (`null`) rather than false. MFA policies deliberately do **not** fire on unknown, so a lost permission cannot open a finding on every administrator. |
 | Member disabled state | Not exposed by GitHub Cloud | `is_disabled` is only set from `suspended_at`, which GitHub Enterprise Server sends. On GitHub Cloud the two `github-disabled-*` policies cannot fire. |
 

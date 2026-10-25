@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-org-2fa-not-required"
-TITLE = "Detect GitHub organizations that do not require two-factor authentication for members"
+TITLE = "GitHub organizations that do not require two-factor authentication for members"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
-DESCRIPTION = "Detect GitHub organizations that do not require two-factor authentication for members"
+DESCRIPTION = "Flags GitHub organizations that do not require two-factor authentication for members"
 REMEDIATION = "Enable organization-wide two-factor authentication requirement in GitHub organization settings."
 COMPLIANCE = {"custom": ["GH-07"], "soc2": ["CC6.1", "CC6.2"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

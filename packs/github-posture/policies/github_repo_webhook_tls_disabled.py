@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-webhook-tls-disabled"
-TITLE = "Detect repository webhooks delivering with TLS verification disabled"
+TITLE = "Repository webhooks delivering with TLS verification disabled"
 SEVERITY = "high"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = "A repository webhook with insecure_ssl set delivers repository events over an unverified connection."
