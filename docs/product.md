@@ -17,7 +17,7 @@ administrators, and platform engineers building internal integrations.
 3. Cross-application access paths are invisible.
 4. Alerts lack evidence and remediation clarity.
 5. Closed SSPM tools are opaque and difficult to self-host.
-6. Compliance mapping is disconnected from real detections.
+6. Compliance mapping is disconnected from the policies that actually evaluate configuration.
 
 ## Core workflows
 
@@ -92,8 +92,8 @@ Security teams should be able to answer, continuously and with evidence:
 | Identity and entitlement graph | Cross-app correlation of humans, services, groups, roles, permissions |
 | Cross-application access analysis | "What remains if this IdP account is disabled?" |
 | Configuration posture management | Continuous drift detection, mapped to published benchmarks |
-| Policy-as-code | Git-versioned Python policies and packs; optional SQL detections later |
-| Custom compliance rules | Map detections to SOC 2, CIS, NIST, or custom frameworks |
+| Policy-as-code | Git-versioned Python policies and packs; optional SQL policies later |
+| Custom compliance rules | Map policies to SOC 2, CIS, NIST, or custom frameworks |
 | Continuous monitoring | Scheduled syncs, health, alerting |
 | Risk prioritization | Explainable prioritization; never an unexplained score as the only signal |
 | Investigation timelines | Reconstruct how access and configuration evolved |
@@ -109,6 +109,6 @@ evidence over dashboards; extensibility without core forks; self-hostable by
 default so operators never have to send posture data to anyone else.
 
 Explicit non-promises: Kestrel will not require a proprietary rule black box
-for core detections, will not withhold the connector SDK or policy language,
+for core policies, will not withhold the connector SDK or policy language,
 and will not adopt exotic infrastructure (graph databases, heavy workflow
 meshes) without evidenced need and an accepted decision.

@@ -65,7 +65,7 @@ identity provider disabled that is still active elsewhere.
 Commercial SaaS security posture management products cover the same problem
 with many more integrations, a hosted service, vendor support, and often
 remediation or SaaS discovery. Kestrel is self-hosted, Apache-2.0, four
-first-party connectors plus an SDK for your own, read-only, and its detections
+first-party connectors plus an SDK for your own, read-only, and its policies
 are Python files in git that you can read, test, and change. It does not
 discover unsanctioned SaaS and does not write back to your tenants
 ([`roadmap.md`](roadmap.md)).

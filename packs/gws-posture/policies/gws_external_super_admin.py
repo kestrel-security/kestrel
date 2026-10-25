@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-external-super-admin"
-TITLE = "Detect external Google Workspace identities with the Super Admin role"
+TITLE = "External Google Workspace identities with the Super Admin role"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect external Google Workspace identities with the Super Admin role"
+DESCRIPTION = "Flags external Google Workspace identities with the Super Admin role"
 REMEDIATION = "Remove Super Admin from external identities; Super Admin must be limited to trusted internal accounts."
 COMPLIANCE = {"cisa": ["GWS-03"], "soc2": ["CC6.1", "CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-4"]}
 

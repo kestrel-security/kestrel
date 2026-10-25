@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-runner-group-allows-public-repos"
-TITLE = "Detect self-hosted runner groups reachable from public repositories"
+TITLE = "Self-hosted runner groups reachable from public repositories"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

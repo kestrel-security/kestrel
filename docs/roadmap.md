@@ -87,7 +87,7 @@ direction is [`product.md`](product.md); decisions are in
 | Managed connector certification | ⬜ |
 | Developer portal | ⬜ |
 | API discovery → connector generation | ⬜ (vision) |
-| Optional SQL detections alongside Python | ⬜ (vision; Python remains the default) |
+| Optional SQL policies alongside Python | ⬜ (vision; Python remains the default) |
 
 ## Active programs
 

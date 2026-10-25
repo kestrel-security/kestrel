@@ -5,7 +5,7 @@ description: >
   Collects Okta users, groups, classic and custom IAM admin roles, application
   assignments, OAuth apps (with scopes), behaviors, authorization servers,
   log streams, devices, and System Log activity (~100 event-type mappings) for
-  identity-spine, posture, and activity detections. OAuth 2.0 service-app auth
+  identity-spine, posture, and activity policies. OAuth 2.0 service-app auth
   recommended; SSWS API token supported as fallback.
 setup_docs: docs/connectors/okta-setup.md
 auth_methods:

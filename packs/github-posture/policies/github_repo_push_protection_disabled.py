@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-push-protection-disabled"
-TITLE = "Detect repositories with secret scanning push protection disabled"
+TITLE = "Repositories with secret scanning push protection disabled"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

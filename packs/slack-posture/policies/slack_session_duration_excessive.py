@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-session-duration-excessive"
-TITLE = "Detect Slack accounts whose session lasts longer than 12 hours"
+TITLE = "Slack accounts whose session lasts longer than 12 hours"
 SEVERITY = "medium"
 RESOURCE_TYPE = "identity"
 DESCRIPTION = (

@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-app-bookmark-or-swa"
-TITLE = "Detect Okta apps using bookmark or SWA sign-on (no SSO)"
+TITLE = "Okta apps using bookmark or SWA sign-on (no SSO)"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
-DESCRIPTION = "Detect Okta applications configured with bookmark or browser-plugin sign-on instead of federated SSO."
+DESCRIPTION = "Flags Okta applications configured with bookmark or browser-plugin sign-on instead of federated SSO."
 REMEDIATION = "Migrate the application to SAML or OIDC SSO, or document an approved exception for bookmark/SWA access."
 COMPLIANCE = {"custom": ["OKTA-03"], "soc2": ["CC6.1"], "cis": ["6.7"], "nist_csf": ["PR.AC-3"]}
 

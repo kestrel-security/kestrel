@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-activity-external-sharing"
-TITLE = "Detect recent Slack external sharing events in Audit Logs"
+TITLE = "Recent Slack external sharing events in Audit Logs"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent Slack Connect channel connections or public file link creation in Audit Logs."
+DESCRIPTION = "Flags recent Slack Connect channel connections or public file link creation in Audit Logs."
 REMEDIATION = "Review the Slack Connect channel or public file link; disconnect or revoke if unexpected."
 COMPLIANCE = {"custom": ["SLACK-03"], "soc2": ["CC6.1"], "nist_csf": ["PR.AC-3"]}
 

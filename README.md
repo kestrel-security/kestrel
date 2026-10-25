@@ -138,7 +138,7 @@ Kestrel answers these from one normalized graph, and it does it in infrastructur
 | | |
 |---|---|
 | **Connectors are ordinary Python packages** | `kestrel connector create <name>` scaffolds a working, fixture-testable connector built on `kestrel.connectors.sdk`. Onboarding an internal or unsupported app never waits on a vendor roadmap and never requires a core change. |
-| **Detections are code, not a rule builder** | A policy is a module with `policy(resource) -> bool` — `True` is compliant, `False` opens a finding — compiled with RestrictedPython and evaluated in an isolated subprocess. It is diffable, code-reviewable, fixture-tested, and versioned in git. |
+| **Policies are code, not a rule builder** | A policy is a module with `policy(resource) -> bool` — `True` is compliant, `False` opens a finding — compiled with RestrictedPython and evaluated in an isolated subprocess. It is diffable, code-reviewable, fixture-tested, and versioned in git. |
 | **Provenance on every row** | Every normalized entity keeps its raw provider payload as `raw_source` next to the normalized columns, so a finding can always show what it was derived from. |
 | **A real graph, in PostgreSQL** | `graph_nodes` / `graph_edges` distinguish direct, inherited (group), inherited (role), federated, and OAuth-derived access, traversed with recursive CTEs. No graph database to operate. |
 
@@ -170,7 +170,7 @@ Search-first triage (`severity:critical status:open assignee:me age:>=7`), keybo
 
 Every sync writes a hashed snapshot. Snapshots are diffed into a classified feed — admin granted, privilege escalated, OAuth app installed, external sharing enabled, MFA disabled, configuration drift — with before/after values and, where the connector collects an audit log, the person who made the change. Each connector's first sync is the baseline, not a change.
 
-### Detection as code
+### Policies as code
 
 <img alt="Kestrel Policies — installed Python policies with slugs, application, severity, open finding counts, and last run status" src="docs/images/policies.png">
 
@@ -213,7 +213,7 @@ The full object-type list for each connector is its `connectors/<name>/manifest.
 
 ## What Kestrel finds
 
-A sample of shipped detections, all implemented as Python policies you can read, test, and change:
+A sample of shipped policies, all written in Python you can read, test, and change:
 
 **Cross-application** — only visible when two applications are read together
 - Account disabled in the identity provider that is still active in another application
@@ -235,7 +235,7 @@ A sample of shipped detections, all implemented as Python policies you can read,
 - Okta: weak password policy, session never expires, no phishing-resistant authenticator, network zone matching everything, hooks over plain HTTP, self-service registration enabled, Threat Insight disabled
 - Slack / Google Workspace: external sharing permissive, externally shared channels unrestricted, groups allowing external members
 
-**Activity detections** over provider audit logs — privilege grants, branch-protection removal, repositories made public, SSO changes, App installs, deploy keys, MFA disabled, Okta threat detections, suspicious logins.
+**Activity policies** over provider audit logs — privilege grants, branch-protection removal, repositories made public, SSO changes, App installs, deploy keys, MFA disabled, Okta threat detections, suspicious logins.
 
 Full catalog and compliance mappings: [`packs/`](packs/) and [`docs/policies.md`](docs/policies.md).
 
@@ -307,7 +307,7 @@ uv run kestrel connector validate connectors/my-app   # manifest, load, collect 
 
 The SDK is four `typing.Protocol`s — `Transport`, `Collector`, `Normalizer`, and the `Connector` that ties them together — plus a per-connector `build_live_transport()` that turns config and secrets into a `Transport`, and a `manifest.yaml` declaring auth methods, read-only scopes, object types and the entities they map to, and the change classes the connector guarantees. Fixture mode replays JSON by request signature and never touches the network, so a connector is testable in CI with no tenant. Start with [`docs/connectors/authoring-tutorial.md`](docs/connectors/authoring-tutorial.md) and [`examples/custom-connector/`](examples/custom-connector/).
 
-**Write a detection** — a Python function, versioned in git:
+**Write a policy** — a Python function, versioned in git:
 
 ```python
 # Abridged from packs/slack-posture/policies/slack_privileged_without_mfa.py
@@ -423,7 +423,7 @@ These are stated plainly in [`docs/threat-model.md`](docs/threat-model.md) rathe
 Themes rather than promises — capability status is in [`docs/roadmap.md`](docs/roadmap.md); new bugs and feature requests go in [GitHub issues](https://github.com/kestrel-security/kestrel/issues).
 
 - Deeper live collection per connector, and live-tenant smoke sign-off across the first-party set
-- More cross-application detections and richer entitlement analysis
+- More cross-application policies and richer entitlement analysis
 - Remediation write-back behind explicit approval gates
 - KMS-backed secrets, PostgreSQL row-level security, and signed releases
 - SSO/SCIM and hardened Kubernetes deployment
@@ -436,7 +436,7 @@ Contributions are welcome, and connectors and policy packs are the easiest place
 
 - **Bugs and features:** open an issue with the templates. Issues labelled [`good first issue`](https://github.com/kestrel-security/kestrel/labels/good%20first%20issue), when there are any, are scoped for newcomers; [`docs/roadmap.md`](docs/roadmap.md) lists open work too.
 - **A new connector:** [`docs/connectors/authoring-tutorial.md`](docs/connectors/authoring-tutorial.md) builds one end to end. The quality bar a first-party connector is held to is written down in [`docs/connectors.md`](docs/connectors.md).
-- **A new detection:** [`docs/policies.md`](docs/policies.md). Policies need fixtures; packs need compliance mappings that the collected data actually supports.
+- **A new policy:** [`docs/policies.md`](docs/policies.md). Policies need fixtures; packs need compliance mappings that the collected data actually supports.
 - **Anything architectural:** open an issue first. Significant decisions get an ADR under [`docs/adr/`](docs/adr/).
 
 [`CONTRIBUTING.md`](CONTRIBUTING.md) has setup, conventions, the test tiers, and the Developer Certificate of Origin sign-off (`git commit -s`). Run `make validate` and `make hygiene` before opening a pull request. This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).

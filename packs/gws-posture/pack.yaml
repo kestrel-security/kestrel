@@ -4,14 +4,14 @@ display_name: Google Workspace Posture
 summary: >
   Super Admin MFA, sharing, shared drives, privileged role hygiene, Cloud Identity
   Policy API settings (2SV, Drive, Gmail, Marketplace, session), devices,
-  domain-wide delegation, and activity detections.
+  domain-wide delegation, and activity policies.
 description: >
   Google Workspace posture: Super Admin and delegated admin MFA, disabled and
   external privileged accounts, shared-drive grants, group settings, domain 2SV
   enforcement (per-account and per-OU via Policy API), Drive sharing, Gmail
   auto-forwarding, Marketplace restriction, session length, password strength,
   Takeout, Super Admin self-recovery, device compromise and encryption state,
-  DWD client scopes, and admin/SSO/DWD activity detections. Mapped to CIS /
+  DWD client scopes, and admin/SSO/DWD activity policies. Mapped to CIS /
   NIST CSF / SOC2 / CISA SCuBA controls where collected data supports it.
 application: google_workspace
 categories:
@@ -67,7 +67,7 @@ policies:
   - gws-device-unencrypted
   # --- DWD clients (v0.2) ---
   - gws-dwd-client-broad-scopes
-  # --- Admin activity detections (v0.2) ---
+  # --- Admin activity policies (v0.2) ---
   - gws-activity-admin-privilege-grant
   - gws-activity-sso-change
   - gws-activity-dwd-grant

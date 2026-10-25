@@ -74,7 +74,7 @@ class Grant(Base, TenantMixin, SoftDeleteMixin):
     """Central access-relationship table: Identity -> Permission and/or Role,
     direct or via a group, optionally scoped to a specific resource. Backs the
     "direct privilege grant bypassing group-based access" and "newly created
-    admin grant" detections directly.
+    admin grant" policies directly.
 
     identity_id is nullable because a grant can be scoped above the identity
     level -- e.g. "this team grants admin on this repo" (source_group_id +

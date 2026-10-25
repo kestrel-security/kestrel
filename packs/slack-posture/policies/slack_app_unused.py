@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-app-unused"
-TITLE = "Detect unused Slack app installations"
+TITLE = "Unused Slack app installations"
 SEVERITY = "medium"
 RESOURCE_TYPE = "oauth_application"
 DESCRIPTION = (
-    "Detect Slack apps whose fixture inventory records a null last_used_at. "
+    "Flags Slack apps whose fixture inventory records a null last_used_at. "
     "Live Admin Apps payloads do not include last activity; rows without the "
     "last_used_at key are skipped so Grid apps are not all marked unused."
 )

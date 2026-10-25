@@ -24,7 +24,7 @@ class ActivityEvent(Base, ProvenanceMixin):
         Index("ix_activity_events_org_action", "org_id", "action"),
     )
 
-    # Normalized action key used by detections (e.g. privilege.grant).
+    # Normalized action key used by policies (e.g. privilege.grant).
     action: Mapped[str] = mapped_column(String, nullable=False, index=True)
     action_category: Mapped[str] = mapped_column(String, nullable=False, index=True)
     actor_email: Mapped[str | None] = mapped_column(String, nullable=True)

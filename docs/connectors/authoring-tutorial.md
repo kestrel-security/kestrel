@@ -242,7 +242,7 @@ Rules of thumb:
 
 - Privileged role assignments must emit a `grant` with `role_ref` and/or
  `permission_level=admin` — a graph edge alone is not coverage.
-- `supports_events: false` is fine; audit logs are optional Findings detections,
+- `supports_events: false` is fine; audit logs feed optional event policies in Findings,
  not a requirement for Changes.
 - The scaffold claims `identity_added` and includes `fixtures/changed/users.json`
  with one extra user so validate passes out of the box.

@@ -456,7 +456,7 @@ class OktaCollector:
                 )
 
     def _collect_system_log(self, now: datetime, *, since: datetime | None = None) -> Iterable[RawObject]:
-        """Okta System Log → activity events for privilege / MFA / threat detections.
+        """Okta System Log → activity events for privilege / MFA / threat-event policies.
 
         `system_log` is in OPTIONAL_OBJECT_TYPES, so `collect` records the skip
         and degrades the run if the token cannot read /api/v1/logs. Unmapped

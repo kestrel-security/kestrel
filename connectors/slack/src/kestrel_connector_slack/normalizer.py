@@ -20,7 +20,7 @@ from kestrel.connectors.sdk.base import NormalizedObject, NormalizedRelationship
 from kestrel.connectors.settings_emit import setting_object, settings_from_mapping
 
 # Conservative sensitivity ruleset for Slack OAuth scopes. Backs
-# "excessive OAuth scopes" detections; expand as packs need more signals.
+# "excessive OAuth scopes" policies; expand as packs need more signals.
 # Live Admin Apps may also set is_sensitive on each scope — that wins.
 _SENSITIVE_SCOPES = frozenset(
     {

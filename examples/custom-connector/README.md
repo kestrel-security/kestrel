@@ -39,5 +39,5 @@ FixtureTransport -- no network access, no secrets required.
    `kestrel.connectors` entry point declared in this connector's
    `pyproject.toml`, so `kestrel sync` and the API can discover it by name
    ("acme-widgets").
-3. See `example_policy.py` for a starting point on detections over this
+3. See `example_policy.py` for a starting point on policies over this
    connector's data (`kestrel policy validate example_policy.py`).

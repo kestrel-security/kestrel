@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-zone-change"
-TITLE = "Detect Okta network zone modification in System Log"
+TITLE = "Okta network zone modification in System Log"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
 DESCRIPTION = (
-    "Detect Okta System Log events indicating a network zone was created, "
+    "Flags Okta System Log events indicating a network zone was created, "
     "updated, deleted, or deactivated. Network zones gate sign-on policies; "
     "a widened or deleted zone can bypass location-based access controls."
 )

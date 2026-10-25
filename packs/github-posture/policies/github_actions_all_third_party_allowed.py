@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-actions-all-third-party-allowed"
-TITLE = "Detect GitHub orgs that allow any third-party Action to run"
+TITLE = "GitHub orgs that allow any third-party Action to run"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

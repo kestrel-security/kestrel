@@ -1,6 +1,6 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
-"""Detection coverage gaps report.
+"""Policy coverage gaps report.
 
 Compares connected application instances to enabled policies that appear
 applicable to each application type. Labeled gap kinds — not an opaque score.
@@ -85,7 +85,7 @@ def detection_coverage_report(
     limit: int = EXPORT_MAX,
     gap_only: bool = False,
 ) -> dict[str, Any]:
-    """Per application-instance detection coverage vs enabled policies."""
+    """Per application-instance policy coverage: which instances lack applicable enabled policies."""
     instances = list(
         db.scalars(
             select(ApplicationInstance)

@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-mfa-enroll-not-required"
-TITLE = "Detect an Okta MFA enrollment policy that requires no factor"
+TITLE = "Okta MFA enrollment policy that requires no factor"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-auth-server-wildcard-scope"
-TITLE = "Detect Okta authorization server with wildcard or overly broad scope"
+TITLE = "Okta authorization server with wildcard or overly broad scope"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
-    "Detect custom Okta authorization servers that expose a wildcard scope (*) "
+    "Flags custom Okta authorization servers that expose a wildcard scope (*) "
     "or a scope ending with :*. A wildcard scope grants any caller access to all "
     "resources the server protects, defeating the purpose of scope-based access control."
 )

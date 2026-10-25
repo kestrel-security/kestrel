@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-password-allows-username"
-TITLE = "Detect an Okta password policy that permits the username in the password"
+TITLE = "Okta password policy that permits the username in the password"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

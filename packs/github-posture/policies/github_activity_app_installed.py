@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-app-installed"
-TITLE = "Detect newly installed GitHub Apps"
+TITLE = "Newly installed GitHub Apps"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
 DESCRIPTION = "A GitHub App was installed on the organization, granting it long-lived access under its permission set."

@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-disabled-help-desk-admin"
-TITLE = "Detect suspended or archived Google Workspace users that still hold Help Desk Admin"
+TITLE = "Suspended or archived Google Workspace users that still hold Help Desk Admin"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect suspended or archived Google Workspace users that still hold Help Desk Admin"
+DESCRIPTION = "Flags suspended or archived Google Workspace users that still hold Help Desk Admin"
 REMEDIATION = (
     "Remove the Help Desk Admin role from the suspended/archived account immediately. Help Desk Admins can reset passwords."
 )

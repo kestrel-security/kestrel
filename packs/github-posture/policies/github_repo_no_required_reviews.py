@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-no-required-reviews"
-TITLE = "Detect protected branches that require no approving review"
+TITLE = "Protected branches that require no approving review"
 SEVERITY = "high"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

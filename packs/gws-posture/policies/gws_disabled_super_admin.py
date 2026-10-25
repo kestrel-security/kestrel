@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-disabled-super-admin"
-TITLE = "Detect suspended or archived Google Workspace users that still hold Super Admin"
+TITLE = "Suspended or archived Google Workspace users that still hold Super Admin"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect suspended or archived Google Workspace users that still hold Super Admin"
+DESCRIPTION = "Flags suspended or archived Google Workspace users that still hold Super Admin"
 REMEDIATION = "Remove the Super Admin role from the suspended/archived account immediately."
 COMPLIANCE = {"cisa": ["GWS-02"], "soc2": ["CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-1"]}
 

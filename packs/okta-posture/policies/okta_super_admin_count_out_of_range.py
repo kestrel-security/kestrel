@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-super-admin-count-out-of-range"
-TITLE = "Detect Okta super admin count outside recommended range (2-4)"
+TITLE = "Okta super admin count outside recommended range (2-4)"
 SEVERITY = "high"
 RESOURCE_TYPE = "grant"
 DESCRIPTION = (
-    "Detect Okta tenants where the number of active super administrators is "
+    "Flags Okta tenants where the number of active super administrators is "
     "outside the recommended range of 2–4. Too few creates a lockout risk; "
     "too many increases the blast radius of account compromise."
 )

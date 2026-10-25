@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-mfa-disabled"
-TITLE = "Detect recent MFA disable events in GitHub audit log"
+TITLE = "Recent MFA disable events in GitHub audit log"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent MFA disable events in GitHub audit log"
+DESCRIPTION = "Flags recent MFA disable events in GitHub audit log"
 REMEDIATION = "Re-enable MFA for the affected identity and investigate who disabled it."
 REQUIRES = ["github:audit_events"]
 COMPLIANCE = {"soc2": ["CC6.1"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}

@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-environment-without-reviewers"
-TITLE = "Detect deployment environments with no required reviewers"
+TITLE = "Deployment environments with no required reviewers"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

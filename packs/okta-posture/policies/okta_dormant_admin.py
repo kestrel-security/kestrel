@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-dormant-admin"
-TITLE = "Detect privileged Okta admins inactive for 90+ days"
+TITLE = "Privileged Okta admins inactive for 90+ days"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect privileged Okta administrators whose last login is older than 90 days."
+DESCRIPTION = "Flags privileged Okta administrators whose last login is older than 90 days."
 REMEDIATION = "Review the dormant admin account, remove unnecessary privileges, or confirm continued need."
 COMPLIANCE = {"custom": ["OKTA-02"], "soc2": ["CC6.1"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

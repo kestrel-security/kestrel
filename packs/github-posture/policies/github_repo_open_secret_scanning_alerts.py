@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-open-secret-scanning-alerts"
-TITLE = "Detect repositories with unresolved secret-scanning alerts"
+TITLE = "Repositories with unresolved secret-scanning alerts"
 SEVERITY = "critical"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = "An open secret-scanning alert means a credential is present in the repository and has not been revoked."

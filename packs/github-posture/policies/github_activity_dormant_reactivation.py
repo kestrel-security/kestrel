@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-dormant-reactivation"
-TITLE = "Detect recent reactivation of previously dormant identities"
+TITLE = "Recent reactivation of previously dormant identities"
 SEVERITY = "medium"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent reactivation of previously dormant identities"
+DESCRIPTION = "Flags recent reactivation of previously dormant identities"
 REMEDIATION = "Confirm the reactivation was approved; re-disable if the account should remain dormant."
 REQUIRES = ["github:audit_events"]
 COMPLIANCE = {"soc2": ["CC6.2"], "nist_csf": ["PR.AC-1"]}

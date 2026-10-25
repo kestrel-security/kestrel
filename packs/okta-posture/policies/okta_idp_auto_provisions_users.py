@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-idp-auto-provisions-users"
-TITLE = "Detect inbound identity providers that create accounts automatically"
+TITLE = "Inbound identity providers that create accounts automatically"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

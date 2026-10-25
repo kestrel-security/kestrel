@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-activity-external-privilege"
-TITLE = "Detect recent privilege grants to external identities"
+TITLE = "Recent privilege grants to external identities"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent privilege grants to external identities"
+DESCRIPTION = "Flags recent privilege grants to external identities"
 REMEDIATION = "Remove external privileged access unless explicitly approved."
 REQUIRES = ["github:audit_events"]
 COMPLIANCE = {"soc2": ["CC6.1", "CC6.3"], "nist_csf": ["PR.AC-3"]}

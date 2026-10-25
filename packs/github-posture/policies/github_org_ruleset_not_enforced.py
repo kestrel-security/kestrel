@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-org-ruleset-not-enforced"
-TITLE = "Detect organization rulesets that are configured but not enforcing"
+TITLE = "Organization rulesets that are configured but not enforcing"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

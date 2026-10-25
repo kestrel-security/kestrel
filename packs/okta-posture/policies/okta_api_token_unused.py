@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-api-token-unused"
-TITLE = "Detect Okta API tokens unused for 180+ days"
+TITLE = "Okta API tokens unused for 180+ days"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Okta API token service identities with no activity in the last 180 days."
+DESCRIPTION = "Flags Okta API token service identities with no activity in the last 180 days."
 REMEDIATION = "Revoke unused API tokens and rotate credentials for automation accounts."
 COMPLIANCE = {"custom": ["OKTA-04"], "soc2": ["CC6.1"], "cis": ["6.3"], "nist_csf": ["PR.AC-4"]}
 

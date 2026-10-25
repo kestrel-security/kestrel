@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-shared-drive-admin-without-mfa"
-TITLE = "Detect Google Workspace identities with shared-drive admin grants that lack 2-Step Verification"
+TITLE = "Google Workspace identities with shared-drive admin grants that lack 2-Step Verification"
 SEVERITY = "high"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Google Workspace identities with shared-drive admin grants that lack 2-Step Verification"
+DESCRIPTION = "Flags Google Workspace identities with shared-drive admin grants that lack 2-Step Verification"
 REMEDIATION = (
     "Require 2-Step Verification for the account,"
     " or remove shared-drive organizer/fileOrganizer grants until MFA is enrolled."

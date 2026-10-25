@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-audit-log-streaming-not-configured"
-TITLE = "Detect GitHub organizations without audit log streaming configured"
+TITLE = "GitHub organizations without audit log streaming configured"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
@@ -22,7 +22,7 @@ COMPLIANCE = {
     "custom": ["GH-13"],
 }
 
-# This policy detects the *absence* of an audit log streaming configuration
+# This policy flags the *absence* of an audit log streaming configuration
 # using activity-log evidence: if the connector has never observed an
 # `audit_log_streaming.create` event, streaming was never set up. This is
 # an approximation — the policy fires only when the audit log is reachable

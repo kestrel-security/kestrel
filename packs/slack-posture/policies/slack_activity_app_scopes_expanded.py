@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-activity-app-scopes-expanded"
-TITLE = "Detect recent Slack app scope expansions in Audit Logs"
+TITLE = "Recent Slack app scope expansions in Audit Logs"
 SEVERITY = "high"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent Slack OAuth app scope expansions recorded in Enterprise Audit Logs."
+DESCRIPTION = "Flags recent Slack OAuth app scope expansions recorded in Enterprise Audit Logs."
 REMEDIATION = "Review the app in Slack Admin → Apps; revoke or re-approve scopes that are not required."
 COMPLIANCE = {"custom": ["SLACK-10"], "soc2": ["CC6.1"], "nist_csf": ["PR.AC-4"]}
 

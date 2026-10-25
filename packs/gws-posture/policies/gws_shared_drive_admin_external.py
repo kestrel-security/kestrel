@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "gws-shared-drive-admin-external"
-TITLE = "Detect external identities with organizer-level (admin) access to a Google shared drive"
+TITLE = "External identities with organizer-level (admin) access to a Google shared drive"
 SEVERITY = "high"
 RESOURCE_TYPE = "grant"
-DESCRIPTION = "Detect external identities with organizer-level (admin) access to a Google shared drive"
+DESCRIPTION = "Flags external identities with organizer-level (admin) access to a Google shared drive"
 REMEDIATION = (
     "Remove shared-drive organizer access for external identities,"
     " or convert to viewer/commenter with a documented exception."

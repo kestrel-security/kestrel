@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-sso-not-enforced"
-TITLE = "Detect Slack Enterprise orgs where SSO bypass is allowed"
+TITLE = "Slack Enterprise orgs where SSO bypass is allowed"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

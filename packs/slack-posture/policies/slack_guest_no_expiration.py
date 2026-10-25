@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-guest-no-expiration"
-TITLE = "Detect Slack guest accounts without an expiration date"
+TITLE = "Slack guest accounts without an expiration date"
 SEVERITY = "medium"
 RESOURCE_TYPE = "identity"
 DESCRIPTION = (

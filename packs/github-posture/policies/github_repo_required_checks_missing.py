@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-required-checks-missing"
-TITLE = "Detect repositories with branch protection but no required status checks"
+TITLE = "Repositories with branch protection but no required status checks"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

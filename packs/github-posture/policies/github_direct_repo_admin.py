@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-direct-repo-admin"
-TITLE = "Detect identities with direct (non-team) admin access to a GitHub repository"
+TITLE = "Identities with direct (non-team) admin access to a GitHub repository"
 SEVERITY = "medium"
 RESOURCE_TYPE = "grant"
-DESCRIPTION = "Detect identities with direct (non-team) admin access to a GitHub repository"
+DESCRIPTION = "Flags identities with direct (non-team) admin access to a GitHub repository"
 REMEDIATION = "Convert direct repository admin grants to team-based access, or document why direct access is required."
 COMPLIANCE = {"custom": ["GH-04"], "soc2": ["CC6.1"], "cis": ["6.8"], "nist_csf": ["PR.AC-4"]}
 

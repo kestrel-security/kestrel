@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "slack-external-without-mfa"
-TITLE = "Detect Slack guest (restricted) identities without two-factor authentication"
+TITLE = "Slack guest (restricted) identities without two-factor authentication"
 SEVERITY = "medium"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect Slack guest (restricted) identities without two-factor authentication"
+DESCRIPTION = "Flags Slack guest (restricted) identities without two-factor authentication"
 REMEDIATION = "Require 2FA for guest accounts that retain workspace access, or remove the guest."
 COMPLIANCE = {"custom": ["SLACK-03"], "soc2": ["CC6.2"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
 

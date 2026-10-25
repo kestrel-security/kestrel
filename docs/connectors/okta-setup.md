@@ -94,7 +94,7 @@ they degrade visibly on SSWS tokens without sufficient access.
 - **Test connection** probes `GET /api/v1/org`, `users|groups|apps?limit=1`,
   classic roles for the first returned user, and `logs?limit=1`. Missing System
   Log permission (403) does **not** fail Test connection — directory sync still
-  works and event detections are skipped until the token can read logs.
+  works and event policies are skipped until the token can read logs.
 - Health failures distinguish **authentication** (401), **permission** (403),
   **rate_limit** (429), and **network** errors in the message.
 - **Partial access degrades the run rather than hiding.** A 403/404 on an optional
@@ -193,7 +193,7 @@ dropped — at collection, because `raw_source` is persisted verbatim.
   hits (`okta-admin-without-mfa`, `okta-mfa-enroll-not-required`, plus
   disabled-admin / dormant-admin / weak-password / bookmark-app / unused-token
   when those conditions exist) and, when System Log has a matching event,
-  `okta-activity-*` detections.
+  `okta-activity-*` policies.
 - Custom Python policies: **Policies → New** can generate Okta-grounded drafts
   from intent chips (works offline for known templates) or Settings → AI for
   novel intents. See [`policies.md`](../policies.md#ai-assisted-drafts).
@@ -250,7 +250,7 @@ Stage identities so policies have something to find:
 Leave the org MFA enrollment policy off or not required to exercise
 `okta-mfa-enroll-not-required`. Assign at least one OIDC app, preferably to a
 group, so Explore shows an OAuth hop with members on one side and apps on the
-other. For System Log detections, stage a privilege grant or factor deactivate
+other. For System Log policies, stage a privilege grant or factor deactivate
 shortly before syncing; the connector keeps a curated event-type map and does
 not store routine logins.
 

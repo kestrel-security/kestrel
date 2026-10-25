@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-pending-admin-invitation"
-TITLE = "Detect unaccepted GitHub organization invitations that grant admin"
+TITLE = "Unaccepted GitHub organization invitations that grant admin"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

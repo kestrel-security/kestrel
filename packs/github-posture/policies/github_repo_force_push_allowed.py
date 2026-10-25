@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-repo-force-push-allowed"
-TITLE = "Detect protected branches that still allow force pushes"
+TITLE = "Protected branches that still allow force pushes"
 SEVERITY = "medium"
 RESOURCE_TYPE = "resource"
 DESCRIPTION = (

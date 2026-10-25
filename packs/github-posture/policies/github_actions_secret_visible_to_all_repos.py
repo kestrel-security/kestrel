@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-actions-secret-visible-to-all-repos"
-TITLE = "Detect organization Actions secrets readable by every repository"
+TITLE = "Organization Actions secrets readable by every repository"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

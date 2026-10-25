@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-disabled-privileged-admin"
-TITLE = "Detect disabled Okta users that still hold privileged admin roles"
+TITLE = "Disabled Okta users that still hold privileged admin roles"
 SEVERITY = "critical"
 RESOURCE_TYPE = "identity"
-DESCRIPTION = "Detect disabled Okta users that still hold privileged admin roles"
+DESCRIPTION = "Flags disabled Okta users that still hold privileged admin roles"
 REMEDIATION = "Remove privileged admin roles from suspended or deprovisioned Okta accounts immediately."
 COMPLIANCE = {"custom": ["OKTA-02"], "soc2": ["CC6.3"], "cis": ["6.8"], "nist_csf": ["PR.AC-1"]}
 

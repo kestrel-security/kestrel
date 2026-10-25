@@ -3,9 +3,9 @@
 """Shared normalized activity-event action vocabulary.
 
 Connectors map vendor audit / report event names onto these keys. The
-Changes actor overlay (`kestrel.changes.overlay`) and event-detection
+Changes actor overlay (`kestrel.changes.overlay`) and event-policy
 policies key off the same strings, so widening a connector's curated
-taxonomy widens attribution and detections without a feed change.
+taxonomy widens attribution and policies without a feed change.
 
 Audit-derived setting changes (Slack ``pref_*``, GWS
 ``CHANGE_APPLICATION_SETTING``) map to ``config.change`` / ``policy.change``

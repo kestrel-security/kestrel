@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-approved-pat-admin-permissions"
-TITLE = "Detect approved fine-grained PATs with organization administration permissions"
+TITLE = "Approved fine-grained PATs with organization administration permissions"
 SEVERITY = "high"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

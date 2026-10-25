@@ -1,7 +1,7 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "github-pat-request-all-repositories"
-TITLE = "Detect pending fine-grained PAT requests scoped to every repository"
+TITLE = "Pending fine-grained PAT requests scoped to every repository"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (

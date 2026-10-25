@@ -110,7 +110,7 @@ def check_health(client: OktaClient) -> HealthCheckResult:
     if healthy and logs_optional_skip:
         message = (
             "Okta reachable with directory access; System Log unavailable "
-            f"({failures['logs.list']}) — event detections will be skipped until "
+            f"({failures['logs.list']}) — event policies will be skipped until "
             "the token can read /api/v1/logs."
         )
     elif healthy:

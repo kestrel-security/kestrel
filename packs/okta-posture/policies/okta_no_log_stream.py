@@ -1,11 +1,11 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-no-log-stream"
-TITLE = "Detect Okta org with no active log stream"
+TITLE = "Okta org with no active log stream"
 SEVERITY = "medium"
 RESOURCE_TYPE = "tenant_setting"
 DESCRIPTION = (
-    "Detect Okta orgs where no active log stream (Splunk, AWS EventBridge, SYSLOG) "
+    "Flags Okta orgs where no active log stream (Splunk, AWS EventBridge, SYSLOG) "
     "is configured. Without an active log stream, security events remain only in "
     "Okta's own System Log and do not reach the security team's SIEM in real time."
 )

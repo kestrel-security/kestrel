@@ -55,7 +55,7 @@ run that produced it, the untouched provider payload as `raw_source`, and a
 |-------|--------|------|
 | `Policy`, `PolicyVersion`, `PolicyEvaluation` | `policy.py` | Installed policies (`PolicySource` pack / custom / system), immutable versions with `Severity`, remediation, and compliance mappings, and evaluation runs with `PolicyEvaluationStatus` |
 | `ComplianceControl`, `PolicyControlMapping` | `compliance.py` | Framework controls (`ComplianceFramework`: CIS, NIST CSF, SOC 2, CISA) and policy → control mappings from packs |
-| `Finding`, `FindingEvidence`, `Exception_` | `finding.py` | Detections with `FindingStatus`, `FindingSubjectType` (identity, grant, setting, OAuth application, application, event, …), assignment, mute expiry; evidence rows; accepted-risk exceptions |
+| `Finding`, `FindingEvidence`, `Exception_` | `finding.py` | Policy violations with `FindingStatus`, `FindingSubjectType` (identity, grant, setting, OAuth application, application, event, …), assignment, mute expiry; evidence rows; accepted-risk exceptions |
 | `FindingNote`, `FindingWatcher`, `FindingFilterPreset` | `finding_note.py`, `finding_watcher.py`, `finding_preset.py` | Investigation notes, per-operator watches, saved search presets |
 | `PostureTrendSnapshot` | `posture_trend.py` | One row per org per UTC day of open-by-severity and labeled factor counts, read by the dashboard trend widget. Written hourly by the `kestrel.posture.capture_daily_snapshot` beat task (idempotent per UTC day), and by the demo seed |
 

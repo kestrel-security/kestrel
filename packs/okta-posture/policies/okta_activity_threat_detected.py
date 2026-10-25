@@ -1,10 +1,10 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
 POLICY_ID = "okta-activity-threat-detected"
-TITLE = "Detect recent Okta threat or attack events in System Log"
+TITLE = "Recent Okta threat or attack events in System Log"
 SEVERITY = "critical"
 RESOURCE_TYPE = "event"
-DESCRIPTION = "Detect recent Okta threat or attack events in System Log"
+DESCRIPTION = "Flags recent Okta threat or attack events in System Log"
 REMEDIATION = "Investigate the actor in Okta System Log and Identity Threat Protection; revoke sessions if confirmed."
 COMPLIANCE = {"custom": ["OKTA-05"], "soc2": ["CC7.2"], "nist_csf": ["DE.CM-1"]}
 
