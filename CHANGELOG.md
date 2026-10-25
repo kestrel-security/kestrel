@@ -13,6 +13,8 @@ started on them.
 
 ## Unreleased
 
+## v0.5.2 — 2026-10-24
+
 ### Changed
 
 - `kestrel init` names the first organization "Kestrel" when `--org-name` is
