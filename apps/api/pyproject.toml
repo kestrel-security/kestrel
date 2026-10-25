@@ -1,6 +1,6 @@
 [project]
 name = "kestrel-api"
-version = "0.5.2"
+version = "0.5.3"
 description = "Kestrel FastAPI application."
 readme = "README.md"
 license = "Apache-2.0"
