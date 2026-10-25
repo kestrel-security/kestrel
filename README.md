@@ -11,9 +11,9 @@
 
 It snapshots that graph on every sync, diffs the snapshots into a classified change feed, evaluates Python policies against the inventory, and produces findings with the evidence that created them and guidance to fix them. Self-hosted, Apache-2.0, no gated features.
 
-[![CI](https://github.com/kestrel-security/kestrel/actions/workflows/ci.yaml/badge.svg)](https://github.com/kestrel-security/kestrel/actions/workflows/ci.yaml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab.svg)](pyproject.toml) [![Status](https://img.shields.io/badge/status-pre--1.0-orange.svg)](#project-status)
+[![CI](https://github.com/kestrel-security/kestrel/actions/workflows/ci.yaml/badge.svg)](https://github.com/kestrel-security/kestrel/actions/workflows/ci.yaml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab.svg)](pyproject.toml) [![Status](https://img.shields.io/badge/status-pre--1.0-orange.svg)](#project-status) [![Docs](https://img.shields.io/badge/docs-docs.kestrelsecurity.io-4f46e5.svg)](https://docs.kestrelsecurity.io/)
 
-[Quick start](#quick-start) · [Why Kestrel](#why-kestrel) · [Integrations](#integrations) · [Architecture](#architecture) · [Documentation](docs/README.md) · [Contributing](CONTRIBUTING.md)
+[Website](https://kestrelsecurity.io) · [Documentation](https://docs.kestrelsecurity.io/) · [Quick start](#quick-start) · [Why Kestrel](#why-kestrel) · [Integrations](#integrations) · [Architecture](#architecture) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -481,7 +481,7 @@ The documentation for the latest release is at **[docs.kestrelsecurity.io](https
 
 ## About
 
-Kestrel is an open-source project maintained by its contributors; see [`MAINTAINERS.md`](MAINTAINERS.md) and [`GOVERNANCE.md`](GOVERNANCE.md). Contributions and new maintainers are welcome.
+Kestrel is an open-source project maintained by its contributors; see [`MAINTAINERS.md`](MAINTAINERS.md) and [`GOVERNANCE.md`](GOVERNANCE.md). Contributions and new maintainers are welcome. Website: [kestrelsecurity.io](https://kestrelsecurity.io) · Documentation: [docs.kestrelsecurity.io](https://docs.kestrelsecurity.io/).
 
 ## License
 
