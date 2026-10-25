@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "ext-sa",
+      "identity": {"email": "partner@ext.example", "display_name": "Partner", "is_external": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Super Admin"]
+    },
+    {
+      "_subject_id": "int-sa",
+      "identity": {"email": "admin@acme.example", "display_name": "Admin", "is_external": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Super Admin"]
+    },
+    {
+      "_subject_id": "ext-user",
+      "identity": {"email": "guest@ext.example", "display_name": "Guest", "is_external": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["ext-sa"]
+}

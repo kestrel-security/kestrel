@@ -1,0 +1,9 @@
+[
+  {
+    "id": "00pprofile00000001",
+    "name": "Default Policy",
+    "type": "PROFILE_ENROLLMENT",
+    "status": "ACTIVE",
+    "system": true
+  }
+]

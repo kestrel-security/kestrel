@@ -1,0 +1,17 @@
+[
+  {
+    "id": "0prrisk0000000001",
+    "name": "High risk challenge",
+    "status": "ACTIVE",
+    "priority": 1,
+    "actions": {
+      "entityRisk": {
+        "actions": [
+          {
+            "action": "CHALLENGE"
+          }
+        ]
+      }
+    }
+  }
+]

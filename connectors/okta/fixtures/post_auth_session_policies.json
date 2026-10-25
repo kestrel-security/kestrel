@@ -1,0 +1,10 @@
+[
+  {
+    "id": "00ppostauth0000001",
+    "name": "Default Post-Auth Session Policy",
+    "type": "POST_AUTH_SESSION",
+    "status": "ACTIVE",
+    "system": true,
+    "description": "Controls session behavior after authentication."
+  }
+]

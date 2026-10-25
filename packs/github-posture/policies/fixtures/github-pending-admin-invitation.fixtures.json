@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "_subject_id": "admin-invite",
+      "setting": {
+        "key": "pending_invitation:6601",
+        "value": {
+          "login": "newhire",
+          "role": "admin"
+        },
+        "label": "inv"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "member-invite",
+      "setting": {
+        "key": "pending_invitation:6602",
+        "value": {
+          "login": "other",
+          "role": "direct_member"
+        },
+        "label": "inv"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "admin-invite"
+  ]
+}

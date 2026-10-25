@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "_subject_id": "org-admin-write",
+      "setting": {
+        "key": "approved_pat:token-1",
+        "value": {
+          "owner": "ada",
+          "permissions": [
+            {"name": "administration", "level": "write", "scope": "organization"}
+          ]
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "repo-read",
+      "setting": {
+        "key": "approved_pat:token-2",
+        "value": {
+          "owner": "alan",
+          "permissions": [
+            {"name": "contents", "level": "read", "scope": "repository"}
+          ]
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["org-admin-write"]
+}

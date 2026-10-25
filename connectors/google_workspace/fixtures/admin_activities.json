@@ -1,0 +1,76 @@
+{
+  "items": [
+    {
+      "kind": "admin#reports#activity",
+      "id": {
+        "time": "2026-09-15T14:30:00.000Z",
+        "uniqueQualifier": "9001",
+        "applicationName": "admin",
+        "customerId": "C0acme1234"
+      },
+      "actor": {
+        "email": "ada@acme.example.com",
+        "profileId": "100000000000000000001"
+      },
+      "ipAddress": "198.51.100.5",
+      "events": [
+        {
+          "name": "GRANT_ADMIN_PRIVILEGE",
+          "type": "DELEGATED_ADMIN_SETTINGS",
+          "parameters": [
+            {"name": "USER_EMAIL", "value": "grace@acme.example.com"},
+            {"name": "ROLE_NAME", "value": "Help Desk Admin"}
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "admin#reports#activity",
+      "id": {
+        "time": "2026-09-16T08:00:00.000Z",
+        "uniqueQualifier": "9002",
+        "applicationName": "admin",
+        "customerId": "C0acme1234"
+      },
+      "actor": {
+        "email": "ada@acme.example.com",
+        "profileId": "100000000000000000001"
+      },
+      "ipAddress": "198.51.100.5",
+      "events": [
+        {
+          "name": "AUTHORIZE_API_CLIENT_ACCESS",
+          "type": "OAUTH_SETTINGS",
+          "parameters": [
+            {"name": "client_id", "value": "dwd-client-123456"},
+            {"name": "api_scopes", "value": "https://www.googleapis.com/auth/admin.directory.user,https://www.googleapis.com/auth/gmail.readonly"}
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "admin#reports#activity",
+      "id": {
+        "time": "2026-09-17T11:00:00.000Z",
+        "uniqueQualifier": "9003",
+        "applicationName": "admin",
+        "customerId": "C0acme1234"
+      },
+      "actor": {
+        "email": "ada@acme.example.com",
+        "profileId": "100000000000000000001"
+      },
+      "ipAddress": "198.51.100.5",
+      "events": [
+        {
+          "name": "CHANGE_SSO_SETTINGS",
+          "type": "SSO_SETTINGS",
+          "parameters": [
+            {"name": "SSO_STATUS", "value": "enabled"},
+            {"name": "IDP_ENTITY_ID", "value": "http://www.okta.com/exkacme1234567"}
+          ]
+        }
+      ]
+    }
+  ]
+}

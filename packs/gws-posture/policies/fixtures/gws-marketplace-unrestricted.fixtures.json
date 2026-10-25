@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "allowlist-disabled",
+      "setting": {
+        "key": "workspace.marketplace_apps_allowlist",
+        "label": "Marketplace apps allowlist mode (tenant)",
+        "value": {"applicationsAllowlistEnabled": false}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "allowlist-enabled",
+      "setting": {
+        "key": "workspace.marketplace_apps_allowlist",
+        "label": "Marketplace apps allowlist mode (tenant)",
+        "value": {"applicationsAllowlistEnabled": true}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["allowlist-disabled"]
+}

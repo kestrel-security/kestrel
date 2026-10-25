@@ -1,0 +1,43 @@
+[
+  {
+    "id": "0prtight000000001",
+    "name": "Require MFA",
+    "status": "ACTIVE",
+    "priority": 1,
+    "conditions": {
+      "network": {
+        "connection": "ZONE",
+        "include": [
+          "nzowoffice0000001"
+        ]
+      }
+    },
+    "actions": {
+      "signon": {
+        "access": "ALLOW",
+        "requireFactor": true,
+        "factorPromptMode": "ALWAYS",
+        "session": {
+          "maxSessionLifetimeMinutes": 480,
+          "maxSessionIdleMinutes": 60,
+          "usePersistentCookie": false
+        }
+      }
+    }
+  },
+  {
+    "id": "0prdisabled000001",
+    "name": "Legacy bypass",
+    "status": "INACTIVE",
+    "priority": 2,
+    "actions": {
+      "signon": {
+        "access": "ALLOW",
+        "requireFactor": false,
+        "session": {
+          "maxSessionLifetimeMinutes": 0
+        }
+      }
+    }
+  }
+]

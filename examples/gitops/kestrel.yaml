@@ -1,0 +1,35 @@
+apiVersion: kestrel.dev/v1
+kind: DesiredState
+
+# Install packs by catalog id (resolved under KESTREL_PACKS_DIR / ./packs)
+# and/or by relative filesystem path.
+packs:
+  - id: github-posture
+    path: ../../packs/github-posture
+
+# Custom policies (pack policies come from packs[] above).
+policies:
+  - path: policies/example_custom.py
+    enabled: true
+
+# Connector instances: config is non-secret JSON. Credentials are refs only.
+connectors:
+  - name: github-acme-fixtures
+    type: github
+    external_tenant_ref: acme-corp
+    auth_method: pat
+    sync_mode: fixtures
+    schedule_cron: "0 * * * *"
+    config:
+      org_login: acme-corp
+    # Optional: declare expected secret *fields* (never values).
+    # Apply will not write secrets — set them out-of-band.
+    # secrets:
+    #   - field: token
+    #     ref: env:GITHUB_TOKEN
+
+# Optional policy-scoped finding exceptions (not per-finding).
+# exceptions:
+#   - policy: github-admin-without-mfa
+#     reason: Accepted risk for break-glass account during migration
+#     expires_at: "2026-12-31T00:00:00+00:00"

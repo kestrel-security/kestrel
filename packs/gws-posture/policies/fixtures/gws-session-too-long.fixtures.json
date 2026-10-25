@@ -1,0 +1,82 @@
+{
+  "rows": [
+    {
+      "_subject_id": "session-30-days",
+      "setting": {
+        "key": "workspace.session.reauth_settings",
+        "label": "Session re-authentication settings (tenant)",
+        "value": {
+          "reauthMethod": "PASSWORD",
+          "sessionLength": "PT720H",
+          "maxInactivity": "PT720H"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "session-12h",
+      "setting": {
+        "key": "workspace.session.reauth_settings",
+        "label": "Session re-authentication settings (tenant)",
+        "value": {
+          "reauthMethod": "PASSWORD",
+          "sessionLength": "PT12H"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "session-8h",
+      "setting": {
+        "key": "workspace.session.reauth_settings",
+        "label": "Session re-authentication settings (tenant)",
+        "value": {
+          "reauthMethod": "PASSWORD",
+          "sessionLength": "PT8H"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "session-24h-seconds",
+      "setting": {
+        "key": "workspace.session.reauth_settings",
+        "label": "Session re-authentication settings (tenant)",
+        "value": {
+          "sessionLength": "86400s"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "session-12h-seconds",
+      "setting": {
+        "key": "workspace.session.reauth_settings",
+        "label": "Session re-authentication settings (tenant)",
+        "value": {
+          "sessionLength": "43200s"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "session-30-days",
+    "session-24h-seconds"
+  ]
+}

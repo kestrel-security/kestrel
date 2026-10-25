@@ -1,0 +1,213 @@
+[
+  {
+    "created_at": "2026-07-28T14:00:00Z",
+    "action": "org.update_member",
+    "actor": "bob",
+    "actor_id": 1002,
+    "org": "acme-corp",
+    "user": "dave",
+    "user_id": 1004,
+    "data": {
+      "permission": "admin"
+    },
+    "_document_id": "audit-priv-grant-001"
+  },
+  {
+    "created_at": "2026-07-27T10:00:00Z",
+    "action": "org.disable_member_two_factor",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "user": "erin",
+    "user_id": 1005,
+    "data": {},
+    "_document_id": "audit-mfa-disable-001"
+  },
+  {
+    "created_at": "2026-07-26T16:30:00Z",
+    "action": "oauth_authorization.create",
+    "actor": "carol",
+    "actor_id": 1003,
+    "org": "acme-corp",
+    "user": "carol",
+    "user_id": 1003,
+    "data": {
+      "application_name": "Shadow CI Bot",
+      "scopes": [
+        "repo",
+        "admin:org"
+      ]
+    },
+    "_document_id": "audit-oauth-sensitive-001"
+  },
+  {
+    "created_at": "2026-07-25T09:15:00Z",
+    "action": "repo.add_member",
+    "actor": "bob",
+    "actor_id": 1002,
+    "org": "acme-corp",
+    "user": "frank-external",
+    "user_id": 2001,
+    "repo": "secrets-vault",
+    "data": {
+      "permission": "admin",
+      "external": true
+    },
+    "_document_id": "audit-external-priv-001"
+  },
+  {
+    "created_at": "2026-07-24T11:00:00Z",
+    "action": "org.update_member",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "user": "deploy-bot",
+    "user_id": 3001,
+    "data": {
+      "permission": "admin",
+      "identity_type": "service_account",
+      "kestrel_action": "service_account.escalate"
+    },
+    "_document_id": "audit-sa-escalate-001"
+  },
+  {
+    "created_at": "2026-07-23T08:45:00Z",
+    "action": "org.reactivate_member",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "user": "dave",
+    "user_id": 1004,
+    "data": {
+      "days_dormant": 120
+    },
+    "_document_id": "audit-dormant-reactivate-001"
+  },
+  {
+    "created_at": "2026-07-25T09:15:00Z",
+    "action": "protected_branch.destroy",
+    "actor": "bob",
+    "actor_id": 1002,
+    "org": "acme-corp",
+    "repo": "acme-corp/web-app",
+    "data": {
+      "branch": "main"
+    },
+    "_document_id": "audit-branch-protection-001"
+  },
+  {
+    "created_at": "2026-07-25T11:00:00Z",
+    "action": "repo.access",
+    "actor": "bob",
+    "actor_id": 1002,
+    "org": "acme-corp",
+    "repo": "acme-corp/public-docs",
+    "data": {
+      "visibility": "public"
+    },
+    "_document_id": "audit-repo-public-001"
+  },
+  {
+    "created_at": "2026-07-25T11:05:00Z",
+    "action": "repo.access",
+    "actor": "bob",
+    "actor_id": 1002,
+    "org": "acme-corp",
+    "repo": "acme-corp/secrets-vault",
+    "data": {
+      "visibility": "private"
+    },
+    "_document_id": "audit-repo-private-001"
+  },
+  {
+    "created_at": "2026-07-24T08:30:00Z",
+    "action": "hook.create",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "data": {
+      "hook_id": 55501,
+      "events": [
+        "push",
+        "pull_request"
+      ]
+    },
+    "_document_id": "audit-hook-create-001"
+  },
+  {
+    "created_at": "2026-07-24T13:45:00Z",
+    "action": "integration_installation.create",
+    "actor": "carol",
+    "actor_id": 1003,
+    "org": "acme-corp",
+    "data": {
+      "application_name": "Deploy Bot"
+    },
+    "_document_id": "audit-app-install-001"
+  },
+  {
+    "created_at": "2026-07-23T17:20:00Z",
+    "action": "org.saml_disabled",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "data": {},
+    "_document_id": "audit-saml-disabled-001"
+  },
+  {
+    "created_at": "2026-07-23T18:00:00Z",
+    "action": "team.add_member",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "user": "dave",
+    "user_id": 1004,
+    "data": {
+      "team": "acme-corp/platform-team"
+    },
+    "_document_id": "audit-team-add-001"
+  },
+  {
+    "created_at": "2026-07-22T12:00:00Z",
+    "action": "org.update_member",
+    "actor": "alice",
+    "actor_id": 1001,
+    "org": "acme-corp",
+    "user": "erin",
+    "user_id": 1005,
+    "data": {
+      "permission": "member"
+    },
+    "_document_id": "audit-priv-revoke-001"
+  },
+  {
+    "created_at": "2026-07-22T14:00:00Z",
+    "action": "deploy_key.create",
+    "actor": "bob",
+    "actor_id": 1002,
+    "org": "acme-corp",
+    "repo": "acme-corp/secrets-vault",
+    "data": {},
+    "_document_id": "audit-deploy-key-001"
+  },
+  {
+    "created_at": "2026-07-21T10:00:00Z",
+    "action": "git.clone",
+    "actor": "dave",
+    "actor_id": 1004,
+    "org": "acme-corp",
+    "repo": "acme-corp/web-app",
+    "data": {},
+    "_document_id": "audit-git-clone-001"
+  },
+  {
+    "created_at": "2026-07-21T10:05:00Z",
+    "action": "repo.rename",
+    "actor": "dave",
+    "actor_id": 1004,
+    "org": "acme-corp",
+    "repo": "acme-corp/web-app",
+    "data": {},
+    "_document_id": "audit-repo-rename-001"
+  }
+]

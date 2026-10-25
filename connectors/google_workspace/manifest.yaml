@@ -1,0 +1,230 @@
+name: google_workspace
+display_name: Google Workspace
+version: "0.2.0"
+description: >
+  Collects Google Workspace directory users, groups, admin role assignments,
+  shared drive access, Admin Reports activity (token, login, admin, drive, SAML),
+  Cloud Identity Policy API settings (OU-scoped 2SV enforcement, Drive sharing,
+  Gmail, Marketplace), Alert Center alerts, mobile and ChromeOS devices, inbound
+  SAML SSO profiles, and domain-wide delegation OAuth clients reconstructed from
+  admin audit. Live lists are customer-wide and do not silently truncate.
+setup_docs: docs/connectors/google-workspace-setup.md
+auth_methods:
+  - id: oauth
+    label: "Service account with domain-wide delegation (OAuth2)"
+    # The service-account JSON key and the admin user to impersonate. Unlike
+    # GitHub's single PAT, Workspace's Admin SDK requires acting *as* an
+    # admin user, so the subject is part of the credential, not the config.
+    secret_fields: [service_account_json, delegated_admin_email]
+    config_fields: [domain]
+    setup_overview: >
+      Create a Google Cloud service account, enable domain-wide delegation for
+      the Admin SDK and Cloud Identity scopes below, and impersonate a Workspace
+      Super Admin. Paste the service-account JSON key and the admin email into
+      Kestrel. Fixture mode works without credentials for demos.
+    scopes_note: >
+      Grant all scopes in required_scopes on the Workspace Admin console
+      domain-wide delegation client (exact scope strings matter).
+    field_help:
+      domain: Primary Workspace domain (for example acme.example.com).
+      service_account_json: >
+        Full JSON key file contents for the service account (type
+        service_account). Envelope-encrypted at rest.
+      delegated_admin_email: >
+        Workspace Super Admin to impersonate. Super Admin is the reliable
+        live-smoke choice; a custom admin requires Directory + Drive + Reports +
+        Cloud Identity read rights.
+    setup_steps:
+      - title: Create a Google Cloud project and service account
+        body: >
+          In Google Cloud Console, create (or select) a project, then enable
+          these APIs: Admin SDK, Google Drive, Cloud Identity, and Alert Center.
+          Create a service account, generate a JSON key, and download it.
+        link_url: https://console.cloud.google.com/iam-admin/serviceaccounts
+        link_label: Service accounts
+      - title: Enable domain-wide delegation
+        body: >
+          Open the service account → Show domain-wide delegation → Enable.
+          Note the numeric Client ID for the next step.
+      - title: Authorize scopes in Google Workspace Admin
+        body: >
+          Admin console → Security → Access and data control → API controls →
+          Domain-wide delegation → Add new. Paste the Client ID and all scopes
+          from required_scopes as a comma-separated list.
+        link_url: https://admin.google.com/ac/owl/domainwidedelegation
+        link_label: Domain-wide delegation
+      - title: Enable the Cloud Identity API
+        body: >
+          The Cloud Identity Policy API (cloud-identity.policies.readonly)
+          requires the Cloud Identity API to be enabled on your Cloud project.
+          Visit the API Library and enable it.
+        link_url: https://console.cloud.google.com/apis/library/cloudidentity.googleapis.com
+        link_label: Cloud Identity API
+      - title: Enable the Alert Center API
+        body: >
+          The Alert Center API (apps.alerts) requires the Alert Center API to
+          be enabled on your Cloud project. Note: apps.alerts has no .readonly
+          variant; Kestrel only calls the list endpoint.
+        link_url: https://console.cloud.google.com/apis/library/alertcenter.googleapis.com
+        link_label: Alert Center API
+      - title: Choose a delegated admin
+        body: >
+          Prefer a Workspace Super Admin. A custom admin requires Directory
+          Users/Groups/Roles read, Drive domain-admin, Reports audit read,
+          Cloud Identity read, and Alert Center read.
+      - title: Enter domain and secrets in Kestrel
+        body: >
+          Config: domain = your primary Workspace domain. Secrets: paste
+          service_account_json and delegated_admin_email.
+      - title: Test and sync
+        body: >
+          Use live sync mode: Kestrel mints an OAuth2 access token from the
+          service account. Run Test connection, then Sync now. Fixture mode
+          works offline for demos.
+required_scopes:
+  - https://www.googleapis.com/auth/admin.directory.user.readonly
+  - https://www.googleapis.com/auth/admin.directory.group.readonly
+  - https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly
+  - https://www.googleapis.com/auth/admin.directory.domain.readonly
+  - https://www.googleapis.com/auth/admin.directory.orgunit.readonly
+  # Groups Settings API (external members, who can join / post / view).
+  - https://www.googleapis.com/auth/apps.groups.settings
+  # Per-user OAuth tokens (Directory users.tokens): current third-party consents.
+  - https://www.googleapis.com/auth/admin.directory.user.security
+  - https://www.googleapis.com/auth/drive.readonly
+  # Admin Reports: login, admin, drive, saml, user_accounts, groups, mobile activity.
+  - https://www.googleapis.com/auth/admin.reports.audit.readonly
+  # Cloud Identity Policy API: OU-scoped 2SV, Drive sharing, Gmail, Marketplace settings.
+  - https://www.googleapis.com/auth/cloud-identity.policies.readonly
+  # Mobile device directory (Admin SDK).
+  - https://www.googleapis.com/auth/admin.directory.device.mobile.readonly
+  # ChromeOS device directory (Admin SDK).
+  - https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly
+  # Cloud Identity unified device view.
+  - https://www.googleapis.com/auth/cloud-identity.devices.readonly
+  # Inbound SAML SSO profiles and assignments (Cloud Identity).
+  - https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly
+  # Customer info (Admin Directory customers.get).
+  - https://www.googleapis.com/auth/admin.directory.customer.readonly
+  # Alert Center: list open alerts. No .readonly variant exists; Kestrel only reads.
+  - https://www.googleapis.com/auth/apps.alerts
+object_types:
+  # The domain payload produces tenant `setting` rows.
+  - name: domain
+    maps_to_entity: setting
+  # Every domain and alias: verification state and internal-address set.
+  - name: domain_list
+    maps_to_entity: setting
+  # Organizational units as `group` nodes; users are members of their OU.
+  - name: org_unit
+    maps_to_entity: group
+  - name: user
+    maps_to_entity: identity
+  - name: group
+    maps_to_entity: group
+  - name: group_member
+    maps_to_entity: group_membership
+  # Groups Settings API, subject-scoped to the group it governs.
+  - name: group_setting
+    maps_to_entity: setting
+  - name: admin_role
+    maps_to_entity: role
+  - name: role_assignment
+    maps_to_entity: grant
+  - name: shared_drive
+    maps_to_entity: resource
+  - name: drive_permission
+    maps_to_entity: grant
+  # Per-user OAuth consent: the app, its scopes, and the grant.
+  - name: user_token
+    maps_to_entity: oauth_application
+  # Admin Reports `login` application (cursored): failures, suspicious sign-ins, 2SV changes.
+  - name: login_activity
+    maps_to_entity: event
+    supports_incremental: true
+  # Customer info: customer ID, domain, creation date.
+  - name: customer
+    maps_to_entity: setting
+    optional: true
+  # Cloud Identity Policy API: OU-scoped or tenant-level settings (2SV, Drive, Gmail, etc.).
+  - name: policy
+    maps_to_entity: setting
+    optional: true
+  # Mobile devices enrolled via MDM (Admin Directory).
+  - name: mobile_device
+    maps_to_entity: resource
+    optional: true
+  # ChromeOS devices (Admin Directory).
+  - name: chromeos_device
+    maps_to_entity: resource
+    optional: true
+  # Alert Center: security alerts (suspicious login, leaked password, etc.).
+  - name: alert
+    maps_to_entity: event
+    optional: true
+  # Inbound SAML SSO profiles (Cloud Identity).
+  - name: inbound_sso_profile
+    maps_to_entity: setting
+    optional: true
+  # Inbound SSO OU assignments (Cloud Identity).
+  - name: inbound_sso_assignment
+    maps_to_entity: setting
+    optional: true
+  # Admin Reports `admin` application (cursored): privilege grants, SSO changes, DWD grants.
+  - name: admin_activity
+    maps_to_entity: event
+    supports_incremental: true
+    optional: true
+  # Admin Reports `drive` application (cursored): external sharing events.
+  - name: drive_activity
+    maps_to_entity: event
+    supports_incremental: true
+    optional: true
+  # Admin Reports `saml` application: SAML login events.
+  - name: saml_activity
+    maps_to_entity: event
+    optional: true
+  # Admin Reports `user_accounts` application: account security events.
+  - name: user_accounts_activity
+    maps_to_entity: event
+    optional: true
+  # Admin Reports `groups` application: group membership and settings events.
+  - name: groups_activity
+    maps_to_entity: event
+    optional: true
+  # Admin Reports `mobile` application: device enrollment and wipe events.
+  - name: mobile_activity
+    maps_to_entity: event
+    optional: true
+  # Synthetic DWD OAuth clients reconstructed from AUTHORIZE_API_CLIENT_ACCESS events.
+  - name: dwd_client
+    maps_to_entity: oauth_application
+    optional: true
+rate_limit_strategy: exponential_backoff
+supports_events: true
+provides_capabilities:
+  - google_workspace:org_settings     # domain, domain_list, org_unit, customer
+  - google_workspace:identity         # user
+  - google_workspace:grants           # admin_role, role_assignment
+  - google_workspace:group_settings   # group, group_member, group_setting
+  - google_workspace:drive            # shared_drive, drive_permission
+  - google_workspace:user_tokens      # user_token
+  - google_workspace:login_activity   # login_activity
+  # New in v0.2
+  - google_workspace:policy_settings  # policy (Cloud Identity Policy API)
+  - google_workspace:devices          # mobile_device, chromeos_device
+  - google_workspace:alerts           # alert
+  - google_workspace:sso              # inbound_sso_profile, inbound_sso_assignment
+  - google_workspace:admin_activity   # admin_activity (privilege grants, DWD, SSO changes)
+  - google_workspace:drive_activity   # drive_activity (external sharing)
+  - google_workspace:dwd_clients      # dwd_client
+change_classes:
+  - admin_granted
+  - group_member_added
+  - config_drift
+  - external_sharing_enabled
+  - oauth_app_installed
+  - mfa_disabled
+example_config:
+  domain: acme.example.com
+fixtures_path: fixtures/

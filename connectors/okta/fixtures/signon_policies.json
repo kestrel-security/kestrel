@@ -1,0 +1,20 @@
+[
+  {
+    "id": "signonpolicy001",
+    "type": "OKTA_SIGN_ON",
+    "status": "ACTIVE",
+    "name": "Default sign-on policy",
+    "rules": [
+      {
+        "id": "signonrule001",
+        "status": "ACTIVE",
+        "actions": {
+          "signon": {
+            "requireFactor": true,
+            "factorPromptMode": "ALWAYS"
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "login": "dave",
+    "id": 1004,
+    "node_id": "U_1004",
+    "type": "User",
+    "site_admin": false,
+    "name": "Dave Platform",
+    "email": "dave@acme.example.com"
+  },
+  {
+    "login": "erin",
+    "id": 1005,
+    "node_id": "U_1005",
+    "type": "User",
+    "site_admin": false,
+    "name": "Erin Collaborator",
+    "email": "erin@acme.example.com"
+  }
+]

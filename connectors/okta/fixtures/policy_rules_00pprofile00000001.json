@@ -1,0 +1,14 @@
+[
+  {
+    "id": "0prprofile0000001",
+    "name": "Default Rule",
+    "status": "ACTIVE",
+    "priority": 1,
+    "actions": {
+      "profileEnrollment": {
+        "access": "ALLOW",
+        "selfServiceRegistration": "ENABLED"
+      }
+    }
+  }
+]

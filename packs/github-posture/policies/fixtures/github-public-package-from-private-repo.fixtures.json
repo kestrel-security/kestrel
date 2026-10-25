@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "_subject_id": "public-from-private",
+      "setting": {
+        "key": "org_package:pkg-1",
+        "value": {
+          "name": "internal-sdk",
+          "package_type": "npm",
+          "visibility": "public",
+          "repository_name": "sdk",
+          "repository_private": true
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "private-package",
+      "setting": {
+        "key": "org_package:pkg-2",
+        "value": {
+          "name": "internal-sdk",
+          "package_type": "npm",
+          "visibility": "private",
+          "repository_name": "sdk",
+          "repository_private": true
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["public-from-private"]
+}

@@ -1,0 +1,47 @@
+{
+  "rows": [
+    {
+      "_subject_id": "deploy-bot",
+      "oauth_application": {
+        "name": "deploy-bot",
+        "publisher": "acme-corp"
+      },
+      "sensitive_scope_names": [
+        "contents:write",
+        "secrets:read"
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "linter",
+      "oauth_application": {
+        "name": "readonly-linter",
+        "publisher": "acme-corp"
+      },
+      "sensitive_scope_names": [],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "slack-app",
+      "oauth_application": {
+        "name": "elsewhere"
+      },
+      "sensitive_scope_names": [
+        "admin"
+      ],
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "deploy-bot"
+  ]
+}

@@ -1,0 +1,43 @@
+[project]
+name = "kestrel-api"
+version = "0.5.1"
+description = "Kestrel FastAPI application."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{name = "The Kestrel Authors"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: FastAPI",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Security",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "kestrel",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.52.4",
+    "celery[redis]>=5.6.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/kestrel-security/kestrel"
+Repository = "https://github.com/kestrel-security/kestrel"
+Issues = "https://github.com/kestrel-security/kestrel/issues"
+Documentation = "https://github.com/kestrel-security/kestrel/tree/main/docs"
+Changelog = "https://github.com/kestrel-security/kestrel/blob/main/CHANGELOG.md"
+
+[tool.uv.sources]
+kestrel = { workspace = true }
+
+[build-system]
+requires = ["hatchling>=1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kestrel_api"]

@@ -1,0 +1,50 @@
+{
+  "alerts": [
+    {
+      "alertId": "alert-001-suspicious-login",
+      "customerId": "C0acme1234",
+      "type": "Suspicious login activity",
+      "source": "Google Identity",
+      "createTime": "2026-09-10T02:11:00.000Z",
+      "startTime": "2026-09-10T02:11:00.000Z",
+      "endTime": null,
+      "deleted": false,
+      "data": {
+        "@type": "type.googleapis.com/google.apps.alertcenter.type.SuspiciousLoginDetails",
+        "email": "grace@acme.example.com",
+        "loginDetails": {
+          "ipAddress": "203.0.113.10",
+          "deviceType": "ANDROID"
+        }
+      },
+      "metadata": {
+        "customerId": "C0acme1234",
+        "alertId": "alert-001-suspicious-login",
+        "status": "NOT_STARTED",
+        "severity": "HIGH",
+        "updateTime": "2026-09-10T02:12:00.000Z"
+      }
+    },
+    {
+      "alertId": "alert-002-leaked-password",
+      "customerId": "C0acme1234",
+      "type": "Leaked password",
+      "source": "Google Identity",
+      "createTime": "2026-09-12T16:30:00.000Z",
+      "startTime": "2026-09-12T16:30:00.000Z",
+      "endTime": null,
+      "deleted": false,
+      "data": {
+        "@type": "type.googleapis.com/google.apps.alertcenter.type.AccountWarning",
+        "email": "contractor@acme.example.com"
+      },
+      "metadata": {
+        "customerId": "C0acme1234",
+        "alertId": "alert-002-leaked-password",
+        "status": "NOT_STARTED",
+        "severity": "HIGH",
+        "updateTime": "2026-09-12T16:31:00.000Z"
+      }
+    }
+  ]
+}

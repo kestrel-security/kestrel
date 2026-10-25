@@ -1,0 +1,193 @@
+# Kestrel on a single host with Docker Compose.
+#
+#   cp deployments/compose/.env.example deployments/compose/.env   # then fill it in
+#   docker compose -f deployments/compose/docker-compose.yml up -d --build
+#
+# Kestrel publishes no images: `up --build` builds api, worker and web from the
+# Dockerfiles in deployments/docker/ (on official python and node base images)
+# and tags them kestrel-{api,worker,web}:local.
+#
+# This is the production-shaped stack -- no source mounts, no auto-reload, only
+# the web UI published -- not the development one at the repository root.
+# Put TLS in front of it: the optional `tls` profile runs Caddy for that, or use
+# your own reverse proxy. See docs/deployment.md.
+
+# Distinct from the development stack's `kestrel`, so the two never share a
+# database volume (they use different Postgres passwords).
+name: kestrel-server
+
+x-app-image: &app-build
+  context: ../..
+
+# Every other variable in deployments/compose/.env reaches the api, worker and
+# migrate containers through env_file (KESTREL_SYNC_*, KESTREL_LLM_*,
+# KESTREL_RATE_LIMIT_*, ... -- see the root .env.example). The `environment`
+# entries below take precedence over it, so DATABASE_URL, REDIS_URL and the
+# other values composed here are never overridden by the file. The path is
+# relative to this file; `required: false` lets the stack start without it.
+x-app-env-file: &app-env-file
+  - path: .env
+    required: false
+
+x-app-env: &app-env
+  DATABASE_URL: postgresql+psycopg://kestrel:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in deployments/compose/.env}@postgres:5432/kestrel
+  REDIS_URL: redis://redis:6379/0
+  KESTREL_MASTER_KEY: ${KESTREL_MASTER_KEY:?set KESTREL_MASTER_KEY in deployments/compose/.env (openssl rand -base64 32)}
+  # Set only while rotating the master key; both api and worker need it.
+  KESTREL_MASTER_KEY_PREVIOUS: ${KESTREL_MASTER_KEY_PREVIOUS:-}
+  # So CLI output (`kestrel demo up`, ...) and notification email links use the
+  # URL people actually use.
+  APP_URL: ${APP_URL:?set APP_URL in deployments/compose/.env}
+  # Optional default for `docker compose run --rm api kestrel init`, so the
+  # first admin can be bootstrapped without the --admin-email flag.
+  KESTREL_ADMIN_EMAIL: ${KESTREL_ADMIN_EMAIL:-}
+  # Optional default SMTP for notification email, watched-findings digests and
+  # dashboard schedules. Settings -> Email in the app overrides it per
+  # organization; with neither, no email is sent.
+  KESTREL_SMTP_HOST: ${KESTREL_SMTP_HOST:-}
+  KESTREL_SMTP_PORT: ${KESTREL_SMTP_PORT:-587}
+  KESTREL_SMTP_USER: ${KESTREL_SMTP_USER:-}
+  KESTREL_SMTP_PASSWORD: ${KESTREL_SMTP_PASSWORD:-}
+  KESTREL_SMTP_FROM: ${KESTREL_SMTP_FROM:-}
+  KESTREL_SMTP_TLS: ${KESTREL_SMTP_TLS:-true}
+  KESTREL_SMTP_SSL: ${KESTREL_SMTP_SSL:-false}
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kestrel
+      POSTGRES_USER: kestrel
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in deployments/compose/.env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kestrel -d kestrel"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Celery's broker. Append-only persistence keeps queued jobs across restarts.
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Applies database migrations, then exits. api and worker start only after it
+  # succeeds, so an upgrade is `git pull` followed by `up -d --build`.
+  migrate:
+    # The api image, built by the api service. Declaring the same
+    # build here too makes `up --build` build one tag twice in parallel and fail.
+    image: kestrel-api:local
+    pull_policy: never
+    env_file: *app-env-file
+    environment:
+      <<: *app-env
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    image: kestrel-api:local
+    build:
+      <<: *app-build
+      dockerfile: deployments/docker/api.Dockerfile
+    restart: unless-stopped
+    env_file: *app-env-file
+    environment:
+      <<: *app-env
+      ALLOWED_ORIGIN: ${APP_URL:?set APP_URL in deployments/compose/.env}
+      # The web container calls the API for every browser, so the API trusts
+      # X-Forwarded-For from the Compose network only. See docs/deployment.md.
+      KESTREL_TRUSTED_PROXIES: ${KESTREL_TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  # Celery worker with embedded beat (scheduled syncs). Run exactly one: a
+  # second copy would dispatch every schedule twice.
+  worker:
+    image: kestrel-worker:local
+    build:
+      <<: *app-build
+      dockerfile: deployments/docker/worker.Dockerfile
+    restart: unless-stopped
+    env_file: *app-env-file
+    environment:
+      <<: *app-env
+    volumes:
+      - beatstate:/var/lib/kestrel
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  web:
+    image: kestrel-web:local
+    build:
+      <<: *app-build
+      dockerfile: deployments/docker/web.Dockerfile
+    restart: unless-stopped
+    environment:
+      API_URL: http://api:8000/api/v1
+      # The origin browsers use. The /login redirect and the session cookie's
+      # Secure flag both come from it; see docs/deployment.md.
+      APP_URL: ${APP_URL:?set APP_URL in deployments/compose/.env}
+      # Optional: force the cookie's Secure flag (true / false) instead of
+      # deriving it from APP_URL's scheme.
+      KESTREL_COOKIE_SECURE: ${KESTREL_COOKIE_SECURE:-}
+    ports:
+      - "${KESTREL_BIND_ADDRESS:-127.0.0.1}:${KESTREL_HTTP_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Optional TLS: `docker compose --profile tls up -d`. Caddy obtains and renews
+  # a certificate for KESTREL_DOMAIN, which must resolve to this host with
+  # ports 80 and 443 reachable. Set APP_URL=https://<KESTREL_DOMAIN>.
+  caddy:
+    image: caddy:2.11.7
+    profiles: ["tls"]
+    restart: unless-stopped
+    environment:
+      KESTREL_DOMAIN: ${KESTREL_DOMAIN:-}
+    # Refuse to start without KESTREL_DOMAIN rather than serve an empty site
+    # address. Checked here, at start, because `${KESTREL_DOMAIN:?...}` would be
+    # interpolated for every `docker compose` command, with or without `tls`.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        if [ -z "$$KESTREL_DOMAIN" ]; then
+        echo "caddy: set KESTREL_DOMAIN in deployments/compose/.env for the tls profile" >&2; exit 1;
+        fi;
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on:
+      - web
+
+volumes:
+  pgdata:
+  redisdata:
+  beatstate:
+  caddydata:
+  caddyconfig:

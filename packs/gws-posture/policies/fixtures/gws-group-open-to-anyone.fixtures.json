@@ -1,0 +1,35 @@
+{
+  "rows": [
+    {
+      "_subject_id": "open-to-the-internet",
+      "setting": {"key": "group_who_can_join", "value": "ANYONE_CAN_JOIN", "label": "Who can join"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "self-service-for-employees",
+      "setting": {"key": "group_who_can_join", "value": "ALL_IN_DOMAIN_CAN_JOIN", "label": "Who can join"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "invitation-only",
+      "setting": {"key": "group_who_can_join", "value": "INVITED_CAN_JOIN", "label": "Who can join"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "request-to-join",
+      "setting": {"key": "group_who_can_join", "value": "CAN_REQUEST_TO_JOIN", "label": "Who can join"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "lowercase-from-a-provider-that-changes-its-mind",
+      "setting": {"key": "group_who_can_join", "value": "anyone_can_join", "label": "Who can join"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "a-different-setting",
+      "setting": {"key": "group_who_can_post_message", "value": "ANYONE_CAN_POST", "label": "Who can post"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["open-to-the-internet", "lowercase-from-a-provider-that-changes-its-mind"]
+}

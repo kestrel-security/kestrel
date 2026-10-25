@@ -1,0 +1,64 @@
+[
+  {
+    "app_id": "A0INCIDENT",
+    "name": "Incident Bot",
+    "publisher": "Acme Security",
+    "is_app_directory_approved": false,
+    "is_internal": true,
+    "installer_user_id": "U0GRACE",
+    "developer_type": {
+      "type": "internal"
+    },
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "channels:history",
+        "users:read"
+      ],
+      "user": []
+    },
+    "date_installed": "2025-11-01T12:00:00Z",
+    "last_active": "2026-07-20T09:00:00Z"
+  },
+  {
+    "app_id": "A0CALENDAR",
+    "name": "Calendar Sync",
+    "publisher": "CalendarCo",
+    "is_app_directory_approved": true,
+    "is_internal": false,
+    "installer_user_id": "U0ALAN",
+    "developer_type": {
+      "type": "third_party"
+    },
+    "scopes": {
+      "bot": [
+        "commands",
+        "chat:write"
+      ],
+      "user": [
+        "users:read.email"
+      ]
+    },
+    "date_installed": "2026-01-15T08:30:00Z",
+    "last_active": null
+  },
+  {
+    "app_id": "A0READONLY",
+    "name": "Status Page",
+    "publisher": "StatusCo",
+    "is_app_directory_approved": true,
+    "is_internal": false,
+    "installer_user_id": "U0ADA",
+    "developer_type": {
+      "type": "third_party"
+    },
+    "scopes": {
+      "bot": [
+        "users:read"
+      ],
+      "user": []
+    },
+    "date_installed": "2024-06-01T00:00:00Z",
+    "last_active": "2026-07-21T14:22:00Z"
+  }
+]

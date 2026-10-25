@@ -1,0 +1,18 @@
+[
+  {
+    "id": "00pmfaenroll00000001",
+    "type": "MFA_ENROLL",
+    "status": "ACTIVE",
+    "name": "Default MFA Enrollment",
+    "settings": {
+      "factors": {
+        "okta_otp": {
+          "enroll": { "self": "OPTIONAL" }
+        },
+        "okta_sms": {
+          "enroll": { "self": "OPTIONAL" }
+        }
+      }
+    }
+  }
+]

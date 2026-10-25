@@ -1,0 +1,91 @@
+{
+  "rows": [
+    {
+      "_subject_id": "privilege-granted",
+      "event": {
+        "action": "privilege.grant",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": null,
+        "attributes": {
+          "gws_event_name": "GRANT_ADMIN_PRIVILEGE",
+          "ROLE_NAME": "Help Desk Admin"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "privilege-revoked",
+      "event": {
+        "action": "privilege.revoke",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": null,
+        "attributes": {
+          "gws_event_name": "REVOKE_ADMIN_PRIVILEGE"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "other-app",
+      "event": {
+        "action": "privilege.grant",
+        "occurred_at": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      }
+    },
+    {
+      "_subject_id": "privilege-granted-recent",
+      "event": {
+        "action": "privilege.grant",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "attributes": {
+          "gws_event_name": "GRANT_ADMIN_PRIVILEGE",
+          "ROLE_NAME": "Help Desk Admin"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "privilege-granted-outside-window",
+      "event": {
+        "action": "privilege.grant",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 45
+        },
+        "attributes": {
+          "gws_event_name": "GRANT_ADMIN_PRIVILEGE",
+          "ROLE_NAME": "Help Desk Admin"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "privilege-granted",
+    "privilege-granted-recent"
+  ]
+}

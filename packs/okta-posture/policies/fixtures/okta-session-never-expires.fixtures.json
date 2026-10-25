@@ -1,0 +1,90 @@
+{
+  "rows": [
+    {
+      "_subject_id": "unlimited",
+      "setting": {
+        "key": "okta_policy:00p1",
+        "value": {
+          "name": "Default Policy",
+          "type": "OKTA_SIGN_ON",
+          "status": "ACTIVE",
+          "rule_count": 1,
+          "active_rule_count": 1,
+          "any_rule_without_mfa": false,
+          "any_rule_unlimited_session": true,
+          "self_service_registration_enabled": false,
+          "longest_session_minutes": null,
+          "rules": []
+        },
+        "label": "Policy",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "bounded",
+      "setting": {
+        "key": "okta_policy:00p1",
+        "value": {
+          "name": "Default Policy",
+          "type": "OKTA_SIGN_ON",
+          "status": "ACTIVE",
+          "rule_count": 1,
+          "active_rule_count": 1,
+          "any_rule_without_mfa": false,
+          "any_rule_unlimited_session": false,
+          "self_service_registration_enabled": false,
+          "longest_session_minutes": 480,
+          "rules": []
+        },
+        "label": "Policy",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "not-a-policy",
+      "setting": {
+        "key": "threat_insight_enabled",
+        "value": true,
+        "label": "TI"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "other-app",
+      "setting": {
+        "key": "okta_policy:00p2",
+        "value": {
+          "name": "Default Policy",
+          "type": "OKTA_SIGN_ON",
+          "status": "ACTIVE",
+          "rule_count": 1,
+          "active_rule_count": 1,
+          "any_rule_without_mfa": false,
+          "any_rule_unlimited_session": true,
+          "self_service_registration_enabled": false,
+          "longest_session_minutes": 480,
+          "rules": []
+        },
+        "label": "P"
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "unlimited"
+  ]
+}

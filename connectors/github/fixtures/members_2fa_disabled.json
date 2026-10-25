@@ -1,0 +1,10 @@
+[
+  {
+    "login": "alice",
+    "id": 1001,
+    "node_id": "U_1001",
+    "type": "User",
+    "name": "Grace Hopper",
+    "email": "grace@acme.example.com"
+  }
+]

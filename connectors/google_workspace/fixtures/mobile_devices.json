@@ -1,0 +1,59 @@
+{
+  "mobiledevices": [
+    {
+      "kind": "admin#directory#mobiledevice",
+      "deviceId": "mob-device-001",
+      "email": ["ada@acme.example.com"],
+      "status": "APPROVED",
+      "type": "ANDROID",
+      "os": "Android 14",
+      "model": "Pixel 8 Pro",
+      "serialNumber": "SN-MOB-001",
+      "hardwareId": "hw-001",
+      "managedAccountIsOnOwnerProfile": true,
+      "deviceCompromisedStatus": "Safe",
+      "name": ["Ada's Pixel"],
+      "encryptionStatus": "ENCRYPTED",
+      "adbStatus": false,
+      "developerOptionsStatus": false,
+      "firstSync": "2025-01-15T10:00:00.000Z",
+      "lastSync": "2026-09-25T08:30:00.000Z"
+    },
+    {
+      "kind": "admin#directory#mobiledevice",
+      "deviceId": "mob-device-002",
+      "email": ["grace@acme.example.com"],
+      "status": "APPROVED",
+      "type": "IOS",
+      "os": "iOS 17.5",
+      "model": "iPhone 15 Pro",
+      "serialNumber": "SN-MOB-002",
+      "managedAccountIsOnOwnerProfile": true,
+      "deviceCompromisedStatus": "Compromised",
+      "name": ["Grace's iPhone"],
+      "encryptionStatus": "ENCRYPTED",
+      "adbStatus": false,
+      "developerOptionsStatus": false,
+      "firstSync": "2025-03-01T09:00:00.000Z",
+      "lastSync": "2026-09-20T14:45:00.000Z"
+    },
+    {
+      "kind": "admin#directory#mobiledevice",
+      "deviceId": "mob-device-003",
+      "email": ["contractor@acme.example.com"],
+      "status": "APPROVED",
+      "type": "ANDROID",
+      "os": "Android 13",
+      "model": "Samsung Galaxy S23",
+      "serialNumber": "SN-MOB-003",
+      "managedAccountIsOnOwnerProfile": false,
+      "deviceCompromisedStatus": "Safe",
+      "name": ["Contractor BYOD"],
+      "encryptionStatus": "UNENCRYPTED",
+      "adbStatus": true,
+      "developerOptionsStatus": true,
+      "firstSync": "2026-04-10T11:00:00.000Z",
+      "lastSync": "2026-09-22T16:00:00.000Z"
+    }
+  ]
+}

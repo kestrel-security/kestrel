@@ -1,0 +1,23 @@
+[
+  {
+    "id": "oag1",
+    "status": "ACTIVE",
+    "scopeId": "okta.users.manage",
+    "issuer": "https://acme.okta.com",
+    "clientId": "0oaciprovision00005"
+  },
+  {
+    "id": "oag2",
+    "status": "ACTIVE",
+    "scopeId": "okta.groups.manage",
+    "issuer": "https://acme.okta.com",
+    "clientId": "0oaciprovision00005"
+  },
+  {
+    "id": "oag3",
+    "status": "REVOKED",
+    "scopeId": "okta.apps.manage",
+    "issuer": "https://acme.okta.com",
+    "clientId": "0oaciprovision00005"
+  }
+]

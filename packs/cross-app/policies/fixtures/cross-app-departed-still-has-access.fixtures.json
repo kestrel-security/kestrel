@@ -1,0 +1,167 @@
+{
+  "rows": [
+    {
+      "_subject_id": "slack-survivor",
+      "identity": {
+        "identity_type": "user",
+        "email": "kj@acme.example.com",
+        "display_name": "Katherine Johnson",
+        "is_disabled": false
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "accounts": [
+          {
+            "application_type": "okta",
+            "application_name": "Okta",
+            "is_disabled": true
+          },
+          {
+            "application_type": "slack",
+            "application_name": "Slack",
+            "is_disabled": false
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "okta-disabled-itself",
+      "identity": {
+        "identity_type": "user",
+        "email": "kj@acme.example.com",
+        "display_name": "Katherine Johnson",
+        "is_disabled": true
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "accounts": [
+          {
+            "application_type": "okta",
+            "application_name": "Okta",
+            "is_disabled": true
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "fully-offboarded",
+      "identity": {
+        "identity_type": "user",
+        "email": "gone@acme.example.com",
+        "display_name": "Gone Person",
+        "is_disabled": true
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "application_types": [
+          "okta",
+          "github"
+        ],
+        "accounts": [
+          {
+            "application_type": "okta",
+            "is_disabled": true
+          },
+          {
+            "application_type": "github",
+            "is_disabled": true
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "still-employed",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "is_disabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "application_types": [
+          "okta",
+          "github"
+        ],
+        "accounts": [
+          {
+            "application_type": "okta",
+            "is_disabled": false
+          },
+          {
+            "application_type": "github",
+            "is_disabled": false
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "service-account",
+      "identity": {
+        "identity_type": "service_account",
+        "email": "ci@acme.example.com",
+        "display_name": "CI Bot",
+        "is_disabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "application_types": [
+          "okta",
+          "github"
+        ],
+        "accounts": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "slack-survivor"
+  ]
+}

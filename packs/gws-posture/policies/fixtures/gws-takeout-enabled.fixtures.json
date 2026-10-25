@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "takeout-on",
+      "setting": {
+        "key": "workspace.google_takeout.export_feature",
+        "label": "Google Takeout enabled (tenant)",
+        "value": {"exportEnabled": true}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "takeout-off",
+      "setting": {
+        "key": "workspace.google_takeout.export_feature",
+        "label": "Google Takeout enabled (tenant)",
+        "value": {"exportEnabled": false}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["takeout-on"]
+}

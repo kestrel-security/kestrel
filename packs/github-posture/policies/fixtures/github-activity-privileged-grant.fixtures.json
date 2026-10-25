@@ -1,0 +1,41 @@
+{
+  "rows": [
+    {
+      "_subject_id": "match-priv",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "test",
+        "actor_email": "actor@example.com",
+        "target_email": "target@example.com",
+        "occurred_at": {"$days_ago": 2},
+        "summary": "match row"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "stale-match-priv",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "test",
+        "actor_email": "actor@example.com",
+        "target_email": "target@example.com",
+        "occurred_at": {"$days_ago": 60},
+        "summary": "outside window"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "other-mfa",
+      "event": {
+        "action": "mfa.disable",
+        "action_category": "test",
+        "actor_email": "actor@example.com",
+        "target_email": "target@example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "different action"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["match-priv"]
+}

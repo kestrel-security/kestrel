@@ -1,0 +1,52 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_auth_server:ausDefault000001",
+        "value": {
+          "name": "default",
+          "max_access_token_lifetime_minutes": 480,
+          "token_lifetime_excessive": true
+        }
+      },
+      "_subject_id": "access-token-lifetime-is-480-minutes-8-hours"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_auth_server:ausDefault000001",
+        "value": {
+          "name": "default",
+          "max_access_token_lifetime_minutes": 60,
+          "token_lifetime_excessive": false
+        }
+      },
+      "_subject_id": "access-token-lifetime-is-60-minutes"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_auth_server:ausDefault000001",
+        "value": {
+          "name": "default",
+          "max_access_token_lifetime_minutes": null,
+          "token_lifetime_excessive": false
+        }
+      },
+      "_subject_id": "no-lifetime-reported"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "access-token-lifetime-is-480-minutes-8-hours"
+  ]
+}

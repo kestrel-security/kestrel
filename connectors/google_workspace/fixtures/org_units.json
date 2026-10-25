@@ -1,0 +1,25 @@
+[
+  {
+    "kind": "admin#directory#orgUnit",
+    "orgUnitId": "id:ou-root",
+    "orgUnitPath": "/",
+    "name": "acme.example.com",
+    "parentOrgUnitId": null
+  },
+  {
+    "kind": "admin#directory#orgUnit",
+    "orgUnitId": "id:ou-eng",
+    "orgUnitPath": "/Engineering",
+    "name": "Engineering",
+    "parentOrgUnitId": "id:ou-root",
+    "blockInheritance": false
+  },
+  {
+    "kind": "admin#directory#orgUnit",
+    "orgUnitId": "id:ou-contractors",
+    "orgUnitPath": "/Contractors",
+    "name": "Contractors",
+    "parentOrgUnitId": "id:ou-root",
+    "blockInheritance": true
+  }
+]

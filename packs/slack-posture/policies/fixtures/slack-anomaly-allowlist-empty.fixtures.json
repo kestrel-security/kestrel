@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "empty-allowlist",
+      "setting": {
+        "key": "anomaly_allowlist_configured",
+        "value": false,
+        "label": "Anomaly allowlist configured"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "configured",
+      "setting": {
+        "key": "anomaly_allowlist_configured",
+        "value": true,
+        "label": "Anomaly allowlist configured"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["empty-allowlist"]
+}

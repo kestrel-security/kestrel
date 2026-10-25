@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "guest-id",
+      "identity": {"email": "contractor@vendor.example.com", "display_name": "External Contractor", "is_external": true, "mfa_enabled": false},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": []
+    },
+    {
+      "_subject_id": "guest-mfa",
+      "identity": {"email": "partner@vendor.example.com", "display_name": "Partner", "is_external": true, "mfa_enabled": true},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": []
+    },
+    {
+      "_subject_id": "internal-no-mfa",
+      "identity": {"email": "grace@acme.example.com", "display_name": "Grace Hopper", "is_external": false, "mfa_enabled": false},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": ["Admin"]
+    }
+  ],
+  "expected_match_subject_ids": ["guest-id"]
+}

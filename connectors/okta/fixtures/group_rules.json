@@ -1,0 +1,20 @@
+[
+  {
+    "id": "0prgrouprule0001",
+    "name": "Contractors to Engineering",
+    "status": "ACTIVE",
+    "conditions": {
+      "expression": {
+        "value": "user.userType==\"Contractor\"",
+        "type": "urn:okta:expression:1.0"
+      }
+    },
+    "actions": {
+      "assignUserToGroups": {
+        "groupIds": [
+          "00gengineering000001"
+        ]
+      }
+    }
+  }
+]

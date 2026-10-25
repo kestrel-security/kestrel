@@ -1,0 +1,44 @@
+name: Kestrel GitOps plan
+# CI-safe drift check. Copy to `.github/workflows/kestrel-plan.yml`.
+# Exit non-zero when desired state differs from the org DB.
+on:
+  pull_request:
+  push:
+    paths:
+      - "examples/gitops/**"
+      - "packs/**"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: kestrel
+          POSTGRES_PASSWORD: kestrel_dev
+          POSTGRES_DB: kestrel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U kestrel"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://kestrel:kestrel_dev@localhost:5432/kestrel
+      KESTREL_MASTER_KEY: "dGVzdC1tYXN0ZXIta2V5LWZvci1jaS1vbmx5ISEhISE="
+      KESTREL_PACKS_DIR: ${{ github.workspace }}/packs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync --all-packages
+      - run: uv run alembic upgrade head
+      - name: Seed org (best-effort)
+        run: uv run kestrel init || true
+      - name: Apply then plan (CI drift check)
+        run: |
+          uv run kestrel apply examples/gitops
+          uv run kestrel plan examples/gitops --json

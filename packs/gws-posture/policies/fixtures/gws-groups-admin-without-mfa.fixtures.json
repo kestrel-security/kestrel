@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "groups-no-mfa",
+      "identity": {"email": "groups@acme.example", "display_name": "Groups Admin", "mfa_enabled": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Groups Admin"]
+    },
+    {
+      "_subject_id": "groups-mfa",
+      "identity": {"email": "groups2@acme.example", "display_name": "Groups Admin 2", "mfa_enabled": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Groups Admin"]
+    },
+    {
+      "_subject_id": "user-no-mfa",
+      "identity": {"email": "user@acme.example", "display_name": "User", "mfa_enabled": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["groups-no-mfa"]
+}

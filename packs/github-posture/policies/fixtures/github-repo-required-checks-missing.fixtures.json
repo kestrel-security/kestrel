@@ -1,0 +1,53 @@
+{
+  "rows": [
+    {
+      "_subject_id": "protected-without-checks",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "protected-without-checks"
+      },
+      "settings_by_key": {
+        "repo_branch_protection_detail": {
+          "key": "repo_branch_protection_detail",
+          "value": {"protected": true, "required_status_checks": false}
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "protected-with-checks",
+      "resource": {
+        "resource_type": "repository",
+        "name": "api",
+        "visibility": "private",
+        "provider_object_id": "protected-with-checks"
+      },
+      "settings_by_key": {
+        "repo_branch_protection_detail": {
+          "key": "repo_branch_protection_detail",
+          "value": {"protected": true, "required_status_checks": true}
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "unprotected",
+      "resource": {
+        "resource_type": "repository",
+        "name": "docs",
+        "visibility": "private",
+        "provider_object_id": "unprotected"
+      },
+      "settings_by_key": {
+        "repo_branch_protection_detail": {
+          "key": "repo_branch_protection_detail",
+          "value": {"protected": false, "required_status_checks": false}
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["protected-without-checks"]
+}

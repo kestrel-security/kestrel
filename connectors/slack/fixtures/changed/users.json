@@ -1,0 +1,148 @@
+[
+  {
+    "id": "U0ADA",
+    "team_id": "T0ACMEWORK",
+    "name": "ada",
+    "deleted": false,
+    "real_name": "Ada Lovelace",
+    "is_admin": false,
+    "is_owner": false,
+    "is_primary_owner": true,
+    "is_restricted": false,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_2fa": true,
+    "profile": {
+      "real_name": "Ada Lovelace",
+      "email": "ada@acme.example.com"
+    },
+    "updated": 1722470400
+  },
+  {
+    "id": "U0GRACE",
+    "team_id": "T0ACMEWORK",
+    "name": "grace",
+    "deleted": false,
+    "real_name": "Grace Hopper",
+    "is_admin": true,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_restricted": false,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_2fa": false,
+    "profile": {
+      "real_name": "Grace Hopper",
+      "email": "grace@acme.example.com"
+    },
+    "updated": 1704067200
+  },
+  {
+    "id": "U0ALAN",
+    "team_id": "T0ACMEWORK",
+    "name": "alan",
+    "deleted": false,
+    "real_name": "Alan Turing",
+    "is_admin": true,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_restricted": false,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_2fa": true,
+    "profile": {
+      "real_name": "Alan Turing",
+      "email": "alan@acme.example.com"
+    },
+    "updated": 1722470400
+  },
+  {
+    "id": "U0GUEST",
+    "team_id": "T0ACMEWORK",
+    "name": "ext-contractor",
+    "deleted": false,
+    "real_name": "External Contractor",
+    "is_admin": false,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_restricted": true,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_2fa": false,
+    "profile": {
+      "real_name": "External Contractor",
+      "email": "contractor@vendor.example.com"
+    },
+    "updated": 1722470400,
+    "expiration_ts": 1893456000
+  },
+  {
+    "id": "U0GUESTNOEXP",
+    "team_id": "T0ACMEWORK",
+    "name": "ext-no-expiry",
+    "deleted": false,
+    "real_name": "Guest No Expiry",
+    "is_admin": false,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_restricted": true,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_2fa": false,
+    "profile": {
+      "real_name": "Guest No Expiry",
+      "email": "noexpiry@vendor.example.com"
+    },
+    "updated": 1722470400
+  },
+  {
+    "id": "U0DEACTIVATED",
+    "team_id": "T0ACMEWORK",
+    "name": "old-hire",
+    "deleted": true,
+    "real_name": "Former Employee",
+    "is_admin": false,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_bot": false,
+    "profile": {
+      "real_name": "Former Employee",
+      "email": "former@acme.example.com"
+    },
+    "updated": 1690000000
+  },
+  {
+    "id": "B0BACKUP",
+    "team_id": "T0ACMEWORK",
+    "name": "backup-bot",
+    "deleted": false,
+    "real_name": "Backup Bot",
+    "is_admin": false,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_bot": true,
+    "profile": {
+      "real_name": "Backup Bot"
+    },
+    "updated": 1722470400
+  },
+  {
+    "id": "U0NEWADMIN",
+    "team_id": "T0ACMEWORK",
+    "name": "new-admin",
+    "deleted": false,
+    "real_name": "New Admin",
+    "is_admin": true,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_restricted": false,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_2fa": false,
+    "profile": {
+      "real_name": "New Admin",
+      "email": "newadmin@acme.example.com"
+    },
+    "updated": 1787600000
+  }
+]

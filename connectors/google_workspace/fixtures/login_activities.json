@@ -1,0 +1,107 @@
+[
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2026-08-30T02:11:00.000Z",
+      "uniqueQualifier": "2001",
+      "applicationName": "login",
+      "customerId": "C01234567"
+    },
+    "actor": {
+      "email": "grace@acme.example.com",
+      "profileId": "100000000000000000002"
+    },
+    "ipAddress": "203.0.113.9",
+    "events": [
+      {
+        "type": "login",
+        "name": "suspicious_login",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "is_suspicious",
+            "boolValue": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2026-08-29T09:40:00.000Z",
+      "uniqueQualifier": "2002",
+      "applicationName": "login",
+      "customerId": "C01234567"
+    },
+    "actor": {
+      "email": "alan@acme.example.com",
+      "profileId": "100000000000000000003"
+    },
+    "ipAddress": "198.51.100.4",
+    "events": [
+      {
+        "type": "login",
+        "name": "login_failure",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          },
+          {
+            "name": "login_failure_type",
+            "value": "login_failure_invalid_password"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2026-08-28T12:00:00.000Z",
+      "uniqueQualifier": "2003",
+      "applicationName": "login",
+      "customerId": "C01234567"
+    },
+    "actor": {
+      "email": "ada@acme.example.com",
+      "profileId": "100000000000000000001"
+    },
+    "events": [
+      {
+        "type": "login",
+        "name": "login_success",
+        "parameters": [
+          {
+            "name": "login_type",
+            "value": "google_password"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "admin#reports#activity",
+    "id": {
+      "time": "2026-08-27T15:30:00.000Z",
+      "uniqueQualifier": "2004",
+      "applicationName": "login",
+      "customerId": "C01234567"
+    },
+    "actor": {
+      "email": "grace@acme.example.com",
+      "profileId": "100000000000000000002"
+    },
+    "events": [
+      {
+        "type": "login",
+        "name": "2sv_disable",
+        "parameters": []
+      }
+    ]
+  }
+]

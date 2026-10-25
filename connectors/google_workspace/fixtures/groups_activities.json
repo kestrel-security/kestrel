@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "id": {
+        "time": "2026-09-05T10:30:00.000Z",
+        "uniqueQualifier": "9001"
+      },
+      "actor": {
+        "email": "ada@acme.example.com",
+        "profileId": "1"
+      },
+      "events": [
+        {
+          "name": "add_member",
+          "parameters": [
+            {"name": "USER_EMAIL", "value": "grace@acme.example.com"},
+            {"name": "group_email", "value": "engineering@acme.example.com"}
+          ]
+        }
+      ]
+    }
+  ]
+}

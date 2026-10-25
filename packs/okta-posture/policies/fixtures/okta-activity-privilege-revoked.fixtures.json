@@ -1,0 +1,27 @@
+{
+  "rows": [
+    {
+      "_subject_id": "privilege-revoked",
+      "event": {"action": "privilege.revoke", "actor_email": "ada@acme.example.com",
+                "occurred_at": {"$days_ago": 2}, "summary": "Revoke user privilege",
+                "attributes": {"okta_event_type": "user.account.privilege.revoke", "outcome": "SUCCESS"}},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "older-than-the-window",
+      "event": {"action": "privilege.revoke", "occurred_at": {"$days_ago": 60}, "attributes": {}},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "unrelated-action",
+      "event": {"action": "threat.detected", "occurred_at": {"$days_ago": 1}, "attributes": {}},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "other-application",
+      "event": {"action": "privilege.revoke", "occurred_at": {"$days_ago": 1}, "attributes": {}},
+      "application": {"type": "slack", "name": "Acme Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["privilege-revoked"]
+}

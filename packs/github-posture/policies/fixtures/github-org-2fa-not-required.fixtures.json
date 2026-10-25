@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "_subject_id": "gh-2fa-off",
+      "setting": {
+        "key": "two_factor_requirement_enabled",
+        "value": false,
+        "label": "Require two-factor authentication"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "gh-2fa-on",
+      "setting": {
+        "key": "two_factor_requirement_enabled",
+        "value": true,
+        "label": "Require two-factor authentication"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "other-key",
+      "setting": {
+        "key": "members_can_create_repositories",
+        "value": false,
+        "label": "Members can create repositories"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["gh-2fa-off"]
+}

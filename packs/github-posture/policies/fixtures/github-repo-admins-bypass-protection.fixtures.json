@@ -1,0 +1,130 @@
+{
+  "rows": [
+    {
+      "_subject_id": "bypassable",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "bypassable"
+      },
+      "settings_by_key": {
+        "repo_branch_protection_detail": {
+          "key": "repo_branch_protection_detail",
+          "value": {
+            "protected": true,
+            "required_reviews": 2,
+            "enforce_admins": false,
+            "allow_force_pushes": false,
+            "allow_deletions": false
+          },
+          "category": "security",
+          "label": "repo_branch_protection_detail"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_branch_protection_detail",
+          "value": {
+            "protected": true,
+            "required_reviews": 2,
+            "enforce_admins": false,
+            "allow_force_pushes": false,
+            "allow_deletions": false
+          },
+          "category": "security",
+          "label": "repo_branch_protection_detail"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "enforced",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "enforced"
+      },
+      "settings_by_key": {
+        "repo_branch_protection_detail": {
+          "key": "repo_branch_protection_detail",
+          "value": {
+            "protected": true,
+            "required_reviews": 2,
+            "enforce_admins": true,
+            "allow_force_pushes": false,
+            "allow_deletions": false
+          },
+          "category": "security",
+          "label": "repo_branch_protection_detail"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_branch_protection_detail",
+          "value": {
+            "protected": true,
+            "required_reviews": 2,
+            "enforce_admins": true,
+            "allow_force_pushes": false,
+            "allow_deletions": false
+          },
+          "category": "security",
+          "label": "repo_branch_protection_detail"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "unprotected",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "unprotected"
+      },
+      "settings_by_key": {
+        "repo_branch_protection_detail": {
+          "key": "repo_branch_protection_detail",
+          "value": {
+            "protected": false,
+            "required_reviews": 2,
+            "enforce_admins": false,
+            "allow_force_pushes": false,
+            "allow_deletions": false
+          },
+          "category": "security",
+          "label": "repo_branch_protection_detail"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_branch_protection_detail",
+          "value": {
+            "protected": false,
+            "required_reviews": 2,
+            "enforce_admins": false,
+            "allow_force_pushes": false,
+            "allow_deletions": false
+          },
+          "category": "security",
+          "label": "repo_branch_protection_detail"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "bypassable"
+  ]
+}

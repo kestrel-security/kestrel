@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-install",
+      "event": {"action": "oauth.app.install", "action_category": "oauth", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 4}, "summary": "app_installed", "attributes": {"app_name": "Standup Bot"}},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "outside-the-window",
+      "event": {"action": "oauth.app.install", "action_category": "oauth", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 45}, "summary": "app_installed", "attributes": {}},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "a-scope-expansion-is-a-different-moment",
+      "event": {"action": "oauth.scope.expand", "action_category": "oauth", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 4}, "summary": "app_scopes_expanded", "attributes": {}},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "another-application",
+      "event": {"action": "oauth.app.install", "action_category": "oauth", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 4}, "summary": "app_installed", "attributes": {}},
+      "application": {"type": "okta", "name": "Okta"}
+    }
+  ],
+  "expected_match_subject_ids": ["recent-install"]
+}

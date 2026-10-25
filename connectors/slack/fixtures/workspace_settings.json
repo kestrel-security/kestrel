@@ -1,0 +1,12 @@
+{
+  "id": "T0ACMEWORK",
+  "name": "Acme Corp",
+  "domain": "acme",
+  "email_domain": "acme.example.com",
+  "icon": {
+    "image_default": true
+  },
+  "enterprise_id": "E0ACMEGRID",
+  "enterprise_name": "Acme Grid",
+  "default_channels": []
+}

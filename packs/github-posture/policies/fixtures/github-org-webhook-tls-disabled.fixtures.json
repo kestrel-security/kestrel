@@ -1,0 +1,49 @@
+{
+  "rows": [
+    {
+      "_subject_id": "insecure",
+      "setting": {
+        "key": "org_webhook:5501",
+        "value": {
+          "host": "hooks.example.test",
+          "insecure_ssl": true
+        },
+        "label": "hook"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "secure",
+      "setting": {
+        "key": "org_webhook:5502",
+        "value": {
+          "host": "hooks.example.test",
+          "insecure_ssl": false
+        },
+        "label": "hook"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "not-a-hook",
+      "setting": {
+        "key": "allowed_actions",
+        "value": "all",
+        "label": "actions"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "insecure"
+  ]
+}

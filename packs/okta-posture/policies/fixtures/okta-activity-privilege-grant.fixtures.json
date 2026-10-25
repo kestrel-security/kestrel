@@ -1,0 +1,41 @@
+{
+  "rows": [
+    {
+      "_subject_id": "match-priv",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": {"$days_ago": 2},
+        "summary": "Grant user privilege"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    },
+    {
+      "_subject_id": "stale-priv",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": {"$days_ago": 60},
+        "summary": "outside window"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    },
+    {
+      "_subject_id": "other-mfa",
+      "event": {
+        "action": "mfa.disable",
+        "action_category": "mfa",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "grace@acme.example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "different action"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    }
+  ],
+  "expected_match_subject_ids": ["match-priv"]
+}

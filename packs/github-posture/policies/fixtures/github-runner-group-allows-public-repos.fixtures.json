@@ -1,0 +1,55 @@
+{
+  "rows": [
+    {
+      "_subject_id": "bad",
+      "setting": {
+        "key": "actions_runner_group_public_repos:1",
+        "value": true,
+        "label": "s"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "good",
+      "setting": {
+        "key": "actions_runner_group_public_repos:1",
+        "value": false,
+        "label": "s"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "unrelated",
+      "setting": {
+        "key": "two_factor_requirement_enabled",
+        "value": true,
+        "label": "2FA"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "other-app",
+      "setting": {
+        "key": "actions_runner_group_public_repos:1",
+        "value": true,
+        "label": "s"
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "bad"
+  ]
+}

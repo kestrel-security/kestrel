@@ -1,0 +1,131 @@
+{
+  "rows": [
+    {
+      "_subject_id": "alice-gh",
+      "identity": {
+        "email": "alice@acme.example",
+        "display_name": "Alice"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "privileged_application_types": [
+        "github",
+        "google_workspace"
+      ],
+      "cluster": {
+        "privileged_application_types": [
+          "github",
+          "google_workspace"
+        ],
+        "accounts": [
+          {
+            "application_type": "github",
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          },
+          {
+            "application_type": "google_workspace",
+            "roles": [
+              "super_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "representative_identity_id": "alice-gws"
+      }
+    },
+    {
+      "_subject_id": "alice-gws",
+      "identity": {
+        "email": "alice@acme.example",
+        "display_name": "Alice"
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      },
+      "roles": [
+        "super_admin"
+      ],
+      "privileged_application_types": [
+        "github",
+        "google_workspace"
+      ],
+      "cluster": {
+        "privileged_application_types": [
+          "github",
+          "google_workspace"
+        ],
+        "accounts": [
+          {
+            "application_type": "github",
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          },
+          {
+            "application_type": "google_workspace",
+            "roles": [
+              "super_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "representative_identity_id": "alice-gws"
+      }
+    },
+    {
+      "_subject_id": "bob-gh",
+      "identity": {
+        "email": "bob@acme.example",
+        "display_name": "Bob"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "privileged_application_types": [
+          "github"
+        ],
+        "accounts": [],
+        "representative_identity_id": "bob-gh"
+      }
+    },
+    {
+      "_subject_id": "carol-gh",
+      "identity": {
+        "email": "carol@acme.example",
+        "display_name": "Carol"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "privileged_application_types": [],
+        "accounts": [],
+        "representative_identity_id": "carol-gh"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "alice-gws"
+  ]
+}

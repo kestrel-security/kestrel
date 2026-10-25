@@ -1,0 +1,4 @@
+[
+  {"login": "bob", "id": 1002, "node_id": "U_1002", "type": "User"},
+  {"login": "dave", "id": 1004, "node_id": "U_1004", "type": "User"}
+]

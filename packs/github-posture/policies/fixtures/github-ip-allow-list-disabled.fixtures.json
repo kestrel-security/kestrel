@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "_subject_id": "disabled",
+      "setting": {
+        "key": "ip_allow_list_enabled",
+        "value": false,
+        "label": "IP allow list"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "enabled",
+      "setting": {
+        "key": "ip_allow_list_enabled",
+        "value": true,
+        "label": "IP allow list"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "unavailable",
+      "setting": {
+        "key": "ip_allow_list_enabled",
+        "value": null,
+        "label": "IP allow list"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["disabled"]
+}

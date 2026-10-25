@@ -1,0 +1,43 @@
+{
+  "rows": [
+    {
+      "_subject_id": "month-long-session",
+      "identity": {"email": "contractor@vendor.example.com", "display_name": "Contractor", "is_disabled": false},
+      "settings_by_key": {
+        "session_duration_hours": {"key": "session_duration_hours", "value": 720.0}
+      },
+      "application": {"type": "slack", "name": "Acme Workspace Slack"}
+    },
+    {
+      "_subject_id": "twelve-hours-exactly",
+      "identity": {"email": "ada@acme.example.com", "display_name": "Ada Lovelace", "is_disabled": false},
+      "settings_by_key": {
+        "session_duration_hours": {"key": "session_duration_hours", "value": 12.0}
+      },
+      "application": {"type": "slack", "name": "Acme Workspace Slack"}
+    },
+    {
+      "_subject_id": "short-session",
+      "identity": {"email": "grace@acme.example.com", "display_name": "Grace Hopper", "is_disabled": false},
+      "settings_by_key": {
+        "session_duration_hours": {"key": "session_duration_hours", "value": 8.0}
+      },
+      "application": {"type": "slack", "name": "Acme Workspace Slack"}
+    },
+    {
+      "_subject_id": "no-explicit-setting",
+      "identity": {"email": "nobody@acme.example.com", "display_name": "No Setting Applied", "is_disabled": false},
+      "settings_by_key": {},
+      "application": {"type": "slack", "name": "Acme Workspace Slack"}
+    },
+    {
+      "_subject_id": "deactivated-long-session",
+      "identity": {"email": "former@acme.example.com", "display_name": "Former Employee", "is_disabled": true},
+      "settings_by_key": {
+        "session_duration_hours": {"key": "session_duration_hours", "value": 720.0}
+      },
+      "application": {"type": "slack", "name": "Acme Workspace Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["month-long-session"]
+}

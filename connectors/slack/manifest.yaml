@@ -1,0 +1,191 @@
+name: slack
+display_name: Slack
+version: "0.3.0"
+description: >
+  Collects Slack workspace members, user groups, admin/owner roles, Enterprise
+  Grid org roles, installed OAuth apps, Slack Connect orgs, externally shared
+  channels, information barriers, workflows, per-channel retention, SSO policy
+  assignments, invite requests, member analytics, and curated Audit Logs
+  (100+ actions) for SaaS security posture.
+setup_docs: docs/connectors/slack-setup.md
+auth_methods:
+  - id: oauth
+    label: "User OAuth Token (Enterprise) or bot token (workspace-only)"
+    secret_fields: [bot_token]
+    config_fields: [team_id, enterprise_id]
+    # Only Enterprise Grid org-level user tokens have an org (E…) id; a
+    # workspace bot token is configured with team_id alone.
+    optional_config_fields: [enterprise_id]
+    setup_overview: >
+      Kestrel stores one token. For Enterprise Grid, org-install as Org Owner
+      and paste the User OAuth Token (xoxp / xoxe) — not the Bot User OAuth
+      Token (xoxb). Slack OAuth requires at least one Bot Token Scope (add
+      team:read as an install stub) or install fails with no_bot_scopes_requested;
+      real permissions still go on User Token Scopes. conversations.connect:manage
+      is bot-only. Workspace-only: paste xoxb with bot scopes. No hosted Slack
+      OAuth in Kestrel.
+    scopes_note: >
+      Enterprise: Bot Token Scopes must include team:read (Slack install stub —
+      empty bot scopes → no_bot_scopes_requested). User Token Scopes: users:read,
+      users:read.email, usergroups:read, team:read, admin.apps:read,
+      admin.roles:read, admin.teams:read, admin.users:read,
+      admin.conversations:read, auditlogs:read, admin.invites:read,
+      admin.barriers:read, admin.usergroups:read, admin.workflows:read,
+      admin.analytics:read, admin.auth.policy:read. Paste User OAuth Token
+      into Kestrel.
+      conversations.connect:manage is bot-only / optional. Workspace-only
+      (Bot User OAuth Token): users:read, users:read.email, usergroups:read,
+      team:read.
+    field_help:
+      team_id: >
+        Slack team / workspace ID (starts with T…). Visible in workspace
+        settings, org admin URL (app.slack.com/manage/E…/T…/…), or auth.test.
+        Must match External tenant ref.
+      enterprise_id: >
+        Optional. Enterprise Grid org ID (starts with E…); leave blank for a
+        workspace bot token. Set it with an org-level user token to get
+        org-wide Admin Apps, member, and invite inventory; when set, Admin Apps
+        calls use enterprise_id instead of team_id (Slack forbids both).
+      bot_token: >
+        Enterprise: paste User OAuth Token (xoxp-… / xoxe-…) with all scopes
+        on User Token Scopes — not Bot User OAuth Token (xoxb-…). Workspace-only:
+        paste Bot User OAuth Token (xoxb-…) with bot scopes. Envelope-encrypted;
+        never shown again after save.
+    setup_steps:
+      - title: Create a Slack app for org install
+        body: >
+          Sign in as an Enterprise Org Owner. Create an app at api.slack.com,
+          enable public distribution, and install it on the Enterprise
+          organization (dropdown = org E…, not a workspace T…).
+        link_url: https://api.slack.com/apps
+        link_label: Slack API apps
+      - title: Add Bot Token Scope stub + User Token Scopes
+        body: >
+          Bot Token Scopes: add team:read (required — Slack returns
+          no_bot_scopes_requested if bot scopes are empty). User Token Scopes —
+          add ALL of: users:read, users:read.email, usergroups:read, team:read,
+          admin.apps:read, admin.roles:read, admin.teams:read, admin.users:read,
+          admin.conversations:read, auditlogs:read, admin.invites:read,
+          admin.barriers:read, admin.usergroups:read, admin.workflows:read,
+          admin.analytics:read, admin.auth.policy:read. Do not add
+          conversations.connect:manage under User Token Scopes — it is bot-only.
+      - title: Install on the Enterprise organization
+        body: >
+          Manage Distribution → Sharable URL → install as Org Owner on the
+          Enterprise org. Then grant the app to your workspace: Org Admin →
+          Integrations → Installed Apps → Manage → Add to more workspaces
+          (org install alone does not grant workspace access — otherwise sync
+          fails with team_access_not_granted). Copy User OAuth Token (xoxp / xoxe),
+          not Bot User OAuth Token.
+      - title: Set team_id and enterprise_id
+        body: >
+          team_id = workspace T… (External tenant ref). enterprise_id = org E…
+          from app.slack.com/manage/E…/T…/… or auth.test (Enterprise Grid
+          only; leave blank for a workspace bot token).
+      - title: Test connection and sync (live)
+        body: >
+          Paste User OAuth Token into bot_token. Test connection should show
+          green for members, user groups, Admin Apps, org roles, workspaces,
+          and Audit Logs. Then Sync now.
+required_scopes:
+  - users:read
+  - users:read.email
+  - usergroups:read
+  - team:read
+  # Channel inventory and membership (conversations.list / conversations.members).
+  - channels:read
+  - groups:read
+  - admin.apps:read
+  - admin.roles:read
+  - admin.teams:read
+  - admin.users:read
+  - admin.conversations:read
+  - auditlogs:read
+  # Release C — Enterprise depth (all :read; degrade gracefully on non-Grid).
+  - admin.invites:read
+  - admin.barriers:read
+  - admin.usergroups:read
+  - admin.workflows:read
+  - admin.analytics:read
+  # SSO / email-password policy assignments (admin.auth.policy.getEntities).
+  - admin.auth.policy:read
+object_types:
+  # The team payload produces tenant `setting` rows. The ApplicationInstance
+  # row is created out of band when the connector instance is configured.
+  - name: team
+    maps_to_entity: setting
+  - name: user
+    maps_to_entity: identity
+  - name: usergroup
+    maps_to_entity: group
+  - name: usergroup_member
+    maps_to_entity: group_membership
+  - name: admin_role
+    maps_to_entity: role
+  - name: role_assignment
+    maps_to_entity: grant
+  - name: oauth_app
+    maps_to_entity: oauth_application
+  - name: oauth_scope
+    maps_to_entity: oauth_scope
+  - name: oauth_grant
+    maps_to_entity: oauth_grant
+  - name: workspace
+    maps_to_entity: group
+  - name: org_role
+    maps_to_entity: role
+  - name: org_role_assignment
+    maps_to_entity: grant
+  - name: restricted_app
+    maps_to_entity: oauth_application
+  - name: app_request
+    maps_to_entity: setting
+  - name: external_team
+    maps_to_entity: setting
+  # Every public and private channel the token can see; membership grants for
+  # private and externally shared channels up to `channel_membership_limit`.
+  - name: channel
+    maps_to_entity: resource
+  - name: shared_channel
+    maps_to_entity: resource
+  - name: anomaly_allowlist
+    maps_to_entity: setting
+  - name: user_session_setting
+    maps_to_entity: setting
+  - name: audit_log
+    maps_to_entity: event
+    supports_incremental: true
+  # Release C — Enterprise depth families (all optional / degrade on non-Grid).
+  - name: sso_policy
+    maps_to_entity: setting
+  - name: information_barrier
+    maps_to_entity: setting
+  - name: workflow
+    maps_to_entity: resource
+  - name: channel_retention
+    maps_to_entity: setting
+  - name: invite_request
+    maps_to_entity: setting
+rate_limit_strategy: header_based
+supports_events: true
+provides_capabilities:
+  - slack:workspace_settings
+  - slack:identity
+  - slack:oauth_apps
+  - slack:app_activities
+  - slack:slack_connect
+  - slack:audit_events
+  - slack:sso_policy
+  - slack:information_barriers
+  - slack:workflows
+  - slack:channel_retention
+  - slack:invite_requests
+  - slack:member_analytics
+change_classes:
+  - admin_granted
+  - oauth_app_installed
+  - config_drift
+  - identity_added
+example_config:
+  team_id: T0ACMEWORK
+fixtures_path: fixtures/

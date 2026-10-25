@@ -1,0 +1,8 @@
+[
+  {
+    "id": 8901,
+    "name": "no-force-push",
+    "target": "branch",
+    "enforcement": "active"
+  }
+]

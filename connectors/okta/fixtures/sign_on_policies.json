@@ -1,0 +1,9 @@
+[
+  {
+    "id": "00pglobal000000001",
+    "name": "Default Policy",
+    "type": "OKTA_SIGN_ON",
+    "status": "ACTIVE",
+    "system": true
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "policies": [
+    {
+      "policy_type": "email_password",
+      "entities": [],
+      "policy_name": "Email/Password bypass (enforced for all)"
+    }
+  ]
+}

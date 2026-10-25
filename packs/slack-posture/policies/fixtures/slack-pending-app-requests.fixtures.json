@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "pending-one",
+      "setting": {
+        "key": "pending_app_requests",
+        "value": 1,
+        "label": "Pending app install requests"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "none-pending",
+      "setting": {
+        "key": "pending_app_requests",
+        "value": 0,
+        "label": "Pending app install requests"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["pending-one"]
+}

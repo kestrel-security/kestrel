@@ -1,0 +1,13 @@
+[
+  {
+    "kind": "admin#directory#token",
+    "clientId": "4433221100-pdfconvert.apps.googleusercontent.com",
+    "displayText": "PDF Convert Anywhere",
+    "anonymous": true,
+    "nativeApp": false,
+    "userKey": "100000000000000000003",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ]
+  }
+]

@@ -1,0 +1,42 @@
+name: acme-widgets
+display_name: Acme Widgets
+version: "0.1.0"
+description: >
+  Example Kestrel connector scaffold for Acme Widgets. Replace the
+  auth/client/collector/normalizer implementations with real calls to your
+  application's API -- this template ships with one object type ("user")
+  mapped to identities, enough to prove the wiring end-to-end.
+auth_methods:
+  - id: api_key
+    label: "API Key"
+    secret_fields: [api_key]
+    config_fields: [base_url]
+    setup_overview: >
+      Create an API key in your application's admin console, then paste it
+      into Kestrel. Replace these setup_steps with real vendor instructions
+      before shipping the connector.
+    field_help:
+      base_url: API base URL (HTTPS). Must pass Kestrel's SSRF guard.
+      api_key: Provider API key. Envelope-encrypted; never shown after save.
+    setup_steps:
+      - title: Open the provider admin console
+        body: >
+          Sign in as an admin who can create API keys for the tenant you want
+          Kestrel to monitor.
+      - title: Create a read-only API key
+        body: >
+          Generate a key with the least privileges needed to list users (and
+          other object types you will collect). Prefer read-only scopes.
+      - title: Copy the key into Kestrel
+        body: >
+          Paste the key into api_key on the Secrets step. Set base_url on
+          Config. Choose live sync mode, then Test connection / Sync now.
+required_scopes: []
+object_types:
+  - name: user
+    maps_to_entity: identity
+rate_limit_strategy: fixed_delay
+supports_events: false
+example_config:
+  base_url: "https://api.example.com"
+fixtures_path: fixtures/

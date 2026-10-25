@@ -1,0 +1,12 @@
+[
+  {
+    "label": "View users and their details",
+    "value": "okta.users.read",
+    "type": "okta.users.read"
+  },
+  {
+    "label": "View groups and their details",
+    "value": "okta.groups.read",
+    "type": "okta.groups.read"
+  }
+]

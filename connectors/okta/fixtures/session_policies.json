@@ -1,0 +1,15 @@
+[
+  {
+    "id": "sessionpolicy001",
+    "name": "Default session policy",
+    "rules": [
+      {
+        "actions": {
+          "session": {
+            "maxSessionIdleMinutes": 30
+          }
+        }
+      }
+    ]
+  }
+]

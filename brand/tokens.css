@@ -1,0 +1,14 @@
+/* Copyright 2026 The Kestrel Authors */
+/* SPDX-License-Identifier: Apache-2.0 */
+:root {
+  --kestrel-violet: #7441F0;
+  --kestrel-periwinkle: #5D61F1;
+  --kestrel-blue: #4689ED;
+  --kestrel-ink: #090C11;
+  --kestrel-dark-slate: #0F1117;
+  --kestrel-surface: #151922;
+  --kestrel-surface-elevated: #1B2130;
+  --kestrel-border: #2A3140;
+  --kestrel-white: #F8FAFC;
+  --kestrel-gradient: linear-gradient(135deg, #7441F0 0%, #5D61F1 52%, #4689ED 100%);
+}

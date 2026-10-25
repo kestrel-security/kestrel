@@ -1,0 +1,30 @@
+{
+  "rows": [
+    {
+      "_subject_id": "evaluate",
+      "setting": {"key": "repo_ruleset:8908", "value": {"name": "main-protection", "target": "branch", "enforcement": "evaluate"}, "label": "rs"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "disabled",
+      "setting": {"key": "repo_ruleset:8931", "value": {"name": "main-protection", "target": "branch", "enforcement": "disabled"}, "label": "rs"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "active",
+      "setting": {"key": "repo_ruleset:8903", "value": {"name": "main-protection", "target": "branch", "enforcement": "active"}, "label": "rs"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "the-org-ruleset-is-not-ours",
+      "setting": {"key": "org_ruleset:8801", "value": {"name": "main-protection", "target": "branch", "enforcement": "evaluate"}, "label": "rs"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "value-is-not-an-object",
+      "setting": {"key": "repo_ruleset:8999", "value": "evaluate", "label": "rs"},
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["evaluate", "disabled"]
+}

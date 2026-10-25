@@ -1,0 +1,14 @@
+[
+  {
+    "app": {
+      "id": "A0BLOCKED",
+      "name": "Blocked Exfil Bot",
+      "is_app_directory_approved": false,
+      "developer_type": "third_party"
+    },
+    "scopes": [
+      {"name": "files:read", "token_type": "bot", "is_sensitive": true}
+    ],
+    "date_updated": 1700002000
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "id": 7801,
+    "owner": {
+      "login": "carol",
+      "id": 1003,
+      "type": "User"
+    },
+    "repository_selection": "all",
+    "repositories_url": "https://api.github.com/orgs/acme-corp/personal-access-tokens/7801/repositories",
+    "permissions": {
+      "organization": {
+        "administration": "write"
+      },
+      "repository": {
+        "contents": "read",
+        "issues": "write"
+      }
+    },
+    "access_granted_at": "2026-09-01T10:00:00Z",
+    "token_expired": false,
+    "token_expires_at": null,
+    "token_last_used_at": "2026-09-20T15:00:00Z"
+  }
+]

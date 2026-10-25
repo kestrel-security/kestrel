@@ -1,0 +1,23 @@
+[
+  {
+    "id": "autpush000000001",
+    "key": "okta_verify",
+    "name": "Okta Verify",
+    "type": "app",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "autpwd0000000001",
+    "key": "okta_password",
+    "name": "Password",
+    "type": "password",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "autwebauthn00001",
+    "key": "webauthn",
+    "name": "Security Key or Biometric",
+    "type": "security_key",
+    "status": "INACTIVE"
+  }
+]

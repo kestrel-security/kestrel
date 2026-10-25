@@ -1,0 +1,27 @@
+[
+  {
+    "id": "tosapp0000000001",
+    "name": "Acme app",
+    "origin": "https://app.acme.example.com",
+    "status": "ACTIVE",
+    "scopes": [
+      {
+        "type": "CORS"
+      },
+      {
+        "type": "REDIRECT"
+      }
+    ]
+  },
+  {
+    "id": "toslegacy00000001",
+    "name": "Legacy portal",
+    "origin": "http://legacy.acme.example.com",
+    "status": "ACTIVE",
+    "scopes": [
+      {
+        "type": "REDIRECT"
+      }
+    ]
+  }
+]

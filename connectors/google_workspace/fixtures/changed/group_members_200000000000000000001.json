@@ -1,0 +1,42 @@
+[
+  {
+    "kind": "admin#directory#member",
+    "id": "100000000000000000002",
+    "email": "grace@acme.example.com",
+    "role": "MANAGER",
+    "type": "USER",
+    "status": "ACTIVE"
+  },
+  {
+    "kind": "admin#directory#member",
+    "id": "100000000000000000003",
+    "email": "alan@acme.example.com",
+    "role": "MEMBER",
+    "type": "USER",
+    "status": "ACTIVE"
+  },
+  {
+    "kind": "admin#directory#member",
+    "id": "900000000000000000009",
+    "email": "vendor.pm@partner.example.net",
+    "role": "MEMBER",
+    "type": "USER",
+    "status": "ACTIVE"
+  },
+  {
+    "kind": "admin#directory#member",
+    "id": "200000000000000000002",
+    "email": "security@acme.example.com",
+    "role": "MEMBER",
+    "type": "GROUP",
+    "status": "ACTIVE"
+  },
+  {
+    "kind": "admin#directory#member",
+    "id": "100000000000000000001",
+    "email": "ada@acme.example.com",
+    "role": "MEMBER",
+    "type": "USER",
+    "status": "ACTIVE"
+  }
+]

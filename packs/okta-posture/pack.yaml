@@ -1,0 +1,65 @@
+name: okta-posture
+version: "0.4.0"
+display_name: Okta Posture
+summary: >
+  MFA, admins, authentication and session policy, password policy, apps, API
+  tokens, behaviors, auth servers, log streams, devices, and System Log activity.
+description: >
+  Okta identity and tenant posture: MFA enrollment, privileged admins without
+  MFA, disabled and dormant admins, weak password policies, bookmark/SWA apps,
+  unused API tokens, behavioral detection, authorization server token lifetimes
+  and wildcard scopes, log stream coverage, super admin count, plus System Log
+  activity detections for policy weakening, impersonation, and zone changes.
+  Mapped to CIS / NIST CSF / SOC2 / CISA SCuBA-style controls.
+application: okta
+categories:
+  - identity
+  - privileged_access
+  - tenant_settings
+  - oauth_apps
+  - activity
+frameworks:
+  - cis
+  - nist_csf
+  - soc2
+  - cisa
+vendor_baselines:
+  - disa-okta-idaas-stig
+  - okta-security-best-practices
+policies:
+  - okta-mfa-enroll-not-required
+  - okta-admin-without-mfa
+  - okta-disabled-privileged-admin
+  - okta-dormant-admin
+  - okta-password-policy-weak
+  - okta-app-bookmark-or-swa
+  - okta-api-token-unused
+  - okta-threat-insight-disabled
+  - okta-activity-privilege-grant
+  - okta-activity-privilege-revoked
+  - okta-activity-api-token-created
+  - okta-device-assurance-without-disk-encryption
+  - okta-password-allows-username
+  - okta-activity-mfa-disabled
+  - okta-activity-threat-detected
+  # Authentication and session policy surface
+  - okta-policy-rule-without-mfa
+  - okta-session-never-expires
+  - okta-session-lifetime-excessive
+  - okta-no-phishing-resistant-authenticator
+  - okta-self-service-registration-enabled
+  # Perimeter and automation surface
+  - okta-hook-endpoint-plaintext
+  - okta-trusted-origin-plaintext
+  - okta-idp-auto-provisions-users
+  - okta-network-zone-matches-everything
+  # Extended: behaviors, auth servers, log streams, privilege
+  - okta-behaviors-disabled
+  - okta-no-log-stream
+  - okta-auth-server-long-token-lifetime
+  - okta-auth-server-wildcard-scope
+  - okta-super-admin-count-out-of-range
+  # Extended: activity detections
+  - okta-activity-policy-weakening
+  - okta-activity-impersonation
+  - okta-activity-zone-change

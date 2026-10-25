@@ -1,0 +1,136 @@
+# Fixture provenance: where every field that produces a setting comes from.
+# Format and rationale: see connectors/google_workspace/fixtures/PROVENANCE.yaml.
+#
+# Slack is the connector this check exists for. `two_factor_required`,
+# `app_approval_enabled`, `sso_enabled`, and `session_duration_hours` were all
+# emitted from `team.info` and `admin.teams.settings.info`, which return none of
+# them. Worse, the workspace guard fired whenever *any* value was present -- and
+# `domain` always is -- so a live workspace got four settings with null values,
+# and `slack-sso-not-enforced` (high) opened on every tenant from a null.
+
+sources:
+  team:
+    endpoint: GET /team.info
+    docs: https://docs.slack.dev/reference/methods/team.info
+    # The whole response: id, name, domain, email_domain, icon, enterprise_id,
+    # enterprise_name. No security configuration of any kind.
+    returns:
+      - domain
+    synthetic: {}
+
+  workspace:
+    endpoint: POST /admin.teams.settings.info
+    docs: https://docs.slack.dev/reference/methods/admin.teams.settings.info
+    # Adds only `default_channels` over team.info. Notably NOT 2FA enforcement,
+    # app approval, SSO, or session duration.
+    returns:
+      - domain
+    synthetic: {}
+
+  user_session_setting:
+    endpoint: POST /admin.users.session.getSettings
+    docs: https://docs.slack.dev/reference/methods/admin.users.session.getSettings
+    # Slack applies session duration per account, not per workspace. `duration`
+    # is in seconds; the normalizer converts to hours.
+    returns:
+      - duration
+    synthetic: {}
+
+  # These emit settings from the *existence* of a record rather than from any
+  # field on it, so perturbation finds no consumed fields. Declared so the
+  # object type is covered and a future field read is caught.
+  app_request:
+    endpoint: GET /admin.apps.requests.list
+    docs: https://docs.slack.dev/reference/methods/admin.apps.requests.list
+    returns: []
+    synthetic: {}
+    constant:
+      pending_app_requests: >-
+        One row per pending request; the value is the count contribution, not a
+        field. The record existing is the signal.
+
+  external_team:
+    endpoint: GET /team.externalTeams.list
+    docs: https://docs.slack.dev/reference/methods/team.externalTeams.list
+    returns: []
+    synthetic: {}
+    constant:
+      slack_connect_org_connected: >-
+        An existence signal: a returned external team means Slack Connect is in
+        use. No field on the record carries it.
+
+  shared_channel:
+    endpoint: POST /admin.conversations.search
+    docs: https://docs.slack.dev/reference/methods/admin.conversations.search
+    returns: []
+    synthetic: {}
+    constant:
+      external_shared_channel: >-
+        An existence signal, emitted only for channels the normalizer has
+        already determined are externally shared.
+
+  anomaly_allowlist:
+    endpoint: POST /admin.audit.anomaly.allow.getItem
+    docs: https://docs.slack.dev/reference/methods/admin.audit.anomaly.allow.getItem
+    returns: []
+    synthetic: {}
+    constant:
+      anomaly_allowlist_configured: >-
+        Not truly constant: it is derived from `trusted_cidrs` / `trusted_asns`.
+        The bundled fixture holds an empty allowlist, so removing either key on
+        its own cannot change the result and the probe cannot see the
+        dependency. Listed here as a known limit of the check -- a setting the
+        fixtures do not exercise in both directions.
+
+  # Release C — Enterprise depth families
+  sso_policy:
+    endpoint: POST /admin.auth.policy.getEntities
+    docs: https://docs.slack.dev/reference/methods/admin.auth.policy.getEntities
+    # The collector unwraps each entry of `policies` into its own row, so the
+    # normalizer sees the policy fields at the top level.
+    returns:
+      - policy_type
+      - entities
+    synthetic: {}
+    notes: >-
+      sso_bypass_count is derived from len(entities) -- number of users/groups
+      that can bypass SSO. Zero means SSO is enforced for all.
+
+  information_barrier:
+    endpoint: GET /admin.barriers.list
+    docs: https://docs.slack.dev/reference/methods/admin.barriers.list
+    returns: []
+    synthetic: {}
+    constant:
+      information_barrier_configured: >-
+        Existence signal: a returned barrier means at least one is active.
+        Absence (empty list) means no barriers configured.
+
+  # Workflows normalize to resources, not settings, so they are not listed here.
+
+  channel_retention:
+    endpoint: POST /admin.conversations.getCustomRetention
+    docs: https://docs.slack.dev/reference/methods/admin.conversations.getCustomRetention
+    returns:
+      - type
+      - duration
+    synthetic: {}
+    notes: >-
+      Called per-channel (private and ext-shared up to channel_membership_limit).
+      Returns empty/null when a channel has no custom policy; the collector skips
+      those and emits only channels with a real custom retention setting.
+
+  invite_request:
+    endpoint: GET /admin.invites.invited.list
+    docs: https://docs.slack.dev/reference/methods/admin.invites.invited.list
+    returns: []
+    synthetic:
+      days_pending: >-
+        Computed by the collector: (now - date_create) / 86400. Used by
+        slack-stale-invite-request to report staleness.
+    constant:
+      pending_invite_requests: >-
+        Existence signal. Each pending request emits the value 1; the count is
+        the number of rows, not a field on the request.
+
+  # Member analytics updates identity last-active timestamps. It does not emit settings.

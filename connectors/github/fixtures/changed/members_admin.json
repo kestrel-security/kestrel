@@ -1,0 +1,29 @@
+[
+  {
+    "login": "alice",
+    "id": 1001,
+    "node_id": "U_1001",
+    "type": "User",
+    "site_admin": false,
+    "name": "Grace Hopper",
+    "email": "grace@acme.example.com"
+  },
+  {
+    "login": "carol",
+    "id": 1003,
+    "node_id": "U_1003",
+    "type": "User",
+    "site_admin": false,
+    "name": "Ada Lovelace",
+    "email": "ada@acme.example.com"
+  },
+  {
+    "login": "bob",
+    "id": 1002,
+    "node_id": "U_1002",
+    "type": "User",
+    "site_admin": false,
+    "name": "Alan Turing",
+    "email": "alan@acme.example.com"
+  }
+]

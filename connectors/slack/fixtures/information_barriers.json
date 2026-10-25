@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "barriers": [
+    {
+      "id": "BARRIER01",
+      "barrier_id": "BARRIER01",
+      "primary_usergroup": "S0SECURITY",
+      "barriered_from_usergroups": ["S0ENGINEERING"],
+      "guarded_usergroups": [],
+      "date_create": 1700000000,
+      "date_update": 1700000000,
+      "enterprise_id": "E0ACMEGRID"
+    }
+  ]
+}

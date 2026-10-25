@@ -1,0 +1,43 @@
+[project]
+name = "kestrel-connector-google-workspace"
+version = "0.2.0"
+description = "Kestrel connector for Google Workspace domains."
+license = "Apache-2.0"
+authors = [{name = "The Kestrel Authors"}]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "kestrel",
+    "pyjwt[crypto]>=2.15.1",
+    "httpx>=0.27",
+]
+
+[project.urls]
+Homepage = "https://github.com/kestrel-security/kestrel"
+Repository = "https://github.com/kestrel-security/kestrel"
+Issues = "https://github.com/kestrel-security/kestrel/issues"
+Documentation = "https://github.com/kestrel-security/kestrel/tree/main/docs"
+Changelog = "https://github.com/kestrel-security/kestrel/blob/main/CHANGELOG.md"
+
+[project.entry-points."kestrel.connectors"]
+google_workspace = "kestrel_connector_google_workspace.connector:GoogleWorkspaceConnector"
+
+[tool.uv.sources]
+kestrel = { workspace = true }
+
+[build-system]
+requires = ["hatchling>=1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kestrel_connector_google_workspace"]

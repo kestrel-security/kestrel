@@ -1,0 +1,15 @@
+[
+  {
+    "id": "calpwd0000000001",
+    "name": "Password import",
+    "status": "ACTIVE",
+    "type": "com.okta.user.credential.password.import",
+    "channel": {
+      "type": "HTTP",
+      "version": "1.0.0",
+      "config": {
+        "uri": "http://legacy-auth.example.test/verify"
+      }
+    }
+  }
+]

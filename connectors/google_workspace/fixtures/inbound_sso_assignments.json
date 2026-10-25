@@ -1,0 +1,21 @@
+{
+  "inboundSsoAssignments": [
+    {
+      "name": "inboundSsoAssignments/assign-root",
+      "customer": "customers/C0acme1234",
+      "ssoMode": "SSO_OFF",
+      "targetOrgUnit": "orgUnits/id:ou-root",
+      "orgUnit": "orgUnits/id:ou-root"
+    },
+    {
+      "name": "inboundSsoAssignments/assign-eng",
+      "customer": "customers/C0acme1234",
+      "ssoMode": "SAML_SSO",
+      "targetOrgUnit": "orgUnits/id:ou-eng",
+      "orgUnit": "orgUnits/id:ou-eng",
+      "samlSsoInfo": {
+        "inboundSamlSsoProfile": "inboundSamlSsoProfiles/okta-acme-sso"
+      }
+    }
+  ]
+}

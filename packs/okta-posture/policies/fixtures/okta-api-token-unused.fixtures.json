@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "_subject_id": "stale-token",
+      "identity": {
+        "identity_type": "service_account",
+        "display_name": "API token: Legacy automation token",
+        "last_active_at": {"$days_ago": 200}
+      },
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": []
+    },
+    {
+      "_subject_id": "fresh-token",
+      "identity": {
+        "identity_type": "service_account",
+        "display_name": "API token: CI token",
+        "last_active_at": {"$days_ago": 7}
+      },
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["stale-token"]
+}

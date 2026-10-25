@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "public-allowed",
+      "setting": {
+        "key": "members_can_create_public_repositories",
+        "value": true,
+        "label": "Members can create public repositories"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "public-blocked",
+      "setting": {
+        "key": "members_can_create_public_repositories",
+        "value": false,
+        "label": "Members can create public repositories"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["public-allowed"]
+}

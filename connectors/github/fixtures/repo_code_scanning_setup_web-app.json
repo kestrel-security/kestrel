@@ -1,0 +1,6 @@
+{
+  "state": "configured",
+  "languages": ["python", "javascript"],
+  "query_suite": "default",
+  "schedule": "weekly"
+}

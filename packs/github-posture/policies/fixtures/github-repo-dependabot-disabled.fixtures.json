@@ -1,0 +1,80 @@
+{
+  "rows": [
+    {
+      "_subject_id": "off",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "off"
+      },
+      "settings_by_key": {
+        "repo_dependabot_security_updates_enabled": {
+          "key": "repo_dependabot_security_updates_enabled",
+          "value": false,
+          "category": "security",
+          "label": "repo_dependabot_security_updates_enabled"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_dependabot_security_updates_enabled",
+          "value": false,
+          "category": "security",
+          "label": "repo_dependabot_security_updates_enabled"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "on",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "on"
+      },
+      "settings_by_key": {
+        "repo_dependabot_security_updates_enabled": {
+          "key": "repo_dependabot_security_updates_enabled",
+          "value": true,
+          "category": "security",
+          "label": "repo_dependabot_security_updates_enabled"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_dependabot_security_updates_enabled",
+          "value": true,
+          "category": "security",
+          "label": "repo_dependabot_security_updates_enabled"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "unknown",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "unknown"
+      },
+      "settings_by_key": {},
+      "settings": [],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "off"
+  ]
+}

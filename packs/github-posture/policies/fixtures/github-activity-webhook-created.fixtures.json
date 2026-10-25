@@ -1,0 +1,72 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent",
+      "event": {
+        "action": "webhook.create",
+        "actor_provider_id": "1002",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "summary": "GitHub audit: webhook.create",
+        "attributes": {
+          "actor_login": "bob",
+          "repo": "acme-corp/web-app"
+        }
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "old",
+      "event": {
+        "action": "webhook.create",
+        "actor_provider_id": "1002",
+        "occurred_at": {
+          "$days_ago": 400
+        },
+        "summary": "GitHub audit: webhook.create",
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "other-action",
+      "event": {
+        "action": "identity.add",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "summary": "unrelated",
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "other-app",
+      "event": {
+        "action": "webhook.create",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "summary": "elsewhere",
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "recent"
+  ]
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "id": 6101,
+    "active": true,
+    "events": [
+      "push"
+    ],
+    "config": {
+      "url": "https://ci.example.test/hook?token=not-real",
+      "insecure_ssl": "0"
+    }
+  }
+]

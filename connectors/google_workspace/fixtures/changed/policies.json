@@ -1,0 +1,52 @@
+{
+  "policies": [
+    {
+      "name": "policies/e1000000000001",
+      "type": "security.two_step_verification_enforcement",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "security.two_step_verification_enforcement",
+        "value": {
+          "enforcementMode": "NOT_ENFORCED"
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000002",
+      "type": "security.two_step_verification_enforcement",
+      "customer": "customers/C0acme1234",
+      "orgUnit": {
+        "orgUnitId": "id:ou-eng"
+      },
+      "setting": {
+        "type": "security.two_step_verification_enforcement",
+        "value": {
+          "enforcementMode": "NOT_ENFORCED"
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000005",
+      "type": "workspace.gmail.allow_auto_forwarding",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.gmail.allow_auto_forwarding",
+        "value": {
+          "enableAutoForwarding": true
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000007",
+      "type": "workspace.drive.external_sharing",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.drive.external_sharing",
+        "value": {
+          "externalSharingMode": "ALLOWED",
+          "allowedDomains": []
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+/* Copyright 2026 The Kestrel Authors */
+/* SPDX-License-Identifier: Apache-2.0 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Brand tokens (from brand/tokens.css) mapped into shadcn HSL CSS variables.
+  Dark-first via .dark on <html>; Light / System / Dark via ThemeScript + nav control.
+*/
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: 210 40% 98%;
+    --foreground: 225 21% 7%;
+    --card: 0 0% 100%;
+    --card-foreground: 225 21% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 225 21% 7%;
+    --primary: 257 85% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 225 21% 7%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 43%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 225 21% 7%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 257 85% 60%;
+    --radius: 0.5rem;
+    /* Elevated: nested/selected content above a card (dropdowns, popovers, active rows). */
+    --elevated: 210 40% 96%;
+    --elevated-foreground: 225 21% 7%;
+    /* Sidebar: distinct recessed chrome tone so the app shell reads as structure, not another card. */
+    --sidebar: 222 24% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 221 21% 21%;
+    --sidebar-muted: 215 16% 65%;
+    --chart-grid: 214 32% 91%;
+    --kestrel-violet: #7441f0;
+    --kestrel-periwinkle: #5d61f1;
+    --kestrel-blue: #4689ed;
+    --kestrel-gradient: linear-gradient(135deg, #7441f0 0%, #5d61f1 52%, #4689ed 100%);
+    /* Muted semantic tones — desaturated traffic-light hues for charts, badges, KPI accents. */
+    --tone-critical: 356 55% 52%;
+    --tone-high: 24 62% 52%;
+    --tone-medium: 38 55% 50%;
+    --tone-low: 216 55% 55%;
+    --tone-info: 239 45% 60%;
+    --tone-success: 152 40% 42%;
+    --tone-neutral: 215 16% 55%;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 218 31% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 24% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 223 28% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 257 85% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 223 28% 15%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 223 28% 15%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 223 28% 15%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 221 21% 21%;
+    --input: 221 21% 21%;
+    --ring: 257 85% 60%;
+    /* Elevated: nested/selected content above a card (dropdowns, popovers, active rows). */
+    --elevated: 223 28% 17%;
+    --elevated-foreground: 210 40% 98%;
+    /* Sidebar: darker than card surface -- recessed chrome that content floats above. */
+    --sidebar: 225 21% 7%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 221 21% 16%;
+    --sidebar-muted: 215 16% 55%;
+    --chart-grid: 221 21% 21%;
+    --tone-critical: 356 60% 62%;
+    --tone-high: 26 62% 60%;
+    --tone-medium: 40 58% 60%;
+    --tone-low: 216 60% 66%;
+    --tone-info: 239 50% 70%;
+    --tone-success: 152 40% 55%;
+    --tone-neutral: 215 16% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  /* Compact uppercase micro-label used for KPI labels, section eyebrows, table group headers. */
+  .text-eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-muted-foreground;
+  }
+  .surface-elevated {
+    @apply bg-elevated text-elevated-foreground;
+  }
+}
+
+/* Logo swap: dark class default; light when .dark is absent. */
+.kestrel-logo-light {
+  display: none;
+}
+.kestrel-logo-dark {
+  display: block;
+}
+:root:not(.dark) .kestrel-logo-light {
+  display: block;
+}
+:root:not(.dark) .kestrel-logo-dark {
+  display: none;
+}
+
+/*
+  Primary nav.
+
+  From md up it is a rail, collapsible to icons. Preference: localStorage
+  `kestrel-sidebar-collapsed` → html[data-sidebar-collapsed] via SidebarScript
+  (before paint) + useSidebarCollapsed toggle.
+
+  Below md it is an off-canvas drawer opened from the top bar's menu button
+  (components/nav.tsx); the collapse preference doesn't apply there, so every
+  [data-sidebar-collapsed] rule sits inside the md media query.
+*/
+:root {
+  --sidebar-width: 16rem;
+  --sidebar-width-collapsed: 4rem;
+}
+
+.kestrel-nav {
+  width: var(--sidebar-width);
+  transition:
+    width 150ms ease,
+    transform 200ms ease;
+}
+
+.kestrel-logo-compact {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  html[data-sidebar-collapsed] .kestrel-nav {
+    width: var(--sidebar-width-collapsed);
+  }
+
+  /* Collapsible logo: full lockup expanded; compact mark when collapsed. */
+  html[data-sidebar-collapsed] .kestrel-logo-full {
+    display: none;
+  }
+  html[data-sidebar-collapsed] .kestrel-logo-compact {
+    display: block;
+  }
+
+  /* Text labels when collapsed; controls keep aria-label for AT. */
+  html[data-sidebar-collapsed] .sidebar-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Center icon-only chrome when collapsed. */
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-nav-link,
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-search,
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-sign-out {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-header {
+    align-items: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-brand {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-brand-actions {
+    flex-direction: column;
+  }
+
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-operator {
+    justify-content: center;
+  }
+
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-theme-group {
+    flex-direction: column;
+  }
+
+  html[data-sidebar-collapsed] .kestrel-nav .sidebar-active-pip {
+    left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* react-grid-layout: match Kestrel surfaces */
+.react-grid-item.react-grid-placeholder {
+  background: hsl(var(--primary) / 0.15) !important;
+  border-radius: 0.5rem;
+  opacity: 1;
+}
+.react-grid-item > .react-resizable-handle::after {
+  border-color: hsl(var(--muted-foreground)) !important;
+}

@@ -1,0 +1,62 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "event": {
+        "action": "config.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": "2026-08-14T11:00:00Z",
+        "summary": "Okta System Log: Network zone updated (config.change)",
+        "attributes": {
+          "okta_event_type": "zone.update",
+          "severity": "WARN",
+          "outcome": "SUCCESS"
+        }
+      },
+      "_subject_id": "network-zone-updated"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "event": {
+        "action": "config.change",
+        "actor_email": "alan@acme.example.com",
+        "occurred_at": "2026-08-14T12:00:00Z",
+        "summary": "Okta System Log: Network zone deleted (config.change)",
+        "attributes": {
+          "okta_event_type": "zone.delete",
+          "severity": "WARN",
+          "outcome": "SUCCESS"
+        }
+      },
+      "_subject_id": "network-zone-deleted"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "event": {
+        "action": "config.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": "2026-08-15T08:00:00Z",
+        "summary": "Okta System Log: App updated (config.change)",
+        "attributes": {
+          "okta_event_type": "app.lifecycle.update",
+          "severity": "INFO",
+          "outcome": "SUCCESS"
+        }
+      },
+      "_subject_id": "non-zone-config-change-is-not-flagged"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "network-zone-updated",
+    "network-zone-deleted"
+  ]
+}

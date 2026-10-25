@@ -1,0 +1,75 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-suspicious",
+      "event": {
+        "action": "threat.detected",
+        "action_category": "threat",
+        "actor_email": "grace@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 3
+        },
+        "summary": "suspicious_login",
+        "attributes": {
+          "gws_event_name": "suspicious_login",
+          "ip_address": "203.0.113.9"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "old-suspicious",
+      "event": {
+        "action": "threat.detected",
+        "action_category": "threat",
+        "actor_email": "grace@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 90
+        },
+        "summary": "suspicious_login"
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "plain-failure",
+      "event": {
+        "action": "auth.failure",
+        "action_category": "auth",
+        "actor_email": "alan@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 1
+        },
+        "summary": "login_failure"
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "other-app",
+      "event": {
+        "action": "threat.detected",
+        "action_category": "threat",
+        "actor_email": "x@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 1
+        },
+        "summary": "okta"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "recent-suspicious"
+  ]
+}

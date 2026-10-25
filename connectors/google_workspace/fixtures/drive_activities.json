@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "kind": "admin#reports#activity",
+      "id": {
+        "time": "2026-09-18T13:00:00.000Z",
+        "uniqueQualifier": "8001",
+        "applicationName": "drive",
+        "customerId": "C0acme1234"
+      },
+      "actor": {
+        "email": "grace@acme.example.com",
+        "profileId": "100000000000000000002"
+      },
+      "ipAddress": "198.51.100.6",
+      "events": [
+        {
+          "name": "change_document_access_scope",
+          "type": "access",
+          "parameters": [
+            {"name": "doc_id", "value": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"},
+            {"name": "doc_title", "value": "Q4 Financial Projections"},
+            {"name": "visibility", "value": "people_with_link"},
+            {"name": "new_value", "value": "shared_externally"},
+            {"name": "old_value", "value": "private"}
+          ]
+        }
+      ]
+    }
+  ]
+}

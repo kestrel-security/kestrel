@@ -1,0 +1,99 @@
+name: github-posture
+version: "0.4.0"
+display_name: GitHub Posture
+summary: >
+  MFA, privileged access, supply chain, org settings, and audit activity for
+  GitHub.
+description: >
+  GitHub organization and repository posture: MFA for admins, external and
+  disabled privileged access, direct grants, org 2FA and default permissions.
+  Supply chain: the default GITHUB_TOKEN scope, third-party Actions, runner
+  groups reachable from public repositories, org secret visibility, webhooks
+  delivering without TLS verification, installed Apps holding sensitive
+  permissions, and rulesets that evaluate without enforcing. Plus Copilot
+  policy (public code suggestions, inactive seats), IP allow list, approved
+  fine-grained PATs with admin permissions, public packages from private repos,
+  open Dependabot and code-scanning alert counts, code scanning setup state,
+  vulnerability alert enablement, and required status checks. Activity
+  detections cover privilege change, branch-protection removal, repositories
+  made public, SSO changes, App installs, webhooks, deploy keys, Copilot seat
+  changes, OIDC changes, and audit log streaming configuration. Mapped to
+  CIS / NIST CSF / SOC2 / CISA SCuBA-style controls where collected data
+  supports it.
+application: github
+categories:
+  - identity
+  - privileged_access
+  - supply_chain
+  - tenant_settings
+  - activity
+frameworks:
+  - cis
+  - nist_csf
+  - soc2
+vendor_baselines:
+  - cis-github-benchmark-v1.2.0
+policies:
+  - github-external-collaborator-on-sensitive-repo
+  - github-org-admin-without-mfa
+  - github-external-collaborator-admin
+  - github-direct-repo-admin
+  - github-disabled-org-admin
+  - github-disabled-repo-admin
+  - github-external-org-admin
+  - github-repo-admin-without-mfa
+  - github-org-2fa-not-required
+  - github-default-repo-permission-admin
+  - github-members-can-create-public-repos
+  - github-private-repo-forking-allowed
+  - github-activity-privileged-grant
+  - github-activity-mfa-disabled
+  - github-activity-sensitive-oauth
+  - github-activity-external-privilege
+  - github-activity-sa-escalation
+  - github-activity-dormant-reactivation
+  # Org security surface
+  - github-actions-default-token-write
+  - github-actions-workflows-can-approve-prs
+  - github-actions-all-third-party-allowed
+  - github-runner-group-allows-public-repos
+  - github-actions-secret-visible-to-all-repos
+  - github-org-webhook-tls-disabled
+  - github-org-ruleset-not-enforced
+  - github-repo-ruleset-not-enforced
+  - github-pending-admin-invitation
+  - github-pat-request-all-repositories
+  - github-sso-credential-stale
+  - github-app-overpermissioned
+  # Audit taxonomy detections
+  - github-activity-branch-protection-disabled
+  - github-activity-repo-made-public
+  - github-activity-sso-changed
+  - github-activity-app-installed
+  - github-activity-webhook-created
+  - github-activity-deploy-key-created
+  - github-activity-privilege-revoked
+  # Per-repository posture
+  - github-repo-default-branch-unprotected
+  - github-repo-no-required-reviews
+  - github-repo-admins-bypass-protection
+  - github-repo-force-push-allowed
+  - github-repo-writable-deploy-key
+  - github-repo-webhook-tls-disabled
+  - github-repo-environment-without-reviewers
+  - github-repo-secret-scanning-disabled
+  - github-repo-push-protection-disabled
+  - github-repo-dependabot-disabled
+  - github-repo-open-secret-scanning-alerts
+  # Extended: IP allow list, Copilot, PATs, packages, additional repo posture
+  - github-ip-allow-list-disabled
+  - github-audit-log-streaming-not-configured
+  - github-repo-dependabot-critical-alerts
+  - github-repo-code-scanning-disabled
+  - github-repo-required-checks-missing
+  - github-repo-security-defaults-off
+  - github-copilot-public-code-suggestions
+  - github-copilot-seat-inactive
+  - github-public-package-from-private-repo
+  - github-custom-repo-role-broad
+  - github-approved-pat-admin-permissions

@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "former-admin",
+      "identity": {"email": "former@acme.example", "display_name": "Former Admin", "is_disabled": true, "mfa_enabled": true},
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["organization_admin"]
+    },
+    {
+      "_subject_id": "active-admin",
+      "identity": {"email": "admin@acme.example", "display_name": "Active Admin", "is_disabled": false, "mfa_enabled": true},
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["organization_admin"]
+    },
+    {
+      "_subject_id": "disabled-member",
+      "identity": {"email": "ex@acme.example", "display_name": "Ex Member", "is_disabled": true, "mfa_enabled": false},
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["former-admin"]
+}

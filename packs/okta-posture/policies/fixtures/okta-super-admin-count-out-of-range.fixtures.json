@@ -1,0 +1,64 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "role": {
+        "name": "Super Administrator",
+        "is_privileged": true
+      },
+      "grant": {
+        "granted_via": "direct"
+      },
+      "identity": {
+        "display_name": "Ada Lovelace",
+        "email": "ada@acme.example.com",
+        "is_disabled": false
+      },
+      "_subject_id": "active-super-admin-grant-flagged-for-review"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "role": {
+        "name": "Super Administrator",
+        "is_privileged": true
+      },
+      "grant": {
+        "granted_via": "direct"
+      },
+      "identity": {
+        "display_name": "Former Admin",
+        "email": "former@acme.example.com",
+        "is_disabled": true
+      },
+      "_subject_id": "disabled-super-admin-is-not-flagged"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "role": {
+        "name": "Organization Administrator",
+        "is_privileged": true
+      },
+      "grant": {
+        "granted_via": "direct"
+      },
+      "identity": {
+        "display_name": "Alan Turing",
+        "email": "alan@acme.example.com",
+        "is_disabled": false
+      },
+      "_subject_id": "org-admin-is-not-flagged"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "active-super-admin-grant-flagged-for-review"
+  ]
+}

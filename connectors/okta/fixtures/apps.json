@@ -1,0 +1,99 @@
+[
+  {
+    "id": "0oaslack000000000001",
+    "name": "slack",
+    "label": "Slack",
+    "status": "ACTIVE",
+    "signOnMode": "OPENID_CONNECT",
+    "created": "2023-01-01T00:00:00.000Z",
+    "lastUpdated": "2024-06-01T00:00:00.000Z",
+    "credentials": {
+      "oauthClient": {
+        "client_id": "0oaslack.client"
+      }
+    },
+    "settings": {
+      "oauthClient": {
+        "scopes": [
+          "openid",
+          "profile",
+          "email",
+          "channels:history"
+        ],
+        "grant_types": [
+          "authorization_code"
+        ]
+      }
+    }
+  },
+  {
+    "id": "0oagithub00000000002",
+    "name": "github",
+    "label": "GitHub",
+    "status": "ACTIVE",
+    "signOnMode": "OPENID_CONNECT",
+    "created": "2023-02-01T00:00:00.000Z",
+    "lastUpdated": "2024-01-15T00:00:00.000Z",
+    "credentials": {
+      "oauthClient": {
+        "client_id": "0oagithub.client"
+      }
+    },
+    "settings": {
+      "oauthClient": {
+        "scopes": [
+          "openid",
+          "repo",
+          "okta.users.read"
+        ],
+        "grant_types": [
+          "authorization_code"
+        ]
+      }
+    }
+  },
+  {
+    "id": "0oainternal000000003",
+    "name": "internal_hr",
+    "label": "Internal HR",
+    "status": "ACTIVE",
+    "signOnMode": "SAML_2_0",
+    "created": "2022-01-01T00:00:00.000Z",
+    "lastUpdated": "2023-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "0oabookmark000000004",
+    "name": "legacy_portal",
+    "label": "Legacy HR Portal",
+    "status": "ACTIVE",
+    "signOnMode": "BOOKMARK",
+    "created": "2022-06-01T00:00:00.000Z",
+    "lastUpdated": "2023-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "0oaciprovision00005",
+    "name": "oidc_client",
+    "label": "CI Provisioner",
+    "status": "ACTIVE",
+    "signOnMode": "OPENID_CONNECT",
+    "created": "2026-05-02T10:00:00.000Z",
+    "lastUpdated": "2026-08-20T10:00:00.000Z",
+    "credentials": {
+      "oauthClient": {
+        "client_id": "0oaciprovision00005",
+        "token_endpoint_auth_method": "private_key_jwt"
+      }
+    },
+    "settings": {
+      "oauthClient": {
+        "application_type": "service",
+        "grant_types": [
+          "client_credentials"
+        ],
+        "scopes": [
+          "okta.users.read"
+        ]
+      }
+    }
+  }
+]

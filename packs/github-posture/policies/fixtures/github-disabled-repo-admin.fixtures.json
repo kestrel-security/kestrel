@@ -1,0 +1,60 @@
+{
+  "rows": [
+    {
+      "_subject_id": "disabled-repo-admin",
+      "identity": {
+        "email": "dev@acme.example",
+        "display_name": "Dev",
+        "is_disabled": true
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": [],
+      "_related": {
+        "grants": [
+          {"grant": {"permission_level": "admin", "granted_via": "direct"}}
+        ]
+      }
+    },
+    {
+      "_subject_id": "active-repo-admin",
+      "identity": {
+        "email": "alice@acme.example",
+        "display_name": "alice",
+        "is_disabled": false
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": [],
+      "_related": {
+        "grants": [
+          {"grant": {"permission_level": "admin", "granted_via": "group"}}
+        ]
+      }
+    },
+    {
+      "_subject_id": "disabled-read-only",
+      "identity": {
+        "email": "bob@acme.example",
+        "display_name": "bob",
+        "is_disabled": true
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": [],
+      "_related": {
+        "grants": [
+          {"grant": {"permission_level": "read", "granted_via": "direct"}}
+        ]
+      }
+    },
+    {
+      "_subject_id": "disabled-no-grants",
+      "identity": {
+        "email": "carol@acme.example",
+        "display_name": "carol",
+        "is_disabled": true
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["disabled-repo-admin"]
+}

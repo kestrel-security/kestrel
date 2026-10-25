@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "_subject_id": "stale-invite",
+      "settings_by_key": {
+        "pending_invite_requests": {"key": "pending_invite_requests", "value": 1, "category": "security"}
+      },
+      "raw_source": {
+        "email": "stale@old.example.com",
+        "days_pending": 45
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "fresh-invite",
+      "settings_by_key": {
+        "pending_invite_requests": {"key": "pending_invite_requests", "value": 1, "category": "security"}
+      },
+      "raw_source": {
+        "email": "newjoin@vendor.example.com",
+        "days_pending": 5
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "no-requests",
+      "settings_by_key": {},
+      "raw_source": {},
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["stale-invite"]
+}

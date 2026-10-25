@@ -1,0 +1,17 @@
+[
+  {
+    "id": "ausDefault000001",
+    "name": "default",
+    "description": "Okta Authorization Server",
+    "audiences": ["api://default"],
+    "issuer": "https://acme.okta.com/oauth2/ausDefault000001",
+    "status": "ACTIVE",
+    "credentials": {
+      "signing": {
+        "rotationMode": "AUTO"
+      }
+    },
+    "created": "2023-01-01T00:00:00.000Z",
+    "lastUpdated": "2025-01-01T00:00:00.000Z"
+  }
+]

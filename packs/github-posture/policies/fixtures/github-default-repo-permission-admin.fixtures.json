@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "perm-admin",
+      "setting": {
+        "key": "default_repository_permission",
+        "value": "admin",
+        "label": "Default repository permission"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "perm-read",
+      "setting": {
+        "key": "default_repository_permission",
+        "value": "read",
+        "label": "Default repository permission"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["perm-admin"]
+}

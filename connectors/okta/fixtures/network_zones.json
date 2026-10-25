@@ -1,0 +1,30 @@
+[
+  {
+    "id": "nzooffice00000001",
+    "name": "Corporate office",
+    "type": "IP",
+    "usage": "POLICY",
+    "status": "ACTIVE",
+    "gateways": [
+      {
+        "type": "CIDR",
+        "value": "203.0.113.0/24"
+      }
+    ],
+    "proxies": []
+  },
+  {
+    "id": "nzoeverywhere0001",
+    "name": "LegacyAnywhere",
+    "type": "IP",
+    "usage": "POLICY",
+    "status": "ACTIVE",
+    "gateways": [
+      {
+        "type": "CIDR",
+        "value": "0.0.0.0/0"
+      }
+    ],
+    "proxies": []
+  }
+]

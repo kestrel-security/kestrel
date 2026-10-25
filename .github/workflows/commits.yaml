@@ -1,0 +1,82 @@
+name: Commits
+
+# Checks on the commits a pull request adds, not on its diff:
+#
+#   dco ........ every commit carries a `Signed-off-by:` trailer whose email is
+#                the commit author's (Developer Certificate of Origin, see
+#                CONTRIBUTING.md). Merge commits are exempt.
+#   metadata ... on same-repository branches, author/committer names, emails
+#                and messages pass the hygiene patterns and email allow-list
+#                (scripts/oss-hygiene.sh --commits).
+on:
+  pull_request:
+
+concurrency:
+  group: commits-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  dco:
+    name: DCO sign-off
+    # Dependabot cannot sign off; its commits are reviewed and merged by a
+    # maintainer, whose merge carries the responsibility. Keyed on the pull
+    # request's author, not github.actor, so a maintainer re-running the check
+    # or pushing to a Dependabot branch does not turn it red.
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Every commit is signed off by its author
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          failed=0
+          for sha in $(git rev-list --no-merges "${BASE}..${HEAD}"); do
+            author="$(git show -s --format='%ae' "$sha")"
+            # Trailers only, so a quoted sign-off in the body does not count.
+            signoffs="$(git show -s --format='%(trailers:key=Signed-off-by,valueonly)' "$sha")"
+            if ! grep -qiF "<${author}>" <<<"$signoffs"; then
+              echo "::error::$(git show -s --format='%h %s' "$sha"): no 'Signed-off-by: ... <${author}>' trailer"
+              failed=1
+            fi
+          done
+          if [[ "$failed" -ne 0 ]]; then
+            echo "Sign off with 'git commit -s'. To fix existing commits:"
+            echo "  git rebase --signoff ${BASE}"
+            echo "  git push --force-with-lease"
+            exit 1
+          fi
+          echo "All commits signed off."
+
+  metadata:
+    name: Commit metadata hygiene
+    # Branches in this repository only, i.e. maintainers' own commits, which is
+    # where a personal address or a private link would leak from. Contributors
+    # on forks sign off with whatever address they choose. Dependabot branches
+    # live in this repository too, but their messages quote upstream release
+    # notes (with upstream authors' addresses), so they are skipped.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Names, emails and messages
+        env:
+          HYGIENE_EXTRA_PATTERNS: ${{ secrets.HYGIENE_EXTRA_PATTERNS }}
+        run: >-
+          bash scripts/oss-hygiene.sh --commits
+          "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"

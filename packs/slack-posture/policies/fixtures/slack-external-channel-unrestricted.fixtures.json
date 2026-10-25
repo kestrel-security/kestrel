@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "ext-channel",
+      "setting": {
+        "key": "external_shared_channel",
+        "value": true,
+        "label": "Externally shared Slack channel"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "internal-only",
+      "setting": {
+        "key": "external_shared_channel",
+        "value": false,
+        "label": "Externally shared Slack channel"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["ext-channel"]
+}

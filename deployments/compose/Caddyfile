@@ -1,0 +1,6 @@
+# TLS in front of the web UI, for `docker compose --profile tls up -d`.
+# Caddy obtains and renews the certificate for $KESTREL_DOMAIN on its own.
+{$KESTREL_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy web:3000
+}

@@ -1,0 +1,147 @@
+{
+  "policies": [
+    {
+      "name": "policies/e1000000000001",
+      "type": "security.two_step_verification_enforcement",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "security.two_step_verification_enforcement",
+        "value": {
+          "enforcementMode": "NOT_ENFORCED"
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000002",
+      "type": "security.two_step_verification_enforcement",
+      "customer": "customers/C0acme1234",
+      "orgUnit": {
+        "orgUnitId": "id:ou-eng"
+      },
+      "setting": {
+        "type": "security.two_step_verification_enforcement",
+        "value": {
+          "enforcementMode": "ENFORCED"
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000003",
+      "type": "security.two_step_verification_enrollment_grace_period",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "security.two_step_verification_enrollment_grace_period",
+        "value": {
+          "gracePeriod": "P14D"
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000004",
+      "type": "security.less_secure_apps_access",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "security.less_secure_apps_access",
+        "value": {
+          "allowLessSecureApps": false
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000005",
+      "type": "workspace.gmail.allow_auto_forwarding",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.gmail.allow_auto_forwarding",
+        "value": {
+          "enableAutoForwarding": true
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000006",
+      "type": "workspace.gmail.imap_access",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.gmail.imap_access",
+        "value": {
+          "enableImap": true
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000007",
+      "type": "workspace.drive.external_sharing",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.drive.external_sharing",
+        "value": {
+          "externalSharingMode": "ALLOWED",
+          "allowedDomains": []
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000008",
+      "type": "workspace.marketplace_apps_allowlist",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.marketplace_apps_allowlist",
+        "value": {
+          "applicationsAllowlistEnabled": false
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000009",
+      "type": "workspace.google_takeout.export_feature",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.google_takeout.export_feature",
+        "value": {
+          "exportEnabled": true
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000010",
+      "type": "accounts.admin_account_recovery.recovery_policy",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "accounts.admin_account_recovery.recovery_policy",
+        "value": {
+          "enableAdminAccountRecovery": true
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000011",
+      "type": "workspace.session.reauth_settings",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.session.reauth_settings",
+        "value": {
+          "reauthMethod": "PASSWORD",
+          "maxInactivity": "PT720H",
+          "sessionLength": "PT720H"
+        }
+      }
+    },
+    {
+      "name": "policies/e1000000000012",
+      "type": "workspace.password_policy",
+      "customer": "customers/C0acme1234",
+      "setting": {
+        "type": "workspace.password_policy",
+        "value": {
+          "minimumLength": 8,
+          "requireNonAlphanumeric": false,
+          "enforcePasswordPolicy": false,
+          "allowedStrength": "WEAK",
+          "expiration": "P0D",
+          "reusePrevention": 0
+        }
+      }
+    }
+  ]
+}

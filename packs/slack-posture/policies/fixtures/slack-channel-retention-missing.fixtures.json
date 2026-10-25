@@ -1,0 +1,52 @@
+{
+  "rows": [
+    {
+      "_subject_id": "private-no-retention",
+      "resource": {
+        "name": "security-incidents",
+        "resource_type": "channel",
+        "is_external": false,
+        "config": {
+          "is_private": true,
+          "is_external": false,
+          "member_count": 3
+        }
+      },
+      "settings_by_key": {},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "private-with-retention",
+      "resource": {
+        "name": "finance-private",
+        "resource_type": "channel",
+        "is_external": false,
+        "config": {
+          "is_private": true,
+          "is_external": false,
+          "member_count": 3
+        }
+      },
+      "settings_by_key": {
+        "retention_days": {"key": "retention_days", "value": 90, "category": "data_governance"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "public-no-retention",
+      "resource": {
+        "name": "general",
+        "resource_type": "channel",
+        "is_external": false,
+        "config": {
+          "is_private": false,
+          "is_external": false,
+          "member_count": 50
+        }
+      },
+      "settings_by_key": {},
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["private-no-retention"]
+}

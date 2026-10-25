@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "grace-id",
+      "identity": {"email": "grace@acme.example.com", "display_name": "Grace Hopper", "mfa_enabled": false},
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": ["Application Administrator"]
+    },
+    {
+      "_subject_id": "ada-id",
+      "identity": {"email": "ada@acme.example.com", "display_name": "Ada Lovelace", "mfa_enabled": true},
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": ["Super Administrator"]
+    },
+    {
+      "_subject_id": "alan-id",
+      "identity": {"email": "alan@acme.example.com", "display_name": "Alan Turing", "mfa_enabled": false},
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["grace-id"]
+}

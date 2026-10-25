@@ -1,0 +1,23 @@
+{
+  "name": "Kestrel",
+  "short_name": "Kestrel",
+  "description": "Open-source security for SaaS.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#090C11",
+  "theme_color": "#090C11",
+  "icons": [
+    {
+      "src": "/brand/kestrel-app-icon-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/kestrel-app-icon-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

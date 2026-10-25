@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "_subject_id": "alerts-off",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "alerts-off"
+      },
+      "settings_by_key": {
+        "repo_vulnerability_alerts_enabled": {
+          "key": "repo_vulnerability_alerts_enabled",
+          "value": false
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "alerts-on",
+      "resource": {
+        "resource_type": "repository",
+        "name": "api",
+        "visibility": "private",
+        "provider_object_id": "alerts-on"
+      },
+      "settings_by_key": {
+        "repo_vulnerability_alerts_enabled": {
+          "key": "repo_vulnerability_alerts_enabled",
+          "value": true
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["alerts-off"]
+}

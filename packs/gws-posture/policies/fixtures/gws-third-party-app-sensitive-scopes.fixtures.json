@@ -1,0 +1,65 @@
+{
+  "rows": [
+    {
+      "_subject_id": "mailmerge",
+      "oauth_application": {
+        "name": "MailMerge Pro",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [
+        "https://mail.google.com/"
+      ],
+      "grant_count": 1,
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "slack",
+      "oauth_application": {
+        "name": "Slack",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [],
+      "grant_count": 40,
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "google-own",
+      "oauth_application": {
+        "name": "Google Chrome",
+        "publisher": "google"
+      },
+      "sensitive_scope_names": [
+        "https://www.googleapis.com/auth/drive"
+      ],
+      "grant_count": 80,
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "other-app",
+      "oauth_application": {
+        "name": "Jira",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [
+        "admin.users:read"
+      ],
+      "grant_count": 3,
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "mailmerge"
+  ]
+}

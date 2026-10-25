@@ -1,0 +1,4 @@
+[
+  {"number": 1, "state": "open", "severity": "critical"},
+  {"number": 2, "state": "open", "severity": "high"}
+]

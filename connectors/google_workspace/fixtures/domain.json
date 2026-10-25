@@ -1,0 +1,9 @@
+{
+  "kind": "admin#directory#domain",
+  "etag": "\"acme-domain-etag\"",
+  "domainName": "acme.example.com",
+  "isPrimary": true,
+  "verified": true,
+  "creationTime": "1609459200000",
+  "domainAliases": []
+}

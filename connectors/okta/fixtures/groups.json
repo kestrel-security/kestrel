@@ -1,0 +1,12 @@
+[
+  {
+    "id": "00gengineering000001",
+    "type": "OKTA_GROUP",
+    "profile": {"name": "engineering", "description": "Engineering"}
+  },
+  {
+    "id": "00gsecurity00000002",
+    "type": "OKTA_GROUP",
+    "profile": {"name": "security", "description": "Security"}
+  }
+]

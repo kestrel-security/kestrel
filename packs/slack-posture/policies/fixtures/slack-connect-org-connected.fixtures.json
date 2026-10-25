@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "connect-on",
+      "setting": {
+        "key": "slack_connect_org_connected",
+        "value": true,
+        "label": "Slack Connect organization connected"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "connect-off",
+      "setting": {
+        "key": "slack_connect_org_connected",
+        "value": false,
+        "label": "Slack Connect organization connected"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["connect-on"]
+}

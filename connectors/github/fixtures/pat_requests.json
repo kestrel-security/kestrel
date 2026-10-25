@@ -1,0 +1,16 @@
+[
+  {
+    "id": 7701,
+    "owner": {
+      "login": "dave",
+      "id": 1004
+    },
+    "repository_selection": "all",
+    "permissions_added": {
+      "organization": {
+        "members": "read"
+      }
+    },
+    "created_at": "2026-07-26T09:00:00Z"
+  }
+]

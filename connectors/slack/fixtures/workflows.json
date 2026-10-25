@@ -1,0 +1,39 @@
+{
+  "ok": true,
+  "workflows": [
+    {
+      "id": "Wf0ONBOARD",
+      "workflow_id": "Wf0ONBOARD",
+      "title": "Employee Onboarding",
+      "description": "Automates new employee onboarding steps",
+      "trigger_type": "shortcut",
+      "is_published": true,
+      "is_published_to_directory": false,
+      "is_external_steps_enabled": false,
+      "shared_externally": false,
+      "collaborator_count": 2,
+      "run_count": 42,
+      "app": {
+        "id": "A0INTERNAL",
+        "name": "Acme Internal"
+      }
+    },
+    {
+      "id": "Wf0EXTFLOW",
+      "workflow_id": "Wf0EXTFLOW",
+      "title": "Vendor Data Sync",
+      "description": "Shares data with external vendor via workflow step",
+      "trigger_type": "webhook",
+      "is_published": true,
+      "is_published_to_directory": true,
+      "is_external_steps_enabled": true,
+      "shared_externally": true,
+      "collaborator_count": 1,
+      "run_count": 15,
+      "app": {
+        "id": "A0CALENDAR",
+        "name": "Calendar Sync"
+      }
+    }
+  ]
+}

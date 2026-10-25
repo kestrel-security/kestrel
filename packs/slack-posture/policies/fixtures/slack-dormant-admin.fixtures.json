@@ -1,0 +1,77 @@
+{
+  "rows": [
+    {
+      "_subject_id": "dormant-grace",
+      "identity": {
+        "email": "grace@acme.example.com",
+        "display_name": "Grace Hopper",
+        "last_active_at": {
+          "$days_ago": 120
+        },
+        "last_active_source": "audit"
+      },
+      "roles": [
+        "Admin"
+      ],
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    },
+    {
+      "_subject_id": "active-ada",
+      "identity": {
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "last_active_at": {
+          "$days_ago": 2
+        },
+        "last_active_source": "audit"
+      },
+      "roles": [
+        "Primary Owner"
+      ],
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    },
+    {
+      "_subject_id": "member-no-role",
+      "identity": {
+        "email": "alan@acme.example.com",
+        "display_name": "Alan Turing",
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "audit"
+      },
+      "roles": [],
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    },
+    {
+      "_subject_id": "profile-only-grace",
+      "identity": {
+        "email": "grace2@acme.example.com",
+        "display_name": "Grace (profile timestamp only)",
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "profile"
+      },
+      "roles": [
+        "Admin"
+      ],
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "dormant-grace"
+  ]
+}

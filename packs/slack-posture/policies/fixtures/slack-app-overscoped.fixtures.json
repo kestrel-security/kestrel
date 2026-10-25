@@ -1,0 +1,41 @@
+{
+  "rows": [
+    {
+      "_subject_id": "incident-bot",
+      "oauth_application": {
+        "name": "Incident Bot",
+        "publisher": "Acme Security"
+      },
+      "sensitive_scope_names": ["chat:write", "channels:history"],
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "calendar-sync",
+      "oauth_application": {
+        "name": "Calendar Sync",
+        "publisher": "CalendarCo"
+      },
+      "sensitive_scope_names": ["chat:write", "commands", "users:read.email"],
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "status-page",
+      "oauth_application": {
+        "name": "Status Page",
+        "publisher": "StatusCo"
+      },
+      "sensitive_scope_names": [],
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "github-app",
+      "oauth_application": {
+        "name": "incident-bot",
+        "publisher": "github"
+      },
+      "sensitive_scope_names": ["administration:write"],
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["incident-bot", "calendar-sync"]
+}

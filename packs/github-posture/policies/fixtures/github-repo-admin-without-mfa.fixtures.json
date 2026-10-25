@@ -1,0 +1,113 @@
+{
+  "rows": [
+    {
+      "_subject_id": "no-mfa-repo-admin",
+      "identity": {
+        "email": "dev@acme.example",
+        "display_name": "Dev",
+        "mfa_enabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "_related": {
+        "grants": [
+          {
+            "grant": {
+              "permission_level": "admin",
+              "granted_via": "direct"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "mfa-repo-admin",
+      "identity": {
+        "email": "alice@acme.example",
+        "display_name": "alice",
+        "mfa_enabled": true
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "_related": {
+        "grants": [
+          {
+            "grant": {
+              "permission_level": "admin",
+              "granted_via": "group"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "no-mfa-read-only",
+      "identity": {
+        "email": "bob@acme.example",
+        "display_name": "bob",
+        "mfa_enabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "_related": {
+        "grants": [
+          {
+            "grant": {
+              "permission_level": "read",
+              "granted_via": "direct"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "no-mfa-no-grants",
+      "identity": {
+        "email": "carol@acme.example",
+        "display_name": "carol",
+        "mfa_enabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": []
+    },
+    {
+      "_subject_id": "unknown-mfa-repo-admin",
+      "comment": "2FA state unreadable -- unknown must not open a finding",
+      "identity": {
+        "email": "dana@acme.example",
+        "display_name": "dana",
+        "mfa_enabled": null
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "_related": {
+        "grants": [
+          {
+            "grant": {
+              "permission_level": "admin",
+              "granted_via": "direct"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "no-mfa-repo-admin"
+  ]
+}

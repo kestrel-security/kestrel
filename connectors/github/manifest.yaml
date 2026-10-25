@@ -1,0 +1,330 @@
+name: github
+display_name: GitHub
+version: "0.7.0"
+description: >
+  Collects GitHub organization membership, teams, repository access, audit-log
+  events, and the org security surface — Actions permissions and runners,
+  webhooks, installed Apps and their permission sets, rulesets, SSO-authorized
+  credentials, secrets and variables metadata, custom roles, pending
+  invitations, IP allow list (GraphQL), Copilot policy and seat assignments,
+  approved fine-grained PATs, and per-repository posture including Dependabot
+  and code-scanning alert counts, vulnerability alert enablement, and code
+  scanning setup state. Supports live Personal Access Tokens (classic and
+  fine-grained), GitHub App installations, and optional enterprise-slug for
+  Enterprise Cloud tenants; the audit log requires GitHub Enterprise Cloud
+  and most of the security surface needs a GitHub App, both degrading cleanly
+  without it.
+setup_docs: docs/connectors/github-setup.md
+auth_methods:
+  - id: pat
+    label: "Personal Access Token (classic)"
+    secret_fields: [token]
+    config_fields: [org_login]
+    setup_overview: >
+      Use a classic Personal Access Token owned by an organization owner (or a
+      machine user with org admin) so Kestrel can read members, teams, repos, and
+      the audit log. Prefer a GitHub App for production if you need
+      installation-scoped credentials and easier rotation.
+    scopes_note: >
+      Classic PAT scopes below are required for a full sync. Member email
+      addresses come from the org's SAML identity provider (GraphQL
+      externalIdentities), which read:org covers on an SSO-enabled org; without
+      SAML SSO, GitHub exposes no member email and cross-app correlation falls
+      back to display name only. Add read:enterprise if enterprise_slug is set
+      and the token owner has enterprise admin — this unlocks enterprise-level
+      settings collection on GitHub Enterprise Cloud. Fine-grained PATs cannot
+      reach enterprise endpoints; use a classic PAT or GitHub App for enterprise
+      coverage.
+    field_help:
+      org_login: >
+        GitHub organization login (the name in github.com/<org>). Must match
+        External tenant ref on the previous step.
+      token: >
+        Classic PAT value (starts with ghp_). Stored envelope-encrypted; never
+        shown again after save.
+    setup_steps:
+      - title: Confirm you can administer the organization
+        body: >
+          You need org owner access (or equivalent) on the target GitHub
+          organization. Sign in to GitHub as that user before creating the token.
+        link_url: https://github.com/settings/organizations
+        link_label: Your organizations
+      - title: Open Personal access tokens (classic)
+        body: >
+          GitHub → Settings → Developer settings → Personal access tokens →
+          Tokens (classic) → Generate new token (classic). Give it a memorable
+          note such as "Kestrel SSPM".
+        link_url: https://github.com/settings/tokens
+        link_label: Create classic PAT
+      - title: Select the required scopes
+        body: >
+          Enable read:org (members, teams, IP allow list via GraphQL),
+          read:user, repo (private repo metadata and collaborator access), and
+          read:audit_log (organization audit events). Optionally add
+          read:enterprise when enterprise_slug is configured on a GitHub
+          Enterprise Cloud tenant. Do not enable write scopes.
+      - title: Generate and copy the token
+        body: >
+          Click Generate token and copy the value immediately (ghp_…). GitHub
+          will not show it again. Paste it into the Token field in Kestrel on the
+          Secrets step.
+      - title: Set the organization login
+        body: >
+          On the Config step, set org_login to the organization slug (for
+          example acme-corp for github.com/acme-corp). Use the same value as
+          External tenant ref. Optionally set enterprise_slug for Enterprise
+          Cloud tenants.
+      - title: Test connection, then sync
+        body: >
+          After creating the connector, open the instance page, click Test
+          connection, then Sync now. Prefer live mode for real posture data;
+          fixtures remain available for offline demos.
+  - id: fine_grained_pat
+    label: "Personal Access Token (fine-grained)"
+    secret_fields: [token]
+    config_fields: [org_login]
+    setup_overview: >
+      Fine-grained PATs provide per-repository, per-permission scopes and
+      support organization-level permissions since 2024. Kestrel can use them
+      for org member/team/repo collection. Note: fine-grained PATs cannot reach
+      enterprise-level endpoints (/enterprises/{slug}/...); use a classic PAT
+      with read:enterprise or a GitHub App for enterprise-layer collection.
+    scopes_note: >
+      Grant the following organization permissions under the organization scope:
+      Members (read), Administration (read), Webhooks (read), Actions (read).
+      Grant repository permissions: Metadata (read), Contents (read). Fine-grained
+      PATs do not support the enterprise scope — enterprise settings require
+      a classic PAT or GitHub App.
+    field_help:
+      org_login: >
+        GitHub organization login (the name in github.com/<org>). Must match
+        External tenant ref on the previous step.
+      token: >
+        Fine-grained PAT value (starts with github_pat_). Stored
+        envelope-encrypted; never shown again after save.
+    setup_steps:
+      - title: Create a fine-grained PAT
+        body: >
+          GitHub → Settings → Developer settings → Personal access tokens →
+          Fine-grained tokens → Generate new token. Set the Resource owner to
+          the target organization and choose Only select repositories or All
+          repositories as appropriate.
+        link_url: https://github.com/settings/tokens?type=beta
+        link_label: Create fine-grained PAT
+      - title: Grant the required permissions
+        body: >
+          Under Organization permissions: Members (read-only), Administration
+          (read-only), Webhooks (read-only), Actions (read-only). Under
+          Repository permissions: Metadata (read-only), Contents (read-only).
+      - title: Generate and copy the token
+        body: >
+          Generate the token and copy the value (github_pat_…). Paste it into
+          the Token field in Kestrel. Note that fine-grained PATs cannot reach
+          enterprise endpoints; enterprise_slug will have no effect with this
+          auth method.
+      - title: Test connection, then sync
+        body: >
+          After creating the connector, click Test connection then Sync now.
+  - id: github_app
+    label: "GitHub App"
+    secret_fields: [app_id, installation_id, private_key]
+    config_fields: [org_login]
+    setup_overview: >
+      Recommended for production. Create a GitHub App installed on the target
+      organization with read-only permissions. Kestrel mints short-lived
+      installation tokens from the App ID, installation ID, and private key.
+    scopes_note: >
+      GitHub Apps use permission checkboxes rather than classic OAuth scopes.
+      Grant the following read-only permissions for full coverage: Organization
+      — Members, Administration, Webhooks, Secrets (names only), Custom
+      repository roles, Copilot business (for Copilot policy and seats).
+      Repository — Metadata, Contents, Actions, Environments, Deployments,
+      Pages, Vulnerability alerts, Code scanning alerts, Dependabot alerts,
+      Secret scanning alerts. Audit log — Organization administration audit log.
+      Members read also covers the SAML identity list and IP allow list via
+      GraphQL that supply member email addresses and network restriction posture.
+    field_help:
+      org_login: GitHub organization login where the App is installed.
+      app_id: Numeric App ID from the App's settings page.
+      installation_id: >
+        Numeric installation ID for this org (see installation URL or the
+        App's Installations list).
+      private_key: >
+        PEM private key downloaded when you created the App (or a newly
+        generated key). Paste the full -----BEGIN RSA PRIVATE KEY----- block.
+    setup_steps:
+      - title: Create a GitHub App
+        body: >
+          GitHub → Settings → Developer settings → GitHub Apps → New GitHub App.
+          Set a name (for example "Kestrel"), Homepage URL to your Kestrel base
+          URL, and disable webhooks unless you need them (Kestrel syncs via API).
+        link_url: https://github.com/settings/apps
+        link_label: GitHub Apps
+      - title: Grant read-only repository and organization permissions
+        body: >
+          Under Permissions, grant read-only for: Repository → Metadata,
+          Contents, Actions, Environments, Pages, Vulnerability alerts,
+          Code scanning alerts, Dependabot alerts, Secret scanning alerts.
+          Organization → Members, Administration, Webhooks, Secrets,
+          Custom repository roles, Copilot business. Enable audit log access
+          if your GitHub plan exposes it for Apps.
+      - title: Create the App and download the private key
+        body: >
+          Create the GitHub App, note the App ID, then generate a private key
+          and download the .pem file. You will paste the PEM into Kestrel's
+          private_key field.
+      - title: Install the App on the organization
+        body: >
+          Install the App on the target organization (only that org). Open the
+          installation page and copy the installation ID from the URL
+          (…/settings/installations/<id>) or the Installations list.
+        link_url: https://github.com/settings/installations
+        link_label: Installations
+      - title: Enter App credentials in Kestrel
+        body: >
+          Auth method = GitHub App. Paste app_id, installation_id, and the PEM
+          private_key. Set org_login to the installed organization. Optionally
+          set enterprise_slug for Enterprise Cloud tenants. Secrets are
+          envelope-encrypted at rest.
+      - title: Test connection, then sync
+        body: >
+          On the instance page, run Test connection to mint an installation
+          token and probe the API, then Sync now.
+required_scopes:
+  - read:org
+  - read:user
+  - repo
+  - read:audit_log
+object_types:
+  # The org payload produces tenant `setting` rows. The ApplicationInstance row
+  # is created out of band when the connector instance is configured, so this
+  # must not claim `application_instance`.
+  - name: organization
+    maps_to_entity: setting
+  # Org-level security posture: SAML, IP allow list, OAuth app restrictions,
+  # Actions permissions, default workflow token permissions, audit streaming.
+  # Enriched with the SAML NameID / SCIM username from GraphQL
+  # `externalIdentities`, the only place GitHub exposes a member's email.
+  - name: member
+    maps_to_entity: identity
+  - name: team
+    maps_to_entity: group
+  - name: team_membership
+    maps_to_entity: group_membership
+  - name: team_repo_permission
+    maps_to_entity: grant
+  - name: repository
+    maps_to_entity: resource
+  - name: repo_collaborator
+    maps_to_entity: grant
+  - name: outside_collaborator
+    maps_to_entity: identity
+  - name: audit_log
+    maps_to_entity: event
+    supports_incremental: true
+  # Org security surface. All optional: each family needs a
+  # permission a classic PAT grants only through a write-shaped scope, so a PAT
+  # tenant reads few and a GitHub App tenant reads most. Missing ones reduce the
+  # run rather than failing it.
+  - name: actions_permission
+    maps_to_entity: setting
+  - name: runner_group
+    maps_to_entity: setting
+  - name: self_hosted_runner
+    maps_to_entity: setting
+  - name: actions_secret
+    maps_to_entity: setting
+  - name: actions_variable
+    maps_to_entity: setting
+  - name: org_webhook
+    maps_to_entity: setting
+  - name: installed_app
+    maps_to_entity: oauth_application
+  - name: credential_authorization
+    maps_to_entity: setting
+  - name: org_ruleset
+    maps_to_entity: setting
+  - name: security_manager
+    maps_to_entity: setting
+  - name: custom_org_role
+    maps_to_entity: role
+  - name: org_invitation
+    maps_to_entity: setting
+  - name: pat_request
+    maps_to_entity: setting
+  # Extended: IP allow list (GraphQL), Copilot, fine-grained PATs, packages.
+  # All optional: they need specific App permissions or enterprise access.
+  - name: org_ip_allow_list
+    maps_to_entity: setting
+  - name: copilot_policy
+    maps_to_entity: setting
+  - name: copilot_seat
+    maps_to_entity: setting
+  - name: approved_pat
+    maps_to_entity: setting
+  - name: org_package
+    maps_to_entity: setting
+  # Per-repository posture. Settings here are subject-scoped to the
+  # repository they govern. Deep families run against a risk-tiered selection
+  # (public + internal + repos with outside or direct-admin access), capped by
+  # `deep_scan_limit`; `repo_security_analysis` is free and covers every repo.
+  - name: repo_security_analysis
+    maps_to_entity: setting
+  - name: repo_branch_protection
+    maps_to_entity: setting
+  - name: repo_ruleset
+    maps_to_entity: setting
+  - name: repo_webhook
+    maps_to_entity: setting
+  - name: deploy_key
+    maps_to_entity: setting
+  - name: repo_environment
+    maps_to_entity: setting
+  - name: repo_actions_permission
+    maps_to_entity: setting
+  - name: secret_scanning_alert
+    maps_to_entity: setting
+  # Extended: additional per-repo alert counts and posture.
+  - name: dependabot_alert
+    maps_to_entity: setting
+  - name: code_scanning_alert
+    maps_to_entity: setting
+  - name: repo_vulnerability_alerts
+    maps_to_entity: setting
+  - name: repo_code_scanning
+    maps_to_entity: setting
+rate_limit_strategy: header_based
+supports_events: true
+# Capability keys a pack policy may name in REQUIRES; the coverage service
+# joins them against connected instances so a check that depends on data this
+# connector does not collect reports "not assessable" instead of passing.
+provides_capabilities:
+  - github:org_settings
+  - github:org_security
+  - github:identity
+  - github:grants
+  - github:branch_protection
+  - github:repo_security
+  - github:actions_settings
+  - github:audit_events
+  - github:copilot
+  - github:ip_allow_list
+  - github:dependabot_alerts
+  - github:code_scanning
+  - github:packages
+change_classes:
+  - admin_granted
+  - mfa_disabled
+  - oauth_app_installed
+  - config_drift
+example_config:
+  org_login: acme-corp
+  # Optional — set for GitHub Enterprise Cloud tenants to enable enterprise-
+  # layer settings collection. Requires read:enterprise scope (classic PAT)
+  # or enterprise admin App permission.
+  # enterprise_slug: acme-enterprise
+  # Optional. Omit for the risk-tiered default.
+  # deep_scan_all: false
+  # deep_scan_repos: []
+  # deep_scan_limit: 200
+fixtures_path: fixtures/

@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "guest-admin",
+      "identity": {"email": "guest@ext.example", "display_name": "Guest Admin", "is_external": true},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": ["Admin"]
+    },
+    {
+      "_subject_id": "guest-member",
+      "identity": {"email": "guest2@ext.example", "display_name": "Guest", "is_external": true},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": []
+    },
+    {
+      "_subject_id": "int-admin",
+      "identity": {"email": "alice@acme.example", "display_name": "alice", "is_external": false},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": ["Admin"]
+    }
+  ],
+  "expected_match_subject_ids": ["guest-admin"]
+}

@@ -1,0 +1,43 @@
+.git
+.github
+.claude
+.cursor
+.env
+.env.*
+!.env.example
+# Nested env files too: apps/web/.env.local would otherwise ride along with
+# `COPY apps/web`, and any NEXT_PUBLIC_* value in it would be baked into the
+# client bundle.
+**/.env
+**/.env.*
+!**/.env.example
+.venv
+venv
+node_modules
+.next
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.pnpm-store
+__pycache__
+*.py[cod]
+# Bare patterns only match at the build-context root, so nested caches (for
+# example migrations/__pycache__) need the recursive form or host .pyc files
+# end up baked into the image.
+**/__pycache__
+**/*.py[cod]
+# The same applies to the web workspace: apps/web/.next and
+# apps/web/node_modules would otherwise ride along with `COPY apps/web`.
+**/node_modules
+**/.next
+**/.pnpm-store
+**/.mypy_cache
+**/.pytest_cache
+**/.ruff_cache
+logs
+tmp
+temp
+coverage
+htmlcov
+*.log
+.DS_Store

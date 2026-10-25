@@ -1,0 +1,57 @@
+name: slack-posture
+version: "0.4.0"
+display_name: Slack Posture
+summary: Workspace MFA, privileged roles, guests, apps, Connect, barriers, workflows, and Audit Logs activity.
+description: >
+  Slack workspace and Enterprise Grid posture: privileged roles without MFA,
+  deactivated and guest privileged access, dormant admins, SSO enforcement,
+  guest expiration, app approval, over-scoped and unused installed apps,
+  pending app/invite requests, Slack Connect orgs and externally shared
+  channels, information barriers, workflows with external sharing, per-channel
+  retention, anomaly allowlist, plus curated Audit Logs activity detections
+  (SSO changes, policy changes, config changes). Mapped to NIST CSF and CIS
+  Controls v8.1 where collected data supports it (no official CIS Slack
+  benchmark).
+application: slack
+categories:
+  - identity
+  - privileged_access
+  - tenant_settings
+  - oauth_apps
+  - activity
+  - sharing
+frameworks:
+  - cis
+  - nist_csf
+  - soc2
+vendor_baselines:
+  - slack-enterprise-security
+policies:
+  - slack-privileged-without-mfa
+  - slack-disabled-privileged
+  - slack-external-privileged
+  - slack-external-without-mfa
+  - slack-dormant-admin
+  - slack-app-overscoped
+  - slack-app-unused
+  - slack-pending-app-requests
+  - slack-anomaly-allowlist-empty
+  - slack-connect-org-connected
+  - slack-external-channel-unrestricted
+  - slack-guest-in-private-channel
+  - slack-activity-privilege-grant
+  - slack-activity-app-scopes-expanded
+  - slack-activity-app-installed
+  - slack-activity-guest-created
+  - slack-activity-external-sharing
+  - slack-session-duration-excessive
+  # Release C — Enterprise depth policies.
+  - slack-sso-not-enforced
+  - slack-guest-no-expiration
+  - slack-information-barrier-missing
+  - slack-workflow-external-sharing
+  - slack-channel-retention-missing
+  - slack-stale-invite-request
+  - slack-activity-config-change
+  - slack-activity-sso-change
+  - slack-activity-policy-change

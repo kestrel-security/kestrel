@@ -1,0 +1,66 @@
+{
+  "rows": [
+    {
+      "_subject_id": "alice-id",
+      "identity": {
+        "email": "alice@acme.example",
+        "display_name": "alice",
+        "mfa_enabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ]
+    },
+    {
+      "_subject_id": "carol-id",
+      "identity": {
+        "email": "carol@acme.example",
+        "display_name": "carol",
+        "mfa_enabled": true
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ]
+    },
+    {
+      "_subject_id": "bob-id",
+      "identity": {
+        "email": "bob@acme.example",
+        "display_name": "bob",
+        "mfa_enabled": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": []
+    },
+    {
+      "_subject_id": "dana-unknown-mfa-id",
+      "comment": "2FA state unreadable (credential lacks org ownership) -- unknown must not open a finding",
+      "identity": {
+        "email": "dana@acme.example",
+        "display_name": "dana",
+        "mfa_enabled": null
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ]
+    }
+  ],
+  "expected_match_subject_ids": [
+    "alice-id"
+  ]
+}

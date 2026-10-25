@@ -1,0 +1,21 @@
+[
+  {
+    "kind": "admin#directory#domain",
+    "domainName": "acme.example.com",
+    "isPrimary": true,
+    "verified": true,
+    "domainAliases": [
+      {
+        "domainAliasName": "acme-corp.example.com",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "kind": "admin#directory#domain",
+    "domainName": "labs.example.com",
+    "isPrimary": false,
+    "verified": false,
+    "domainAliases": []
+  }
+]

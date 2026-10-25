@@ -1,0 +1,40 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-sso-change",
+      "event": {
+        "action": "sso.change",
+        "action_category": "sso",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 5},
+        "summary": "Slack Audit Logs: pref.sso_setting_changed (sso.change)",
+        "attributes": {"slack_action": "pref.sso_setting_changed"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "stale-sso-change",
+      "event": {
+        "action": "sso.change",
+        "action_category": "sso",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 60},
+        "summary": "Slack Audit Logs: pref.sso_setting_changed (sso.change)",
+        "attributes": {"slack_action": "pref.sso_setting_changed"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "different-action",
+      "event": {
+        "action": "config.change",
+        "action_category": "config",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 2},
+        "summary": "pref.who_can_create_channels"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["recent-sso-change"]
+}

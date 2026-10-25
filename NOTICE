@@ -1,0 +1,18 @@
+Kestrel
+Copyright 2026 The Kestrel Authors
+
+This product includes software developed by The Kestrel Authors.
+Licensed under the Apache License, Version 2.0.
+See the LICENSE file in this repository.
+
+This distribution also includes third-party software. Those components remain
+under their own licenses as declared by their respective packages.
+
+The Apache License grants no rights to the Kestrel name or logo (section 6).
+Forks that change behavior should carry their own name; "based on Kestrel" is
+always fine.
+
+Product marks (GitHub, Slack, Okta, Google Workspace, Microsoft 365) shown in
+the Explore graph and finding investigation UI identify third-party products and
+remain the trademarks of their respective owners. Simplified SVG artwork is
+derived from Simple Icons (CC0); see brand/THIRD_PARTY_MARKS.md.

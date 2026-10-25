@@ -1,0 +1,18 @@
+{
+  "inboundSamlSsoProfiles": [
+    {
+      "name": "inboundSamlSsoProfiles/okta-acme-sso",
+      "customer": "customers/C0acme1234",
+      "displayName": "Okta SAML SSO",
+      "idpConfig": {
+        "entityId": "http://www.okta.com/exkacme1234567",
+        "singleSignOnServiceUri": "https://acme.okta.com/app/google/exk1234/sso/saml",
+        "signOutUri": "https://acme.okta.com/login/signout"
+      },
+      "spConfig": {
+        "entityId": "google.com/a/acme.example.com",
+        "assertionConsumerServiceUri": "https://www.google.com/a/acme.example.com/acs"
+      }
+    }
+  ]
+}

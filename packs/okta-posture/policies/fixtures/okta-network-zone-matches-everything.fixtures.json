@@ -1,0 +1,73 @@
+{
+  "rows": [
+    {
+      "_subject_id": "wide",
+      "setting": {
+        "key": "okta_network_zone:nzo1",
+        "value": {
+          "name": "Anywhere",
+          "usage": "POLICY",
+          "matches_everything": true
+        },
+        "label": "okta_network_zone:nzo1",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "narrow",
+      "setting": {
+        "key": "okta_network_zone:nzo2",
+        "value": {
+          "name": "Office",
+          "usage": "POLICY",
+          "matches_everything": false
+        },
+        "label": "okta_network_zone:nzo2",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "blocklist",
+      "setting": {
+        "key": "okta_network_zone:nzo3",
+        "value": {
+          "name": "Blocked",
+          "usage": "BLOCKLIST",
+          "matches_everything": true
+        },
+        "label": "okta_network_zone:nzo3",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "not-a-zone",
+      "setting": {
+        "key": "okta_policy:00p1",
+        "value": {
+          "name": "P"
+        },
+        "label": "okta_policy:00p1",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "wide"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "rows": [
+    {
+      "_subject_id": "no-disk-encryption",
+      "setting": {"key": "okta_device_assurance:dae1",
+                  "value": {"name": "BYOD", "platform": "MACOS", "disk_encryption": false, "screen_lock": true}},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "encryption-required",
+      "setting": {"key": "okta_device_assurance:dae2",
+                  "value": {"name": "Managed macOS", "platform": "MACOS", "disk_encryption": true}},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "not-reported",
+      "setting": {"key": "okta_device_assurance:dae3", "value": {"name": "Windows", "platform": "WINDOWS"}},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "unrelated-setting",
+      "setting": {"key": "subdomain", "value": "acme"},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    }
+  ],
+  "expected_match_subject_ids": ["no-disk-encryption"]
+}

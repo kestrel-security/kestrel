@@ -1,0 +1,287 @@
+[
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh001",
+    "date_create": 1787603865,
+    "action": "role_change_to_admin",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "user",
+      "user": {
+        "id": "U0ALAN",
+        "name": "Alan Turing",
+        "email": "alan@acme.example.com"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh002",
+    "date_create": 1787603925,
+    "action": "app_scopes_expanded",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0GRACE",
+        "name": "Grace Hopper",
+        "email": "grace@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "app",
+      "app": {
+        "id": "A0INCIDENT",
+        "name": "Incident Bot"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "enterprise",
+        "id": "E0ACMEGRID",
+        "name": "Acme Grid",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh003",
+    "date_create": 1787603985,
+    "action": "guest_created",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "user",
+      "user": {
+        "id": "U0GUEST",
+        "name": "External Contractor",
+        "email": "contractor@vendor.example.com"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh004",
+    "date_create": 1787604045,
+    "action": "external_shared_channel_connected",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "channel",
+      "channel": {
+        "id": "C0EXTSHARED",
+        "name": "ext-project-alpha"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh099",
+    "date_create": 1787604105,
+    "action": "user_login",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ALAN",
+        "name": "Alan Turing",
+        "email": "alan@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "user",
+      "user": {
+        "id": "U0ALAN",
+        "name": "Alan Turing",
+        "email": "alan@acme.example.com"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh100",
+    "date_create": 1787604200,
+    "action": "pref.sso_setting_changed",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "workspace",
+      "workspace": {
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh101",
+    "date_create": 1787604300,
+    "action": "pref.two_factor_authentication_requirement_changed",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "workspace",
+      "workspace": {
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh102",
+    "date_create": 1787604400,
+    "action": "workflow_shared_externally",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ALAN",
+        "name": "Alan Turing",
+        "email": "alan@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "workflow",
+      "workflow": {
+        "id": "Wf0EXTFLOW",
+        "name": "Vendor Data Sync"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "enterprise",
+        "id": "E0ACMEGRID",
+        "name": "Acme Grid",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh103",
+    "date_create": 1787604500,
+    "action": "barrier_created",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "barrier",
+      "barrier": {
+        "id": "BARRIER01"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "enterprise",
+        "id": "E0ACMEGRID",
+        "name": "Acme Grid",
+        "domain": "acme"
+      }
+    }
+  },
+  {
+    "id": "0123a45b-6c7d-8900-e12f-3456789gh104",
+    "date_create": 1787604600,
+    "action": "pref.who_can_create_shared_channels",
+    "actor": {
+      "type": "user",
+      "user": {
+        "id": "U0ADA",
+        "name": "Ada Lovelace",
+        "email": "ada@acme.example.com"
+      }
+    },
+    "entity": {
+      "type": "workspace",
+      "workspace": {
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    },
+    "context": {
+      "location": {
+        "type": "workspace",
+        "id": "T0ACMEWORK",
+        "name": "Acme Corp",
+        "domain": "acme"
+      }
+    }
+  }
+]

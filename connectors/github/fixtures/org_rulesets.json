@@ -1,0 +1,9 @@
+[
+  {
+    "id": 8801,
+    "name": "main-protection",
+    "target": "branch",
+    "enforcement": "evaluate",
+    "source_type": "Organization"
+  }
+]

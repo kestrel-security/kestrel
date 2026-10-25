@@ -1,0 +1,127 @@
+{
+  "rows": [
+    {
+      "_subject_id": "contractor-admin-on-vault",
+      "identity": {
+        "display_name": "Contractor Dev",
+        "email": "dev@partner.example.net",
+        "is_external": true
+      },
+      "resource": {
+        "name": "secrets-vault",
+        "resource_type": "repository",
+        "visibility": "private",
+        "is_sensitive": true,
+        "config": {
+          "sensitivity_source": "heuristic",
+          "sensitivity_reasons": [
+            "name or topic matches 'vault'"
+          ]
+        }
+      },
+      "grant": {
+        "permission_level": "admin",
+        "granted_via": "direct"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "contractor-read-on-vault",
+      "identity": {
+        "display_name": "Contractor Dev",
+        "email": "dev@partner.example.net",
+        "is_external": true
+      },
+      "resource": {
+        "name": "secrets-vault",
+        "resource_type": "repository",
+        "visibility": "private",
+        "is_sensitive": true,
+        "config": {}
+      },
+      "grant": {
+        "permission_level": "read",
+        "granted_via": "direct"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "member-admin-on-vault",
+      "identity": {
+        "display_name": "Ada",
+        "email": "ada@acme.example.com",
+        "is_external": false
+      },
+      "resource": {
+        "name": "secrets-vault",
+        "resource_type": "repository",
+        "visibility": "private",
+        "is_sensitive": true,
+        "config": {}
+      },
+      "grant": {
+        "permission_level": "admin",
+        "granted_via": "direct"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "contractor-admin-on-unassessed",
+      "identity": {
+        "display_name": "Contractor Dev",
+        "email": "dev@partner.example.net",
+        "is_external": true
+      },
+      "resource": {
+        "name": "web-app",
+        "resource_type": "repository",
+        "visibility": "private",
+        "is_sensitive": null,
+        "config": {}
+      },
+      "grant": {
+        "permission_level": "admin",
+        "granted_via": "direct"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "contractor-admin-on-public",
+      "identity": {
+        "display_name": "Contractor Dev",
+        "email": "dev@partner.example.net",
+        "is_external": true
+      },
+      "resource": {
+        "name": "public-docs",
+        "resource_type": "repository",
+        "visibility": "public",
+        "is_sensitive": false,
+        "config": {}
+      },
+      "grant": {
+        "permission_level": "admin",
+        "granted_via": "direct"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "contractor-admin-on-vault"
+  ]
+}

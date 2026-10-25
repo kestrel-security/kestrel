@@ -1,0 +1,35 @@
+{
+  "total_count": 2,
+  "installations": [
+    {
+      "id": 7001,
+      "app_id": 400,
+      "app_slug": "deploy-bot",
+      "account": {
+        "login": "acme-corp",
+        "type": "Organization"
+      },
+      "target_type": "Organization",
+      "repository_selection": "all",
+      "permissions": {
+        "contents": "write",
+        "metadata": "read",
+        "organization_administration": "read"
+      }
+    },
+    {
+      "id": 7002,
+      "app_id": 401,
+      "app_slug": "readonly-linter",
+      "account": {
+        "login": "acme-corp",
+        "type": "Organization"
+      },
+      "target_type": "Organization",
+      "repository_selection": "selected",
+      "permissions": {
+        "pull_requests": "read"
+      }
+    }
+  ]
+}

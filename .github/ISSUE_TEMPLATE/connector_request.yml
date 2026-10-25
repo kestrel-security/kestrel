@@ -1,0 +1,47 @@
+name: Connector request
+description: Ask for a new SaaS application to be supported, or offer to build it
+title: "[connector] "
+labels: ["connector", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search [open connector requests](https://github.com/kestrel-security/kestrel/issues?q=is%3Aissue+label%3Aconnector) first. If you want to build it yourself, say so below: connectors are ordinary Python packages and [`docs/connectors/authoring-tutorial.md`](https://github.com/kestrel-security/kestrel/blob/main/docs/connectors/authoring-tutorial.md) walks through one end to end.
+  - type: input
+    id: application
+    attributes:
+      label: Application
+      description: Vendor and product, with a link to its admin API documentation.
+      placeholder: "Atlassian Jira Cloud — https://developer.atlassian.com/cloud/jira/platform/rest/v3/"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What access questions would it answer?
+      description: Which users, groups, roles, grants, settings, or OAuth apps matter, and which findings you expect from them.
+    validations:
+      required: true
+  - type: textarea
+    id: auth
+    attributes:
+      label: Read-only authentication
+      description: How a read-only credential is minted (API token, OAuth app, service account), and the minimum scopes it needs. Kestrel refuses connectors that ask for write scopes.
+    validations:
+      required: true
+  - type: textarea
+    id: objects
+    attributes:
+      label: Objects and audit log
+      description: The API endpoints for users, groups, roles, permissions, resources, settings, OAuth grants, and the audit log, with pagination and rate-limit notes if you know them.
+  - type: dropdown
+    id: help
+    attributes:
+      label: Can you help?
+      options:
+        - I can build it and open a pull request
+        - I can test against a real tenant
+        - I can provide API documentation and fixtures
+        - I am requesting only
+    validations:
+      required: true

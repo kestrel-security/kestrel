@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "session_settings": [
+    {
+      "user_id": "U0ADA",
+      "desktop_app_browser_quit": true,
+      "duration": 43200
+    },
+    {
+      "user_id": "U0GRACE",
+      "desktop_app_browser_quit": true,
+      "duration": 28800
+    },
+    {
+      "user_id": "U0CONTRACTOR",
+      "desktop_app_browser_quit": false,
+      "duration": 2592000
+    }
+  ],
+  "no_settings_applied": []
+}

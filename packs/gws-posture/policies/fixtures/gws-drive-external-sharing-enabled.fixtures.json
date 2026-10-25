@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "_subject_id": "drive-sharing-allowed",
+      "setting": {
+        "key": "workspace.drive.external_sharing",
+        "label": "Drive external sharing mode (tenant)",
+        "value": {"externalSharingMode": "ALLOWED"}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "drive-sharing-allowlisted",
+      "setting": {
+        "key": "workspace.drive.external_sharing",
+        "label": "Drive external sharing mode (tenant)",
+        "value": {"externalSharingMode": "ALLOWLISTED", "allowedDomains": ["partner.example.com"]}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "drive-sharing-disallowed",
+      "setting": {
+        "key": "workspace.drive.external_sharing",
+        "label": "Drive external sharing mode (tenant)",
+        "value": {"externalSharingMode": "DISALLOWED"}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["drive-sharing-allowed"]
+}

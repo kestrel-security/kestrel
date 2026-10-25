@@ -1,0 +1,79 @@
+{
+  "rows": [
+    {
+      "_subject_id": "open",
+      "setting": {
+        "key": "okta_policy:00p1",
+        "value": {
+          "name": "Default Policy",
+          "type": "PROFILE_ENROLLMENT",
+          "status": "ACTIVE",
+          "rule_count": 1,
+          "active_rule_count": 1,
+          "any_rule_without_mfa": false,
+          "any_rule_unlimited_session": false,
+          "self_service_registration_enabled": true,
+          "longest_session_minutes": 480,
+          "rules": []
+        },
+        "label": "Policy",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "closed",
+      "setting": {
+        "key": "okta_policy:00p1",
+        "value": {
+          "name": "Default Policy",
+          "type": "PROFILE_ENROLLMENT",
+          "status": "ACTIVE",
+          "rule_count": 1,
+          "active_rule_count": 1,
+          "any_rule_without_mfa": false,
+          "any_rule_unlimited_session": false,
+          "self_service_registration_enabled": false,
+          "longest_session_minutes": 480,
+          "rules": []
+        },
+        "label": "Policy",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "not-enrollment",
+      "setting": {
+        "key": "okta_policy:00p1",
+        "value": {
+          "name": "Default Policy",
+          "type": "OKTA_SIGN_ON",
+          "status": "ACTIVE",
+          "rule_count": 1,
+          "active_rule_count": 1,
+          "any_rule_without_mfa": false,
+          "any_rule_unlimited_session": false,
+          "self_service_registration_enabled": true,
+          "longest_session_minutes": 480,
+          "rules": []
+        },
+        "label": "Policy",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "open"
+  ]
+}

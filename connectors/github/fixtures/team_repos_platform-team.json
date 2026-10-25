@@ -1,0 +1,12 @@
+[
+  {
+    "id": 9001,
+    "node_id": "R_9001",
+    "name": "web-app",
+    "full_name": "acme-corp/web-app",
+    "private": true,
+    "visibility": "private",
+    "archived": false,
+    "permissions": {"admin": false, "maintain": false, "push": true, "triage": true, "pull": true}
+  }
+]

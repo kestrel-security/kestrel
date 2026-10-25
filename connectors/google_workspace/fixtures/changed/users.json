@@ -1,0 +1,77 @@
+[
+  {
+    "kind": "admin#directory#user",
+    "id": "100000000000000000001",
+    "primaryEmail": "ada@acme.example.com",
+    "name": {
+      "givenName": "Ada",
+      "familyName": "Lovelace",
+      "fullName": "Ada Lovelace"
+    },
+    "isAdmin": true,
+    "isDelegatedAdmin": false,
+    "suspended": false,
+    "archived": false,
+    "isEnrolledIn2Sv": false,
+    "isEnforcedIn2Sv": true,
+    "lastLoginTime": "2026-07-20T09:14:00.000Z",
+    "creationTime": "2024-01-15T10:00:00.000Z",
+    "orgUnitPath": "/"
+  },
+  {
+    "kind": "admin#directory#user",
+    "id": "100000000000000000002",
+    "primaryEmail": "grace@acme.example.com",
+    "name": {
+      "givenName": "Grace",
+      "familyName": "Hopper",
+      "fullName": "Grace Hopper"
+    },
+    "isAdmin": false,
+    "isDelegatedAdmin": true,
+    "suspended": false,
+    "archived": false,
+    "isEnrolledIn2Sv": false,
+    "isEnforcedIn2Sv": false,
+    "lastLoginTime": "2026-07-21T16:02:00.000Z",
+    "creationTime": "2024-03-02T11:30:00.000Z",
+    "orgUnitPath": "/Engineering"
+  },
+  {
+    "kind": "admin#directory#user",
+    "id": "100000000000000000003",
+    "primaryEmail": "alan@acme.example.com",
+    "name": {
+      "givenName": "Alan",
+      "familyName": "Turing",
+      "fullName": "Alan Turing"
+    },
+    "isAdmin": false,
+    "isDelegatedAdmin": false,
+    "suspended": false,
+    "archived": false,
+    "isEnrolledIn2Sv": true,
+    "isEnforcedIn2Sv": true,
+    "lastLoginTime": "2026-07-22T08:45:00.000Z",
+    "creationTime": "2025-06-11T09:00:00.000Z",
+    "orgUnitPath": "/"
+  },
+  {
+    "kind": "admin#directory#user",
+    "id": "100000000000000000004",
+    "primaryEmail": "svc-backup@acme.example.com",
+    "name": {
+      "givenName": "Backup",
+      "familyName": "Service",
+      "fullName": "Backup Service"
+    },
+    "isAdmin": false,
+    "isDelegatedAdmin": false,
+    "suspended": true,
+    "archived": false,
+    "isEnrolledIn2Sv": false,
+    "isEnforcedIn2Sv": false,
+    "creationTime": "2024-08-01T00:00:00.000Z",
+    "orgUnitPath": "/Engineering"
+  }
+]

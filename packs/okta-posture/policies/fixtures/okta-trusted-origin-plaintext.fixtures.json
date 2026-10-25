@@ -1,0 +1,39 @@
+{
+  "rows": [
+    {
+      "_subject_id": "http",
+      "setting": {
+        "key": "okta_trusted_origin:tos1",
+        "value": {
+          "origin": "http://legacy.test",
+          "insecure_scheme": true
+        },
+        "label": "okta_trusted_origin:tos1",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "https",
+      "setting": {
+        "key": "okta_trusted_origin:tos2",
+        "value": {
+          "origin": "https://app.test",
+          "insecure_scheme": false
+        },
+        "label": "okta_trusted_origin:tos2",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "http"
+  ]
+}

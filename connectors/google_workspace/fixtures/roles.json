@@ -1,0 +1,66 @@
+[
+  {
+    "kind": "admin#directory#role",
+    "roleId": "300000000000001",
+    "roleName": "_SEED_ADMIN_ROLE",
+    "roleDescription": "Super Admin",
+    "isSuperAdminRole": true,
+    "isSystemRole": true,
+    "rolePrivileges": [
+      {
+        "privilegeName": "SUPER_ADMIN",
+        "serviceId": "00haapch16h1ysv"
+      }
+    ]
+  },
+  {
+    "kind": "admin#directory#role",
+    "roleId": "300000000000002",
+    "roleName": "_HELP_DESK_ADMIN_ROLE",
+    "roleDescription": "Help Desk Admin",
+    "isSuperAdminRole": false,
+    "isSystemRole": true,
+    "rolePrivileges": [
+      {
+        "privilegeName": "USERS_RESET_PASSWORD",
+        "serviceId": "00haapch16h1ysv"
+      },
+      {
+        "privilegeName": "USERS_RETRIEVE",
+        "serviceId": "00haapch16h1ysv"
+      }
+    ]
+  },
+  {
+    "kind": "admin#directory#role",
+    "roleId": "300000000000003",
+    "roleName": "Groups Reader",
+    "roleDescription": "Custom read-only role for group metadata",
+    "isSuperAdminRole": false,
+    "isSystemRole": false,
+    "rolePrivileges": [
+      {
+        "privilegeName": "GROUPS_RETRIEVE",
+        "serviceId": "00haapch16h1ysv"
+      }
+    ]
+  },
+  {
+    "kind": "admin#directory#role",
+    "roleId": "300000000000004",
+    "roleName": "Security Operations",
+    "roleDescription": "Custom role that can change security settings",
+    "isSuperAdminRole": false,
+    "isSystemRole": false,
+    "rolePrivileges": [
+      {
+        "privilegeName": "SECURITY_SETTINGS",
+        "serviceId": "00haapch16h1ysv"
+      },
+      {
+        "privilegeName": "USERS_RETRIEVE",
+        "serviceId": "00haapch16h1ysv"
+      }
+    ]
+  }
+]

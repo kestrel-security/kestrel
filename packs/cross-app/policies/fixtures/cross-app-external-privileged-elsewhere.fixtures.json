@@ -1,0 +1,126 @@
+{
+  "rows": [
+    {
+      "_subject_id": "github-owner-slack-guest",
+      "identity": {
+        "identity_type": "user",
+        "email": "contractor@partner.example.com",
+        "display_name": "Jean Bartik",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["admin"],
+      "cluster": {
+        "match_kind": "email",
+        "application_types": ["github", "slack"],
+        "accounts": [
+          {"application_type": "github", "application_name": "GitHub", "is_external": false, "is_disabled": false, "privileged": true, "roles": ["admin"]},
+          {"application_type": "slack", "application_name": "Slack", "is_external": true, "is_disabled": false, "privileged": false, "roles": []}
+        ]
+      }
+    },
+    {
+      "_subject_id": "the-slack-guest-half",
+      "identity": {
+        "identity_type": "user",
+        "email": "contractor@partner.example.com",
+        "display_name": "Jean Bartik",
+        "is_disabled": false,
+        "is_external": true
+      },
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": [],
+      "cluster": {
+        "match_kind": "email",
+        "application_types": ["github", "slack"],
+        "accounts": [
+          {"application_type": "github", "application_name": "GitHub", "is_external": false, "is_disabled": false, "privileged": true, "roles": ["admin"]},
+          {"application_type": "slack", "application_name": "Slack", "is_external": true, "is_disabled": false, "privileged": false, "roles": []}
+        ]
+      }
+    },
+    {
+      "_subject_id": "guest-admin-in-one-app-only",
+      "identity": {
+        "identity_type": "user",
+        "email": "vendor@partner.example.com",
+        "display_name": "Vendor Account",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": ["owner"],
+      "cluster": {
+        "match_kind": "email",
+        "application_types": ["slack"],
+        "accounts": [
+          {"application_type": "slack", "application_name": "Slack", "is_external": true, "is_disabled": false, "privileged": true, "roles": ["owner"]}
+        ]
+      }
+    },
+    {
+      "_subject_id": "staff-admin-no-guest-account",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": ["Super Administrator"],
+      "cluster": {
+        "match_kind": "email",
+        "application_types": ["okta", "slack"],
+        "accounts": [
+          {"application_type": "okta", "application_name": "Okta", "is_external": false, "is_disabled": false, "privileged": true, "roles": ["Super Administrator"]},
+          {"application_type": "slack", "application_name": "Slack", "is_external": false, "is_disabled": false, "privileged": false, "roles": []}
+        ]
+      }
+    },
+    {
+      "_subject_id": "guest-account-already-disabled",
+      "identity": {
+        "identity_type": "user",
+        "email": "former@partner.example.com",
+        "display_name": "Former Partner",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["admin"],
+      "cluster": {
+        "match_kind": "email",
+        "application_types": ["github", "slack"],
+        "accounts": [
+          {"application_type": "github", "application_name": "GitHub", "is_external": false, "is_disabled": false, "privileged": true, "roles": ["admin"]},
+          {"application_type": "slack", "application_name": "Slack", "is_external": true, "is_disabled": true, "privileged": false, "roles": []}
+        ]
+      }
+    },
+    {
+      "_subject_id": "bot-with-admin",
+      "identity": {
+        "identity_type": "service_account",
+        "email": "ci@acme.example.com",
+        "display_name": "CI Bot",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["admin"],
+      "cluster": {
+        "match_kind": "email",
+        "application_types": ["github", "slack"],
+        "accounts": [
+          {"application_type": "github", "application_name": "GitHub", "is_external": false, "is_disabled": false, "privileged": true, "roles": ["admin"]},
+          {"application_type": "slack", "application_name": "Slack", "is_external": true, "is_disabled": false, "privileged": false, "roles": []}
+        ]
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "github-owner-slack-guest"
+  ]
+}

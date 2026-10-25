@@ -1,0 +1,55 @@
+{
+  "rows": [
+    {
+      "_subject_id": "webauthn-off",
+      "setting": {
+        "key": "okta_authenticator:webauthn",
+        "label": "Security Key",
+        "value": {
+          "key": "webauthn",
+          "status": "INACTIVE",
+          "phishing_resistant": true
+        }
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "webauthn-on",
+      "setting": {
+        "key": "okta_authenticator:webauthn",
+        "label": "Security Key",
+        "value": {
+          "key": "webauthn",
+          "status": "ACTIVE",
+          "phishing_resistant": true
+        }
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "push",
+      "setting": {
+        "key": "okta_authenticator:okta_verify",
+        "label": "Okta Verify",
+        "value": {
+          "key": "okta_verify",
+          "status": "ACTIVE",
+          "phishing_resistant": false
+        }
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "webauthn-off"
+  ]
+}

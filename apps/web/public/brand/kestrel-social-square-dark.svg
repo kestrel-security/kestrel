@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title">
+  <title id="title">Kestrel</title>
+  <rect width="1080" height="1080" fill="#090C11"/>
+  <defs>
+    <radialGradient id="square-glow" cx="0" cy="0" r="1" gradientTransform="translate(540 830) rotate(90) scale(500 740)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0" stop-opacity=".56"/>
+      <stop offset=".54" stop-color="#5D61F1" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#4689ED" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="url(#square-glow)"/>
+
+  <defs>
+    <linearGradient id="kestrel-gradient" x1="8" y1="20" x2="98" y2="107" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0"/>
+      <stop offset=".52" stop-color="#5D61F1"/>
+      <stop offset="1" stop-color="#4689ED"/>
+    </linearGradient>
+    <linearGradient id="kestrel-head-gradient" x1="79" y1="20" x2="132.5" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0"/>
+      <stop offset=".52" stop-color="#5D61F1"/>
+      <stop offset="1" stop-color="#4689ED"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(345 205) scale(3)">
+    <path d="M8 20h45l45 42v45l-7.5-3L8 20Z" fill="url(#kestrel-gradient)"/>
+      <path d="M87.5 20h27l18 18h-30l-6 9-18-19.5 9-7.5Z" fill="url(#kestrel-head-gradient)"/>
+  </g>
+  <text x="265" y="690" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="146" font-weight="600" letter-spacing="-2">Kestrel</text>
+  <text x="540" y="785" text-anchor="middle" fill="#F8FAFC" fill-opacity=".72" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="38" font-weight="500">Open-source security for SaaS.</text>
+</svg>

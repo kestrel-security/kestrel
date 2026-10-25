@@ -1,0 +1,8 @@
+{
+  "kind": "groupsSettings#groups",
+  "email": "security@acme.example.com",
+  "allowExternalMembers": "false",
+  "whoCanJoin": "INVITED_CAN_JOIN",
+  "whoCanPostMessage": "ALL_MEMBERS_CAN_POST",
+  "whoCanViewMembership": "ALL_MANAGERS_CAN_VIEW"
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "user_id": "U0ADA",
+    "username": "ada",
+    "email": "ada@acme.example.com",
+    "is_admin": false,
+    "is_owner": false,
+    "is_primary_owner": true,
+    "date_last_active": "2026-09-25",
+    "messages_posted_count": 120,
+    "channel_messages_posted_count": 80,
+    "reactions_added_count": 15,
+    "workspaces": ["T0ACMEWORK"]
+  },
+  {
+    "user_id": "U0GRACE",
+    "username": "grace",
+    "email": "grace@acme.example.com",
+    "is_admin": true,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "date_last_active": "2026-08-01",
+    "messages_posted_count": 5,
+    "channel_messages_posted_count": 3,
+    "reactions_added_count": 1,
+    "workspaces": ["T0ACMEWORK"]
+  },
+  {
+    "user_id": "U0ALAN",
+    "username": "alan",
+    "email": "alan@acme.example.com",
+    "is_admin": true,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "date_last_active": "2026-09-20",
+    "messages_posted_count": 200,
+    "channel_messages_posted_count": 150,
+    "reactions_added_count": 50,
+    "workspaces": ["T0ACMEWORK"]
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "rows": [
+    {
+      "_subject_id": "guest-no-expiry",
+      "identity": {
+        "email": "noexpiry@vendor.example.com",
+        "display_name": "Guest No Expiry",
+        "is_disabled": false,
+        "is_external": true,
+        "guest_type": "multi_channel_guest",
+        "expires_at": null
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "guest-with-expiry",
+      "identity": {
+        "email": "contractor@vendor.example.com",
+        "display_name": "External Contractor",
+        "is_disabled": false,
+        "is_external": true,
+        "guest_type": "single_channel_guest",
+        "expires_at": "2027-01-01T00:00:00+00:00"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "non-guest",
+      "identity": {
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "is_disabled": false,
+        "is_external": false,
+        "guest_type": null,
+        "expires_at": null
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "disabled-guest",
+      "identity": {
+        "email": "old@vendor.example.com",
+        "display_name": "Old Guest",
+        "is_disabled": true,
+        "is_external": true,
+        "guest_type": "multi_channel_guest",
+        "expires_at": null
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["guest-no-expiry"]
+}

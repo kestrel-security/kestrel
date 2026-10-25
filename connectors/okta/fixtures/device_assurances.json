@@ -1,0 +1,18 @@
+[
+  {
+    "id": "dae0000000000001",
+    "name": "macOS baseline",
+    "platform": "MACOS",
+    "diskEncryptionType": {
+      "include": [
+        "FULL"
+      ]
+    },
+    "screenLockType": {
+      "include": [
+        "BIOMETRIC"
+      ]
+    },
+    "secureHardwarePresent": true
+  }
+]

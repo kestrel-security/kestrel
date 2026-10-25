@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title">
+  <title id="title">Kestrel — Open-source security for SaaS</title>
+  <rect width="1200" height="630" fill="#090C11"/>
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0v48" fill="none" stroke="#2A3140" stroke-opacity=".24"/>
+    </pattern>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(260 110) rotate(36) scale(650 420)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0" stop-opacity=".26"/>
+      <stop offset="1" stop-color="#7441F0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <defs>
+    <linearGradient id="kestrel-gradient" x1="8" y1="20" x2="98" y2="107" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0"/>
+      <stop offset=".52" stop-color="#5D61F1"/>
+      <stop offset="1" stop-color="#4689ED"/>
+    </linearGradient>
+    <linearGradient id="kestrel-head-gradient" x1="79" y1="20" x2="132.5" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0"/>
+      <stop offset=".52" stop-color="#5D61F1"/>
+      <stop offset="1" stop-color="#4689ED"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(92 142) scale(1.55)">
+    <path d="M8 20h45l45 42v45l-7.5-3L8 20Z" fill="url(#kestrel-gradient)"/>
+      <path d="M87.5 20h27l18 18h-30l-6 9-18-19.5 9-7.5Z" fill="url(#kestrel-head-gradient)"/>
+  </g>
+  <text x="330" y="288" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="116" font-weight="600" letter-spacing="-2">Kestrel</text>
+  <text x="98" y="430" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="52" font-weight="500" letter-spacing="-1.4">Open-source security for SaaS.</text>
+  <text x="100" y="490" fill="#F8FAFC" fill-opacity=".58" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="500">Posture · identity · access · evidence</text>
+</svg>

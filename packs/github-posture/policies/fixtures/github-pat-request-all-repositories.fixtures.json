@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "_subject_id": "all-repositories",
+      "setting": {"key": "pat_request:7701", "value": {"owner": "alan-turing", "created_at": "2026-09-12T18:41:05Z", "repository_selection": "all", "permissions": {"organization": {"members": "read"}}}, "label": "pat"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "named-repositories",
+      "setting": {"key": "pat_request:7702", "value": {"owner": "grace-hopper", "created_at": "2026-09-12T18:41:05Z", "repository_selection": "subset", "permissions": {"repository": {"contents": "read"}}}, "label": "pat"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "selection-missing",
+      "setting": {"key": "pat_request:7703", "value": {"owner": "ada-lovelace", "created_at": "2026-09-12T18:41:05Z", "permissions": {}}, "label": "pat"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "a-pending-invitation-is-not-a-pat-request",
+      "setting": {"key": "pending_invitation:6601", "value": {"role": "admin"}, "label": "inv"},
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["all-repositories"]
+}

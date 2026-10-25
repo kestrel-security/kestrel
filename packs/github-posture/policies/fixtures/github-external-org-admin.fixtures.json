@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "ext-admin",
+      "identity": {"email": "vendor@ext.example", "display_name": "Vendor", "is_external": true},
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["organization_admin"]
+    },
+    {
+      "_subject_id": "int-admin",
+      "identity": {"email": "alice@acme.example", "display_name": "alice", "is_external": false},
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": ["organization_admin"]
+    },
+    {
+      "_subject_id": "ext-member",
+      "identity": {"email": "guest@ext.example", "display_name": "Guest", "is_external": true},
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["ext-admin"]
+}

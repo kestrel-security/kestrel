@@ -1,0 +1,64 @@
+{
+  "rows": [
+    {
+      "_subject_id": "drive-explorer",
+      "oauth_application": {
+        "name": "Drive Explorer Sync",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [
+        "https://www.googleapis.com/auth/drive"
+      ],
+      "grant_count": 1,
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "widely-used",
+      "oauth_application": {
+        "name": "Docusign",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [
+        "https://www.googleapis.com/auth/drive"
+      ],
+      "grant_count": 35,
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "no-sensitive",
+      "oauth_application": {
+        "name": "Slack",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [],
+      "grant_count": 1,
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "unknown-count",
+      "oauth_application": {
+        "name": "Mystery",
+        "publisher": "third-party"
+      },
+      "sensitive_scope_names": [
+        "https://mail.google.com/"
+      ],
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "drive-explorer"
+  ]
+}

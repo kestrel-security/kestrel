@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "suspended-sa",
+      "identity": {"email": "old-sa@acme.example.com", "display_name": "Old Super Admin", "is_disabled": true, "mfa_enabled": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Super Admin"]
+    },
+    {
+      "_subject_id": "active-sa",
+      "identity": {"email": "ada@acme.example.com", "display_name": "Ada Lovelace", "is_disabled": false, "mfa_enabled": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Super Admin"]
+    },
+    {
+      "_subject_id": "suspended-user",
+      "identity": {"email": "svc-backup@acme.example.com", "display_name": "Backup Service", "is_disabled": true, "mfa_enabled": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["suspended-sa"]
+}

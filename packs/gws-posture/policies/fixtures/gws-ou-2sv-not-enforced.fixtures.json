@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "_subject_id": "ou-not-enforced",
+      "setting": {
+        "key": "security.two_step_verification_enforcement",
+        "label": "2SV enforcement mode (OU:id:ou-eng)",
+        "value": {"enforcementMode": "NOT_ENFORCED"}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "ou-enforced",
+      "setting": {
+        "key": "security.two_step_verification_enforcement",
+        "label": "2SV enforcement mode (OU:id:ou-root)",
+        "value": {"enforcementMode": "ENFORCED"}
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "other-app",
+      "setting": {
+        "key": "security.two_step_verification_enforcement",
+        "value": {"enforcementMode": "NOT_ENFORCED"}
+      },
+      "application": {"type": "okta", "name": "Acme Okta"}
+    }
+  ],
+  "expected_match_subject_ids": ["ou-not-enforced"]
+}

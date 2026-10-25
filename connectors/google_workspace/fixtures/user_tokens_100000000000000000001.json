@@ -1,0 +1,28 @@
+[
+  {
+    "kind": "admin#directory#token",
+    "clientId": "1234567890-slackworkspace.apps.googleusercontent.com",
+    "displayText": "Slack",
+    "anonymous": false,
+    "nativeApp": false,
+    "userKey": "100000000000000000001",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/drive.file",
+      "openid"
+    ]
+  },
+  {
+    "kind": "admin#directory#token",
+    "clientId": "9988776655-mailmerge.apps.googleusercontent.com",
+    "displayText": "MailMerge Pro",
+    "anonymous": true,
+    "nativeApp": false,
+    "userKey": "100000000000000000001",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ]
+  }
+]

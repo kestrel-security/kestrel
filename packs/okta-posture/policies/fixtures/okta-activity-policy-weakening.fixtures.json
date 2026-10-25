@@ -1,0 +1,62 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "event": {
+        "action": "policy.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": "2026-08-10T15:00:00Z",
+        "summary": "Okta System Log: Deactivate policy (policy.change)",
+        "attributes": {
+          "okta_event_type": "policy.lifecycle.deactivate",
+          "severity": "WARN",
+          "outcome": "SUCCESS"
+        }
+      },
+      "_subject_id": "policy-deactivated-in-system-log"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "event": {
+        "action": "policy.change",
+        "actor_email": "alan@acme.example.com",
+        "occurred_at": "2026-08-11T09:00:00Z",
+        "summary": "Okta System Log: Delete policy rule (policy.change)",
+        "attributes": {
+          "okta_event_type": "policy.rule.delete",
+          "severity": "WARN",
+          "outcome": "SUCCESS"
+        }
+      },
+      "_subject_id": "policy-rule-deleted"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "event": {
+        "action": "policy.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": "2026-08-12T10:00:00Z",
+        "summary": "Okta System Log: Create policy (policy.change)",
+        "attributes": {
+          "okta_event_type": "policy.lifecycle.create",
+          "severity": "INFO",
+          "outcome": "SUCCESS"
+        }
+      },
+      "_subject_id": "policy-created-not-a-weakening"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "policy-deactivated-in-system-log",
+    "policy-rule-deleted"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "kestrel-workspace",
+  "private": true,
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.34.6",
+  "devDependencies": {
+    "playwright-core": "1.64.1"
+  }
+}

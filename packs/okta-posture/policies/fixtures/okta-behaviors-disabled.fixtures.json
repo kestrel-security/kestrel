@@ -1,0 +1,54 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_behavior:bhvAnomLocation001",
+        "value": {
+          "name": "anomalousLocation",
+          "type": "ANOMALOUS_LOCATION",
+          "status": "INACTIVE",
+          "evaluate_on_sign_in": false,
+          "is_active": false,
+          "effective": false
+        }
+      },
+      "_subject_id": "behavior-inactive-and-not-evaluating-on-sign-in"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_behavior:bhvAnomDevice002",
+        "value": {
+          "name": "anomalousDevice",
+          "type": "ANOMALOUS_DEVICE",
+          "status": "ACTIVE",
+          "evaluate_on_sign_in": true,
+          "is_active": true,
+          "effective": true
+        }
+      },
+      "_subject_id": "behavior-active-and-evaluating-on-sign-in"
+    },
+    {
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "setting": {
+        "key": "some_key",
+        "value": {}
+      },
+      "_subject_id": "non-okta-application-is-ignored"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "behavior-inactive-and-not-evaluating-on-sign-in"
+  ]
+}

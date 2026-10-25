@@ -1,0 +1,35 @@
+{
+  "rows": [
+    {
+      "_subject_id": "device-unencrypted",
+      "resource": {
+        "resource_type": "device",
+        "management_type": "mdm",
+        "name": "Contractor BYOD",
+        "owner_email": "contractor@acme.example.com",
+        "device_type": "ANDROID",
+        "os": "Android 13",
+        "compromised": false,
+        "encrypted": false,
+        "status": "APPROVED"
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "device-encrypted",
+      "resource": {
+        "resource_type": "device",
+        "management_type": "mdm",
+        "name": "Ada's Pixel",
+        "owner_email": "ada@acme.example.com",
+        "device_type": "ANDROID",
+        "os": "Android 14",
+        "compromised": false,
+        "encrypted": true,
+        "status": "APPROVED"
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["device-unencrypted"]
+}

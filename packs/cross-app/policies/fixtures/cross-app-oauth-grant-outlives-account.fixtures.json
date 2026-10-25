@@ -1,0 +1,113 @@
+{
+  "rows": [
+    {
+      "_subject_id": "disabled-with-live-token",
+      "identity": {
+        "identity_type": "user",
+        "email": "rf@acme.example.com",
+        "display_name": "Rosalind Franklin",
+        "is_disabled": true
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": [],
+      "cluster": {
+        "idp_status": "disabled",
+        "idp_application_types": ["okta"],
+        "application_types": ["okta", "google_workspace"]
+      },
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Analytics Sync",
+          "publisher": "Third Party Ltd",
+          "is_verified": false,
+          "sensitive_scope_names": ["https://www.googleapis.com/auth/drive"],
+          "last_used_at": "2026-09-01T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "_subject_id": "enabled-account-idp-disabled",
+      "identity": {
+        "identity_type": "user",
+        "email": "kj@acme.example.com",
+        "display_name": "Katherine Johnson",
+        "is_disabled": false
+      },
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": [],
+      "cluster": {
+        "idp_status": "disabled",
+        "idp_application_types": ["okta"],
+        "application_types": ["okta", "slack"]
+      },
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Standup Bot",
+          "publisher": null,
+          "is_verified": true,
+          "sensitive_scope_names": [],
+          "last_used_at": null
+        }
+      ]
+    },
+    {
+      "_subject_id": "disabled-no-grants",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "is_disabled": true
+      },
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": [],
+      "cluster": {"idp_status": "disabled", "idp_application_types": ["okta"], "application_types": ["okta"]},
+      "oauth_grants": []
+    },
+    {
+      "_subject_id": "active-person-with-grants",
+      "identity": {
+        "identity_type": "user",
+        "email": "grace@acme.example.com",
+        "display_name": "Grace Hopper",
+        "is_disabled": false
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": [],
+      "cluster": {"idp_status": "active", "idp_application_types": ["okta"], "application_types": ["okta", "google_workspace"]},
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Analytics Sync",
+          "publisher": "Third Party Ltd",
+          "is_verified": false,
+          "sensitive_scope_names": ["https://www.googleapis.com/auth/drive"],
+          "last_used_at": "2026-09-10T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "_subject_id": "disabled-service-account",
+      "identity": {
+        "identity_type": "service_account",
+        "email": "ci@acme.example.com",
+        "display_name": "CI Bot",
+        "is_disabled": true
+      },
+      "application": {"type": "github", "name": "GitHub"},
+      "roles": [],
+      "cluster": {"idp_status": "absent", "idp_application_types": [], "application_types": ["github"]},
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Deploy Runner",
+          "publisher": "Acme",
+          "is_verified": true,
+          "sensitive_scope_names": ["repo"],
+          "last_used_at": "2026-09-14T10:00:00Z"
+        }
+      ]
+    }
+  ],
+  "expected_match_subject_ids": [
+    "disabled-with-live-token",
+    "enabled-account-idp-disabled"
+  ]
+}

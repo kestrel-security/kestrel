@@ -1,0 +1,100 @@
+{
+  "rows": [
+    {
+      "_subject_id": "unprotected",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "unprotected"
+      },
+      "settings_by_key": {
+        "repo_default_branch_protected": {
+          "key": "repo_default_branch_protected",
+          "value": false,
+          "category": "security",
+          "label": "repo_default_branch_protected"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_default_branch_protected",
+          "value": false,
+          "category": "security",
+          "label": "repo_default_branch_protected"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "protected",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "protected"
+      },
+      "settings_by_key": {
+        "repo_default_branch_protected": {
+          "key": "repo_default_branch_protected",
+          "value": true,
+          "category": "security",
+          "label": "repo_default_branch_protected"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_default_branch_protected",
+          "value": true,
+          "category": "security",
+          "label": "repo_default_branch_protected"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "not-scanned",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "not-scanned"
+      },
+      "settings_by_key": {},
+      "settings": [],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "not-a-repo",
+      "resource": {
+        "resource_type": "channel",
+        "name": "general"
+      },
+      "settings_by_key": {
+        "repo_default_branch_protected": {
+          "key": "repo_default_branch_protected",
+          "value": false,
+          "category": "security",
+          "label": "repo_default_branch_protected"
+        }
+      },
+      "settings": [],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "unprotected"
+  ]
+}

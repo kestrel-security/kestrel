@@ -1,0 +1,13 @@
+{
+  "rows": [
+    {
+      "_subject_id": "id-1",
+      "identity": {"email": "alice@example.com", "display_name": "Alice", "mfa_enabled": false}
+    },
+    {
+      "_subject_id": "id-2",
+      "identity": {"email": "bob@example.com", "display_name": "Bob", "mfa_enabled": true}
+    }
+  ],
+  "expected_match_subject_ids": ["id-1"]
+}

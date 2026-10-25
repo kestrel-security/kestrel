@@ -1,0 +1,17 @@
+{
+  "rows": [
+    {
+      "_subject_id": "former-id",
+      "identity": {"email": "former@acme.example.com", "display_name": "Former Employee", "is_disabled": true, "mfa_enabled": false},
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": ["Super Administrator"]
+    },
+    {
+      "_subject_id": "ada-id",
+      "identity": {"email": "ada@acme.example.com", "display_name": "Ada Lovelace", "is_disabled": false, "mfa_enabled": true},
+      "application": {"type": "okta", "name": "Okta"},
+      "roles": ["Super Administrator"]
+    }
+  ],
+  "expected_match_subject_ids": ["former-id"]
+}

@@ -1,0 +1,190 @@
+# Pinned project name: containers, network, and volumes are kestrel-* no matter
+# which directory the repository was cloned into, so two checkouts (or a rename
+# of the directory) share one stack instead of fighting over host ports.
+name: kestrel
+
+# Development only. Every published port is bound to 127.0.0.1: this stack has
+# fixed credentials, no auth on Redis or Adminer, and a dev login, so nothing in
+# it should be reachable from the network. For a server, use
+# deployments/compose/docker-compose.yml.
+
+services:
+  # Host ports are shifted from Postgres/Redis defaults (5433/6380 instead of
+  # 5432/6379) to avoid colliding with other local projects. Containers still
+  # reach each other over the default ports via the internal Docker network
+  # (e.g. api -> postgres:5432), so DATABASE_URL/REDIS_URL below are unaffected.
+  # The credentials are fixed on purpose: Postgres applies them only when the
+  # pgdata volume is first created, and DATABASE_URL's default repeats them.
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: kestrel
+      POSTGRES_USER: kestrel
+      POSTGRES_PASSWORD: kestrel_dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kestrel"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Applies migrations once, then exits; api and worker wait for it. Uses the
+  # host's migrations (bind-mounted) so a new revision needs no image rebuild.
+  migrate:
+    build:
+      context: .
+      dockerfile: deployments/docker/api.Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kestrel:kestrel_dev@postgres:5432/kestrel}
+    volumes:
+      - ./kestrel:/app/kestrel
+      - ./alembic.ini:/app/alembic.ini:ro
+      - ./migrations:/app/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: alembic upgrade head
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: deployments/docker/api.Dockerfile
+    # .env is optional: a fresh clone starts without one. `kestrel init` or
+    # `make demo-up` writes it (with a generated KESTREL_MASTER_KEY), and
+    # compose also reads it to fill the ${...} defaults below.
+    env_file:
+      - path: .env
+        required: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kestrel:kestrel_dev@postgres:5432/kestrel}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      # Catalog for GET /packs / POST /packs/{name}/install.
+      KESTREL_PACKS_DIR: /app/packs
+      KESTREL_CONNECTOR_URL_ALLOWLIST: 127.0.0.1,localhost,host.docker.internal
+      # The web app (in compose or `next dev` on the host via the published
+      # port) forwards the browser IP; trust it from the Docker networks only.
+      KESTREL_TRUSTED_PROXIES: ${KESTREL_TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      # The published web port. Override in .env when running `next dev` on the
+      # host (http://localhost:3000) against this API.
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:3010}
+    volumes:
+      # Bind-mount Python so uvicorn --reload picks up host edits without --build.
+      - ./kestrel:/app/kestrel
+      - ./apps/api:/app/apps/api
+      - ./connectors:/app/connectors
+      - ./packs:/app/packs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8010:8000"
+    command: uvicorn kestrel_api.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      # /readyz, not /healthz: the API answers /healthz before it can reach
+      # Postgres, and `web` waiting on that races the first page load.
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/readyz', timeout=3).status == 200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  worker:
+    build:
+      context: .
+      dockerfile: deployments/docker/worker.Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kestrel:kestrel_dev@postgres:5432/kestrel}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      KESTREL_METRICS_PORT: "9101"
+      KESTREL_CONNECTOR_URL_ALLOWLIST: 127.0.0.1,localhost,host.docker.internal
+    volumes:
+      - ./kestrel:/app/kestrel
+      - ./apps/worker:/app/apps/worker
+      - ./connectors:/app/connectors
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:9101:9101"
+    # --schedule: embedded beat persists last-run times, and /app is not
+    # writable by the image's user; /var/lib/kestrel is (worker.Dockerfile).
+    command: celery -A kestrel_worker.celery_app worker --beat --schedule /var/lib/kestrel/celerybeat-schedule -l info
+
+  web:
+    build:
+      context: .
+      dockerfile: deployments/docker/web.Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      API_URL: ${API_URL:-http://api:8000/api/v1}
+      # The origin browsers use for this stack: the published port, not the
+      # container's 3000. Without it the /login redirect falls back to the
+      # request URL and the web container warns at every boot.
+      APP_URL: ${APP_URL:-http://localhost:3010}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3010:3000"
+
+  adminer:
+    image: adminer:6.1.1
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - postgres
+    profiles: ["debug"]
+
+  # Optional local metrics scrape (does not start Grafana — keep the slice lean).
+  # docker compose --profile observability up
+  prometheus:
+    image: prom/prometheus:v3.15.1
+    profiles: ["observability"]
+    volumes:
+      - ./deployments/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+    depends_on:
+      - api
+      - worker
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+
+volumes:
+  pgdata:

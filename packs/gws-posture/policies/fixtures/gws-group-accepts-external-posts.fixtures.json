@@ -1,0 +1,35 @@
+{
+  "rows": [
+    {
+      "_subject_id": "anyone-can-post",
+      "setting": {"key": "group_who_can_post_message", "value": "ANYONE_CAN_POST", "label": "Who can post"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "members-only",
+      "setting": {"key": "group_who_can_post_message", "value": "ALL_MEMBERS_CAN_POST", "label": "Who can post"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "the-whole-organization",
+      "setting": {"key": "group_who_can_post_message", "value": "ALL_IN_DOMAIN_CAN_POST", "label": "Who can post"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "managers-only",
+      "setting": {"key": "group_who_can_post_message", "value": "ALL_MANAGERS_CAN_POST", "label": "Who can post"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "value-missing",
+      "setting": {"key": "group_who_can_post_message", "value": null, "label": "Who can post"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "another-application",
+      "setting": {"key": "group_who_can_post_message", "value": "ANYONE_CAN_POST", "label": "Who can post"},
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["anyone-can-post"]
+}

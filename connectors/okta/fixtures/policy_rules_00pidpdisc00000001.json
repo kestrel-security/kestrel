@@ -1,0 +1,17 @@
+[
+  {
+    "id": "0pridp00000000001",
+    "name": "Default Rule",
+    "status": "ACTIVE",
+    "priority": 1,
+    "actions": {
+      "idp": {
+        "providers": [
+          {
+            "type": "OKTA"
+          }
+        ]
+      }
+    }
+  }
+]

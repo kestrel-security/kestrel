@@ -1,0 +1,10 @@
+[
+  {
+    "id": "00prisk00000000001",
+    "name": "Default Entity Risk Policy",
+    "type": "ENTITY_RISK",
+    "status": "ACTIVE",
+    "system": true,
+    "description": "Evaluates entity risk for authentication decisions."
+  }
+]

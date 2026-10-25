@@ -1,0 +1,24 @@
+{
+  "rows": [
+    {
+      "_subject_id": "no-barrier",
+      "settings_by_key": {
+        "information_barrier_configured": {"key": "information_barrier_configured", "value": false, "category": "security"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "barrier-present",
+      "settings_by_key": {
+        "information_barrier_configured": {"key": "information_barrier_configured", "value": true, "category": "security"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "barrier-not-collected",
+      "settings_by_key": {},
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["no-barrier"]
+}

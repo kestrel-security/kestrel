@@ -1,0 +1,78 @@
+{
+  "rows": [
+    {
+      "_subject_id": "long-grace",
+      "setting": {
+        "key": "security.two_step_verification_enrollment_grace_period",
+        "label": "2SV enrollment grace period (tenant)",
+        "value": {
+          "gracePeriod": "P14D"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "short-grace",
+      "setting": {
+        "key": "security.two_step_verification_enrollment_grace_period",
+        "label": "2SV enrollment grace period (tenant)",
+        "value": {
+          "gracePeriod": "P3D"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "zero-grace",
+      "setting": {
+        "key": "security.two_step_verification_enrollment_grace_period",
+        "label": "2SV enrollment grace period (tenant)",
+        "value": {
+          "gracePeriod": "P0D"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "grace-14d-seconds",
+      "setting": {
+        "key": "security.two_step_verification_enrollment_grace_period",
+        "label": "2SV enrollment grace period (tenant)",
+        "value": {
+          "gracePeriod": "1209600s"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "grace-7d-seconds",
+      "setting": {
+        "key": "security.two_step_verification_enrollment_grace_period",
+        "label": "2SV enrollment grace period (tenant)",
+        "value": {
+          "gracePeriod": "604800s"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "long-grace",
+    "grace-14d-seconds"
+  ]
+}

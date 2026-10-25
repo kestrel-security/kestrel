@@ -1,0 +1,14 @@
+[
+  {
+    "role_id": "Rl01",
+    "entity_id": "E0ACMEGRID",
+    "user_id": "U0ADA",
+    "date_create": 1700000000
+  },
+  {
+    "role_id": "Rl0E",
+    "entity_id": "T0ACMEWORK",
+    "user_id": "U0GRACE",
+    "date_create": 1700001000
+  }
+]

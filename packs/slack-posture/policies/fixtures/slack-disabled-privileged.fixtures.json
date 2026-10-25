@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "deleted-owner",
+      "identity": {"email": "former@acme.example.com", "display_name": "Former Owner", "is_disabled": true, "mfa_enabled": true},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": ["Owner"]
+    },
+    {
+      "_subject_id": "active-admin",
+      "identity": {"email": "grace@acme.example.com", "display_name": "Grace Hopper", "is_disabled": false, "mfa_enabled": false},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": ["Admin"]
+    },
+    {
+      "_subject_id": "deleted-member",
+      "identity": {"email": "old-hire@acme.example.com", "display_name": "Former Employee", "is_disabled": true},
+      "application": {"type": "slack", "name": "Slack"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["deleted-owner"]
+}

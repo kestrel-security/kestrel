@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "allow",
+      "setting": {
+        "key": "copilot_public_code_suggestions",
+        "value": "allow",
+        "label": "Suggestions matching public code"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "block",
+      "setting": {
+        "key": "copilot_public_code_suggestions",
+        "value": "block",
+        "label": "Suggestions matching public code"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["allow"]
+}

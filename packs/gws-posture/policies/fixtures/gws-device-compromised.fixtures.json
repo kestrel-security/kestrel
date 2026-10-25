@@ -1,0 +1,44 @@
+{
+  "rows": [
+    {
+      "_subject_id": "device-compromised",
+      "resource": {
+        "resource_type": "device",
+        "management_type": "mdm",
+        "name": "Grace's iPhone",
+        "owner_email": "grace@acme.example.com",
+        "device_type": "IOS",
+        "os": "iOS 17.5",
+        "compromised": true,
+        "encrypted": true,
+        "status": "APPROVED"
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "device-safe",
+      "resource": {
+        "resource_type": "device",
+        "management_type": "mdm",
+        "name": "Ada's Pixel",
+        "owner_email": "ada@acme.example.com",
+        "device_type": "ANDROID",
+        "os": "Android 14",
+        "compromised": false,
+        "encrypted": true,
+        "status": "APPROVED"
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "not-a-device",
+      "resource": {
+        "resource_type": "shared_drive",
+        "name": "Finance Drive",
+        "compromised": true
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["device-compromised"]
+}

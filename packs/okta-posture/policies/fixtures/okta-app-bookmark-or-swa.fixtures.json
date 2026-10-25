@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "_subject_id": "bookmark-app",
+      "setting": {
+        "key": "okta_app_sign_on_mode:0oabookmark000000004",
+        "value": {"app_id": "0oabookmark000000004", "name": "Legacy HR Portal", "sign_on_mode": "BOOKMARK"},
+        "value_type": "object",
+        "category": "access"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    },
+    {
+      "_subject_id": "saml-app",
+      "setting": {
+        "key": "okta_app_sign_on_mode:0oainternal000000003",
+        "value": {"app_id": "0oainternal000000003", "name": "Internal HR", "sign_on_mode": "SAML_2_0"},
+        "value_type": "object",
+        "category": "access"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    }
+  ],
+  "expected_match_subject_ids": ["bookmark-app"]
+}

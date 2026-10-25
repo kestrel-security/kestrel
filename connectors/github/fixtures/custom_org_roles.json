@@ -1,0 +1,14 @@
+{
+  "total_count": 1,
+  "roles": [
+    {
+      "id": 9901,
+      "name": "Repo Admin (custom)",
+      "description": "Manage repository settings",
+      "permissions": [
+        "manage_repository_settings",
+        "read_code"
+      ]
+    }
+  ]
+}

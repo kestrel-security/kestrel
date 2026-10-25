@@ -1,0 +1,40 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-config-change",
+      "event": {
+        "action": "config.change",
+        "action_category": "config",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 3},
+        "summary": "Slack Audit Logs: pref.sso_setting_changed (config.change)",
+        "attributes": {"slack_action": "pref.sso_setting_changed"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "stale-config-change",
+      "event": {
+        "action": "config.change",
+        "action_category": "config",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 30},
+        "summary": "Slack Audit Logs: pref.who_can_create_channels (config.change)",
+        "attributes": {"slack_action": "pref.who_can_create_channels"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "different-action",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "role_change_to_admin"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["recent-config-change"]
+}

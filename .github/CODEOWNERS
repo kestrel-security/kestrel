@@ -1,0 +1,15 @@
+# Review routing. Every path falls back to the maintainer; add narrower
+# entries below as component owners emerge.
+
+*                                 @jaredst3wart
+
+# Security-sensitive surfaces: always route to the maintainer even if a
+# narrower owner is added above.
+/kestrel/src/kestrel/auth/        @jaredst3wart
+/kestrel/src/kestrel/secrets/     @jaredst3wart
+/kestrel/src/kestrel/security/    @jaredst3wart
+/apps/api/src/kestrel_api/deps.py @jaredst3wart
+/.github/                         @jaredst3wart
+/SECURITY.md                      @jaredst3wart
+/LICENSE                          @jaredst3wart
+/NOTICE                           @jaredst3wart

@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "not-configured",
+      "setting": {
+        "key": "audit_log_streaming_configured",
+        "value": false,
+        "label": "Audit log streaming"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "configured",
+      "setting": {
+        "key": "audit_log_streaming_configured",
+        "value": true,
+        "label": "Audit log streaming"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["not-configured"]
+}

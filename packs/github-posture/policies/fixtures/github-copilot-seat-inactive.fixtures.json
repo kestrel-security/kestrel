@@ -1,0 +1,29 @@
+{
+  "rows": [
+    {
+      "_subject_id": "never-used",
+      "setting": {
+        "key": "copilot_seat:ada",
+        "value": {"login": "ada", "last_activity_at": null}
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "stale",
+      "setting": {
+        "key": "copilot_seat:grace",
+        "value": {"login": "grace", "last_activity_at": {"$days_ago": 200}}
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "recent",
+      "setting": {
+        "key": "copilot_seat:alan",
+        "value": {"login": "alan", "last_activity_at": {"$days_ago": 2}}
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["never-used", "stale"]
+}

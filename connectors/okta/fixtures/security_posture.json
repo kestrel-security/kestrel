@@ -1,0 +1,6 @@
+{
+  "phishing_resistant_authenticator_active": true,
+  "signon_mfa_required": false,
+  "session_idle_timeout_minutes": 30,
+  "network_zones_configured": true
+}

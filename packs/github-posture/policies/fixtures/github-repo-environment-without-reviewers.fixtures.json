@@ -1,0 +1,92 @@
+{
+  "rows": [
+    {
+      "_subject_id": "unreviewed",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "unreviewed"
+      },
+      "settings_by_key": {
+        "repo_environment:production": {
+          "key": "repo_environment:production",
+          "value": {
+            "name": "production",
+            "has_reviewers": false
+          },
+          "category": "security",
+          "label": "repo_environment:production"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_environment:production",
+          "value": {
+            "name": "production",
+            "has_reviewers": false
+          },
+          "category": "security",
+          "label": "repo_environment:production"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "reviewed",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "reviewed"
+      },
+      "settings_by_key": {
+        "repo_environment:production": {
+          "key": "repo_environment:production",
+          "value": {
+            "name": "production",
+            "has_reviewers": true
+          },
+          "category": "security",
+          "label": "repo_environment:production"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_environment:production",
+          "value": {
+            "name": "production",
+            "has_reviewers": true
+          },
+          "category": "security",
+          "label": "repo_environment:production"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "none",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "none"
+      },
+      "settings_by_key": {},
+      "settings": [],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "unreviewed"
+  ]
+}

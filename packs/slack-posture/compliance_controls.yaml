@@ -1,0 +1,177 @@
+# Built-in compliance control catalog for slack-posture.
+controls:
+  - framework: custom
+    control_id: SLACK-01
+    title: Require MFA for Slack workspace privileged roles
+    description: >
+      Slack Primary Owners, Owners, and Admins must enable two-factor
+      authentication.
+  - framework: custom
+    control_id: SLACK-02
+    title: Remove privileged Slack roles from deactivated accounts
+    description: >
+      Deleted or deactivated Slack identities must not retain Owner or Admin
+      roles.
+  - framework: custom
+    control_id: SLACK-03
+    title: Restrict privileged access for Slack guests
+    description: >
+      Restricted/ultra-restricted (guest) accounts must not hold workspace
+      Owner or Admin roles, and guests should use MFA when access is required.
+  - framework: custom
+    control_id: SLACK-04
+    title: Require workspace-wide 2FA on Slack
+    description: >
+      Slack workspaces should require two-factor authentication for members
+      so a stolen password alone cannot access the workspace.
+  - framework: custom
+    control_id: SLACK-05
+    title: Guest accounts are created deliberately and owned
+    description: >
+      Every guest account has a known owner and an end date. Slack does not
+      expire guests, and a guest never enters the identity provider, so no
+      offboarding run reaches one.
+  - framework: custom
+    control_id: SLACK-12
+    title: Application installation is reviewed at the moment it happens
+    description: >
+      An application entering the workspace is reported when it is installed,
+      not only inventoried afterwards, so an unreviewed install is visible
+      while it is still recent.
+  - framework: custom
+    control_id: SLACK-10
+    title: Least privilege for Slack app scopes
+    description: >
+      Installed Slack apps should not hold sensitive bot or user scopes
+      (message history, chat:write, admin) unless required.
+  - framework: custom
+    control_id: SLACK-11
+    title: Review unused Slack app installations
+    description: >
+      Slack apps that have never been used (or have no recorded last activity)
+      should be uninstalled or restricted.
+  - framework: soc2
+    control_id: CC6.1
+    title: Logical access security
+    description: >
+      The entity implements logical access security software, infrastructure,
+      and architectures over protected information assets.
+  - framework: soc2
+    control_id: CC6.3
+    title: Role-based access removal and modification
+    description: >
+      Access is authorized, modified, or removed based on roles and least
+      privilege.
+  - framework: soc2
+    control_id: CC6.8
+    title: Unauthorized or malicious software is prevented or detected
+    description: >
+      The entity implements controls to prevent or detect and act upon the
+      introduction of unauthorized or malicious software. An application
+      installed into the workspace holds a long-lived token against the scopes
+      it requested.
+  - framework: cis
+    control_id: "6.8"
+    title: Define and maintain role-based access control
+    description: >
+      Define and maintain role-based access control for duties in the
+      enterprise.
+  - framework: nist_csf
+    control_id: PR.AC-4
+    title: Least-privilege access permissions
+    description: >
+      Access permissions and authorizations are managed with least privilege
+      and separation of duties.
+  - framework: soc2
+    control_id: CC6.1
+    title: Logical access security
+    description: >
+      The entity implements logical access security software, infrastructure,
+      and architectures over protected information assets to protect them
+      from security events.
+  - framework: soc2
+    control_id: CC6.2
+    title: Access provisioning and authentication
+    description: >
+      Prior to issuing system credentials and granting system access, the
+      entity registers and authorizes new internal and external users whose
+      access is administered by the entity.
+  - framework: soc2
+    control_id: CC6.3
+    title: Role-based access removal and modification
+    description: >
+      The entity authorizes, modifies, or removes access to data, software,
+      functions, and other protected information assets based on roles,
+      responsibilities, or the system design and changes, giving
+      consideration to the concept of least privilege.
+  - framework: cis
+    control_id: "6.3"
+    title: Require MFA for externally-exposed applications
+    description: >
+      Require multi-factor authentication for externally-exposed
+      applications.
+  - framework: cis
+    control_id: "6.8"
+    title: Define and maintain role-based access control
+    description: >
+      Define and maintain role-based access control, through determining and
+      documenting the access rights necessary for each role within the
+      enterprise to successfully carry out its assigned duties.
+  - framework: nist_csf
+    control_id: PR.AC-1
+    title: Identity and credential management
+    description: >
+      Identities and credentials are issued, managed, verified, revoked, and
+      audited for authorized devices, users, and processes.
+  - framework: nist_csf
+    control_id: PR.AC-3
+    title: Remote access management
+    description: >
+      Remote access is managed.
+  - framework: nist_csf
+    control_id: PR.AC-4
+    title: Least-privilege access permissions
+    description: >
+      Access permissions and authorizations are managed, incorporating the
+      principles of least privilege and separation of duties.
+  - framework: nist_csf
+    control_id: PR.AC-7
+    title: Authentication commensurate with risk
+    description: >
+      Users, devices, and other assets are authenticated (e.g. single-factor,
+      multi-factor) commensurate with the risk of the transaction.
+  - framework: nist_csf
+    control_id: DE.CM-1
+    title: Network and physical continuous monitoring
+    description: >
+      The network is monitored to detect potential cybersecurity events.
+  - framework: cis
+    control_id: "5.2"
+    title: Use unique passwords
+    description: >
+      Use unique passwords for all enterprise assets. Longer passwords where
+      multi-factor authentication is not supported.
+  - framework: cis
+    control_id: "6.7"
+    title: Centralize access control
+    description: >
+      Centralize access control for enterprise systems through directory
+      services or SSO.
+  - framework: nist_csf
+    control_id: DE.CM-3
+    title: Personnel activity is monitored
+    description: >
+      Workspace configuration, SSO, and policy changes in the Slack audit log
+      are personnel activity that should be detected.
+  - framework: nist_csf
+    control_id: PR.DS-5
+    title: Protections against data leaks are implemented
+    description: >
+      Workflows shared outside the workspace can move conversation data to
+      parties the organization did not intend.
+  - framework: nist_csf
+    control_id: PR.IP-6
+    title: Data is destroyed according to policy
+    description: >
+      Channel history retention is the control that limits how long Slack
+      messages remain available.

@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "_subject_id": "not-configured",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "not-configured"
+      },
+      "settings_by_key": {
+        "repo_code_scanning_setup": {
+          "key": "repo_code_scanning_setup",
+          "value": {"state": "not-configured"}
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "configured",
+      "resource": {
+        "resource_type": "repository",
+        "name": "api",
+        "visibility": "private",
+        "provider_object_id": "configured"
+      },
+      "settings_by_key": {
+        "repo_code_scanning_setup": {
+          "key": "repo_code_scanning_setup",
+          "value": {"state": "configured"}
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["not-configured"]
+}

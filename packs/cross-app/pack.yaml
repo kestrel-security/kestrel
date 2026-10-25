@@ -1,0 +1,27 @@
+name: cross-app
+version: "0.1.0"
+display_name: Cross-app
+summary: Findings that only exist when two applications are read together.
+description: >
+  Detections that require inventory from more than one connector: an account
+  the identity provider disabled that is still live somewhere else, a company
+  account no identity provider knows about, privilege concentrated on one
+  person across applications, an OAuth token that outlived the account that
+  authorized it, and a person who is a guest in one application and an
+  administrator in another. None of these is visible in a single admin
+  console.
+application: cross_app
+categories:
+  - privileged_access
+  - identity
+  - offboarding
+frameworks:
+  - cis
+  - nist_csf
+  - soc2
+policies:
+  - cross-app-privileged-concentration
+  - cross-app-departed-still-has-access
+  - cross-app-no-idp-account
+  - cross-app-oauth-grant-outlives-account
+  - cross-app-external-privileged-elsewhere

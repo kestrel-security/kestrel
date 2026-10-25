@@ -1,0 +1,193 @@
+# Built-in compliance control catalog for gws-posture.
+controls:
+  - framework: cisa
+    control_id: GWS-01
+    title: Require MFA for Google Workspace Super Admins
+    description: >
+      Google Workspace Super Admin accounts must enroll in 2-Step Verification.
+  - framework: cisa
+    control_id: GWS-02
+    title: Remove Super Admin from disabled Workspace accounts
+    description: >
+      Suspended or archived users must not retain the Super Admin role.
+  - framework: cisa
+    control_id: GWS-03
+    title: Restrict external Super Admin and drive admin access
+    description: >
+      External identities must not hold Super Admin or shared-drive organizer
+      privileges without documented exception.
+  - framework: cisa
+    control_id: GWS-04
+    title: Prefer group-mediated shared drive admin grants
+    description: >
+      Direct organizer/fileOrganizer grants on shared drives should be
+      converted to group-based access where practical.
+  - framework: cisa
+    control_id: GWS-05
+    title: Require MFA for Google Workspace Help Desk Admins
+    description: >
+      Help Desk Admin accounts can reset passwords and must enroll in
+      2-Step Verification.
+  - framework: cisa
+    control_id: GWS-06
+    title: Require MFA for Google Workspace Groups Admins
+    description: >
+      Groups Admin accounts can alter membership for sensitive groups and
+      must enroll in 2-Step Verification.
+  - framework: cisa
+    control_id: GWS-07
+    title: Require MFA for shared-drive administrators
+    description: >
+      Identities with shared-drive organizer or fileOrganizer grants must
+      enroll in 2-Step Verification.
+  - framework: cisa
+    control_id: GWS-08
+    title: Enforce 2-Step Verification for the domain
+    description: >
+      Google Workspace domains should enforce 2-Step Verification so users
+      cannot skip MFA enrollment.
+  - framework: cisa
+    control_id: GWS-09
+    title: Restrict Drive sharing with non-members
+    description: >
+      Drive sharing for people outside the organization should not be freely
+      allowed without documented exception.
+  - framework: cisa
+    control_id: GWS-10
+    title: Restrict Google groups to internal members
+    description: >
+      Groups that grant access to Drive, Calendar, or applications should not
+      accept members from outside the Workspace domains without a documented
+      partner-collaboration purpose.
+  - framework: cisa
+    control_id: GWS-11
+    title: Review third-party OAuth applications with sensitive scopes
+    description: >
+      Third-party applications holding Gmail, Drive, Admin SDK, or Cloud
+      Platform scopes over user data should be reviewed, restricted, or
+      revoked.
+  - framework: custom
+    control_id: GWS-12
+    title: Group membership is not self-service for people outside the organization
+    description: >
+      No group admits members from outside the organization on request. A
+      Workspace group can carry Drive permissions, calendar access, and
+      application assignments, so open membership is open access.
+  - framework: custom
+    control_id: GWS-13
+    title: Groups do not accept mail from outside the organization
+    description: >
+      A group that anyone on the internet can post to delivers unverified mail
+      to every member from an internal address, bypassing the external-sender
+      cues recipients rely on.
+  - framework: custom
+    control_id: GWS-14
+    title: Removal of a second factor is detected, not only its absence
+    description: >
+      Turning off 2-Step Verification for an account is recorded in the admin
+      audit log and reported when it happens. The directory shows only the
+      resulting state, with no record of who changed it.
+  - framework: soc2
+    control_id: CC6.1
+    title: Logical access security
+    description: >
+      The entity implements logical access security software, infrastructure,
+      and architectures over protected information assets to protect them
+      from security events.
+  - framework: soc2
+    control_id: CC6.2
+    title: Access provisioning and authentication
+    description: >
+      Prior to issuing system credentials and granting system access, the
+      entity registers and authorizes new internal and external users whose
+      access is administered by the entity.
+  - framework: soc2
+    control_id: CC6.3
+    title: Role-based access removal and modification
+    description: >
+      The entity authorizes, modifies, or removes access to data, software,
+      functions, and other protected information assets based on roles,
+      responsibilities, or the system design and changes, giving
+      consideration to the concept of least privilege.
+  - framework: cis
+    control_id: "6.3"
+    title: Require MFA for externally-exposed applications
+    description: >
+      Require multi-factor authentication for externally-exposed
+      applications.
+  - framework: cis
+    control_id: "6.8"
+    title: Define and maintain role-based access control
+    description: >
+      Define and maintain role-based access control, through determining and
+      documenting the access rights necessary for each role within the
+      enterprise to successfully carry out its assigned duties.
+  - framework: nist_csf
+    control_id: PR.AC-1
+    title: Identity and credential management
+    description: >
+      Identities and credentials are issued, managed, verified, revoked, and
+      audited for authorized devices, users, and processes.
+  - framework: nist_csf
+    control_id: PR.AC-3
+    title: Remote access management
+    description: >
+      Remote access is managed.
+  - framework: nist_csf
+    control_id: PR.AC-4
+    title: Least-privilege access permissions
+    description: >
+      Access permissions and authorizations are managed, incorporating the
+      principles of least privilege and separation of duties.
+  - framework: nist_csf
+    control_id: PR.AC-7
+    title: Authentication commensurate with risk
+    description: >
+      Users, devices, and other assets are authenticated (e.g. single-factor,
+      multi-factor) commensurate with the risk of the transaction.
+  - framework: nist_csf
+    control_id: DE.CM-1
+    title: Network and physical continuous monitoring
+    description: >
+      The network is monitored to detect potential cybersecurity events.
+  - framework: cis
+    control_id: "5.2"
+    title: Use unique passwords
+    description: >
+      Use unique passwords for all enterprise assets. Longer passwords where
+      multi-factor authentication is not supported.
+  - framework: cis
+    control_id: "6.7"
+    title: Centralize access control
+    description: >
+      Centralize access control for enterprise systems through directory
+      services or SSO.
+  - framework: cis
+    control_id: "1.1"
+    title: Establish and maintain a detailed enterprise asset inventory
+    description: >
+      Devices enrolled in the Google Workspace tenant, including mobile and
+      ChromeOS, are assets that must be inventoried and assessed.
+  - framework: cis
+    control_id: "3.2"
+    title: Establish and maintain a data inventory
+    description: >
+      Less-secure application access and data-export settings determine which
+      clients can read tenant data and must be inventoried.
+  - framework: cisa
+    control_id: GWS-12
+    title: Restrict Google Takeout
+    description: >
+      Takeout lets a user export a copy of their Google Workspace data.
+      Leaving it enabled expands the paths by which tenant data can leave.
+  - framework: nist_csf
+    control_id: PR.DS-1
+    title: Data at rest is protected
+    description: >
+      Managed devices that store Workspace data should be encrypted at rest.
+  - framework: nist_csf
+    control_id: PR.DS-5
+    title: Protections against data leaks are implemented
+    description: >
+      Drive sharing, Gmail auto-forwarding, and Takeout are data-loss paths
+      and should be restricted to what the organization intends.

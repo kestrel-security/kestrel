@@ -1,0 +1,41 @@
+{
+  "rows": [
+    {
+      "_subject_id": "too-many-admins",
+      "setting": {
+        "key": "super_admin_count",
+        "label": "Super Admin count",
+        "value": 12
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "one-admin",
+      "setting": {
+        "key": "super_admin_count",
+        "label": "Super Admin count",
+        "value": 1
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "two-admins",
+      "setting": {
+        "key": "super_admin_count",
+        "label": "Super Admin count",
+        "value": 2
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "eight-admins",
+      "setting": {
+        "key": "super_admin_count",
+        "label": "Super Admin count",
+        "value": 8
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["too-many-admins", "one-admin"]
+}

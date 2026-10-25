@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "_subject_id": "ext-drive-admin",
+      "identity": {"email": "vendor@ext.example", "display_name": "Vendor", "is_external": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "resource": {"name": "Finance Drive"},
+      "grant": {"permission_level": "admin", "granted_via": "direct"}
+    },
+    {
+      "_subject_id": "int-drive-admin",
+      "identity": {"email": "alice@acme.example", "display_name": "alice", "is_external": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "resource": {"name": "Finance Drive"},
+      "grant": {"permission_level": "admin", "granted_via": "direct"}
+    },
+    {
+      "_subject_id": "ext-viewer",
+      "identity": {"email": "guest@ext.example", "display_name": "Guest", "is_external": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "resource": {"name": "Finance Drive"},
+      "grant": {"permission_level": "viewer", "granted_via": "direct"}
+    }
+  ],
+  "expected_match_subject_ids": ["ext-drive-admin"]
+}

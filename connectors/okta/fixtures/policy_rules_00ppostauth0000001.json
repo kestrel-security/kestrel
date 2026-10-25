@@ -1,0 +1,17 @@
+[
+  {
+    "id": "0prpostauth000001",
+    "name": "Terminate elevated sessions",
+    "status": "ACTIVE",
+    "priority": 1,
+    "actions": {
+      "postAuthSession": {
+        "actions": [
+          {
+            "action": "RUN_WORKFLOW"
+          }
+        ]
+      }
+    }
+  }
+]

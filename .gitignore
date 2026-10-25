@@ -1,0 +1,94 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnpm-local-store/
+.vendor-tgz/
+.npm-cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Next.js / frontend
+.next/
+out/
+*.tsbuildinfo
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local overrides / IDE
+docker-compose.override.yml
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and runtime
+logs/
+*.log
+# Celery beat's own scheduler state, written next to the working directory
+# whenever the worker runs with --beat. Runtime state, not source: it was
+# tracked and churning on every local run.
+celerybeat-schedule*
+celerybeat.pid
+tmp/
+temp/
+
+# Test / coverage artifacts
+coverage/
+.nyc_output/
+
+# OS / tooling
+*.pem
+.direnv/
+.python-version.local
+Kestrel_Brand_Repo_Package*.zip
+
+# Local AI coding-assistant directories
+.claude/
+.cursor/
+
+# Private keys, wherever they land.
+*.key
+
+# Database dumps pulled down for a restore
+*.sql
+*.sql.gz
+*.dump
+
+# Credential files that must never be committed
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+*service_account*.json
+
+# Maintainer-private hygiene patterns (scripts/oss-hygiene.sh)
+.hygiene-denylist.local
+
+# Local output and data: snapshot and export dumps, captured API responses
+# from real tenants (fixtures must be synthetic), and local runtime state.
+/snapshots/
+/exports/
+/output/
+/.kestrel/
+*.har

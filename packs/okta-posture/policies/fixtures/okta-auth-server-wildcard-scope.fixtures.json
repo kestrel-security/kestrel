@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_auth_server:ausWidcard000001",
+        "value": {
+          "name": "internal-api",
+          "has_wildcard_scope": true,
+          "scope_count": 5
+        }
+      },
+      "_subject_id": "authorization-server-has-a-wildcard-scope"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_auth_server:ausDefault000001",
+        "value": {
+          "name": "default",
+          "has_wildcard_scope": false,
+          "scope_count": 3
+        }
+      },
+      "_subject_id": "authorization-server-has-only-named-scopes"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "authorization-server-has-a-wildcard-scope"
+  ]
+}

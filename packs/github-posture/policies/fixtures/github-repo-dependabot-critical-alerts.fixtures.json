@@ -1,0 +1,48 @@
+{
+  "rows": [
+    {
+      "_subject_id": "open-alerts",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "open-alerts"
+      },
+      "settings_by_key": {
+        "repo_open_dependabot_alerts": {
+          "key": "repo_open_dependabot_alerts",
+          "value": 3
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "no-alerts",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "no-alerts"
+      },
+      "settings_by_key": {
+        "repo_open_dependabot_alerts": {
+          "key": "repo_open_dependabot_alerts",
+          "value": 0
+        }
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "unknown",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "unknown"
+      },
+      "settings_by_key": {},
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["open-alerts"]
+}

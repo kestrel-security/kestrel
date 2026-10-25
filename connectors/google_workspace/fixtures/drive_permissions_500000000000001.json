@@ -1,0 +1,4 @@
+[
+  {"kind": "drive#permission", "id": "600000000000001", "type": "user", "emailAddress": "ada@acme.example.com", "role": "organizer", "deleted": false},
+  {"kind": "drive#permission", "id": "600000000000002", "type": "group", "emailAddress": "security@acme.example.com", "role": "reader", "deleted": false}
+]

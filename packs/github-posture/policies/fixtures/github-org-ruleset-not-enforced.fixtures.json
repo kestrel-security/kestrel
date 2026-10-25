@@ -1,0 +1,53 @@
+{
+  "rows": [
+    {
+      "_subject_id": "evaluate",
+      "setting": {
+        "key": "org_ruleset:8801",
+        "value": {
+          "name": "main",
+          "enforcement": "evaluate"
+        },
+        "label": "rs"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "disabled",
+      "setting": {
+        "key": "org_ruleset:8802",
+        "value": {
+          "name": "tags",
+          "enforcement": "disabled"
+        },
+        "label": "rs"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "active",
+      "setting": {
+        "key": "org_ruleset:8803",
+        "value": {
+          "name": "prod",
+          "enforcement": "active"
+        },
+        "label": "rs"
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "evaluate",
+    "disabled"
+  ]
+}

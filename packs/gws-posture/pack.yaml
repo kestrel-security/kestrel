@@ -1,0 +1,73 @@
+name: gws-posture
+version: "0.2.0"
+display_name: Google Workspace Posture
+summary: >
+  Super Admin MFA, sharing, shared drives, privileged role hygiene, Cloud Identity
+  Policy API settings (2SV, Drive, Gmail, Marketplace, session), devices,
+  domain-wide delegation, and activity detections.
+description: >
+  Google Workspace posture: Super Admin and delegated admin MFA, disabled and
+  external privileged accounts, shared-drive grants, group settings, domain 2SV
+  enforcement (per-account and per-OU via Policy API), Drive sharing, Gmail
+  auto-forwarding, Marketplace restriction, session length, password strength,
+  Takeout, Super Admin self-recovery, device compromise and encryption state,
+  DWD client scopes, and admin/SSO/DWD activity detections. Mapped to CIS /
+  NIST CSF / SOC2 / CISA SCuBA controls where collected data supports it.
+application: google_workspace
+categories:
+  - identity
+  - activity
+  - privileged_access
+  - tenant_settings
+  - devices
+frameworks:
+  - cis
+  - nist_csf
+  - soc2
+  - cisa
+vendor_baselines:
+  - cisa-scuba-gws
+policies:
+  # --- Identity / 2SV (per-account, Directory API) ---
+  - gws-2sv-not-enforced
+  # --- Groups ---
+  - gws-group-allows-external-members
+  - gws-group-open-to-anyone
+  - gws-group-accepts-external-posts
+  # --- OAuth / token ---
+  - gws-third-party-app-sensitive-scopes
+  - gws-personal-consent-to-risky-app
+  # --- Login activity ---
+  - gws-activity-suspicious-login
+  - gws-activity-two-step-disabled
+  # --- Privileged access ---
+  - gws-super-admin-without-mfa
+  - gws-disabled-super-admin
+  - gws-external-super-admin
+  - gws-help-desk-admin-without-mfa
+  - gws-disabled-help-desk-admin
+  - gws-groups-admin-without-mfa
+  - gws-shared-drive-admin-without-mfa
+  - gws-shared-drive-admin-external
+  - gws-direct-shared-drive-admin
+  # --- Cloud Identity Policy API (v0.2) ---
+  - gws-ou-2sv-not-enforced
+  - gws-ou-2sv-long-grace
+  - gws-less-secure-apps-allowed
+  - gws-gmail-autoforwarding-allowed
+  - gws-drive-external-sharing-enabled
+  - gws-marketplace-unrestricted
+  - gws-takeout-enabled
+  - gws-super-admin-recovery-enabled
+  - gws-password-policy-weak
+  - gws-session-too-long
+  - gws-super-admin-count-out-of-range
+  # --- Devices (v0.2) ---
+  - gws-device-compromised
+  - gws-device-unencrypted
+  # --- DWD clients (v0.2) ---
+  - gws-dwd-client-broad-scopes
+  # --- Admin activity detections (v0.2) ---
+  - gws-activity-admin-privilege-grant
+  - gws-activity-sso-change
+  - gws-activity-dwd-grant

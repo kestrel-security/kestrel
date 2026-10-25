@@ -1,0 +1,39 @@
+{
+  "rows": [
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_log_stream:lgs0000000000001",
+        "value": {
+          "name": "Splunk SIEM",
+          "type": "aws_eventbridge",
+          "status": "INACTIVE",
+          "is_active": false
+        }
+      },
+      "_subject_id": "log-stream-is-inactive"
+    },
+    {
+      "application": {
+        "type": "okta",
+        "name": "Acme Okta"
+      },
+      "setting": {
+        "key": "okta_log_stream:lgs0000000000001",
+        "value": {
+          "name": "Splunk SIEM",
+          "type": "aws_eventbridge",
+          "status": "ACTIVE",
+          "is_active": true
+        }
+      },
+      "_subject_id": "log-stream-is-active"
+    }
+  ],
+  "expected_match_subject_ids": [
+    "log-stream-is-inactive"
+  ]
+}

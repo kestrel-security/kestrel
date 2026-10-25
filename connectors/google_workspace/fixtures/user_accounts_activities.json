@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": {
+        "time": "2026-09-10T14:00:00.000Z",
+        "uniqueQualifier": "8001"
+      },
+      "actor": {
+        "email": "ada@acme.example.com",
+        "profileId": "1"
+      },
+      "events": [
+        {
+          "name": "2sv_enroll",
+          "parameters": [
+            {"name": "USER_EMAIL", "value": "ada@acme.example.com"}
+          ]
+        }
+      ]
+    }
+  ]
+}

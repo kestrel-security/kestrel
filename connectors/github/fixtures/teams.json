@@ -1,0 +1,18 @@
+[
+  {
+    "id": 5001,
+    "node_id": "T_5001",
+    "slug": "platform-team",
+    "name": "Platform Team",
+    "description": "Core platform engineers",
+    "permission": "push"
+  },
+  {
+    "id": 5002,
+    "node_id": "T_5002",
+    "slug": "security-team",
+    "name": "Security Team",
+    "description": "Security engineering",
+    "permission": "admin"
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "chromeosdevices": [
+    {
+      "kind": "admin#directory#chromeosdevice",
+      "deviceId": "chromeos-device-001",
+      "serialNumber": "CHROMEOS-SN-001",
+      "status": "ACTIVE",
+      "model": "HP Chromebook x360",
+      "osVersion": "114.0.5735.110",
+      "platformVersion": "15359.58.0",
+      "firmwareVersion": "Google_Lindar.13.434.0.0",
+      "macAddress": "aa:bb:cc:dd:ee:01",
+      "lastSync": "2026-09-28T10:00:00.000Z",
+      "lastEnrollmentTime": "2024-06-01T09:00:00.000Z",
+      "annotatedUser": "bob@acme.example.com",
+      "annotatedLocation": "San Francisco HQ",
+      "annotatedAssetId": "ASSET-CB-001",
+      "notes": ""
+    },
+    {
+      "kind": "admin#directory#chromeosdevice",
+      "deviceId": "chromeos-device-002",
+      "serialNumber": "CHROMEOS-SN-002",
+      "status": "ACTIVE",
+      "model": "Lenovo IdeaPad Flex 5 Chromebook",
+      "osVersion": "112.0.5615.134",
+      "platformVersion": "15278.58.0",
+      "lastSync": "2026-09-15T14:30:00.000Z",
+      "lastEnrollmentTime": "2024-09-15T08:00:00.000Z",
+      "annotatedUser": "grace@acme.example.com",
+      "annotatedLocation": "New York Office",
+      "annotatedAssetId": "ASSET-CB-002"
+    }
+  ]
+}

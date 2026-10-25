@@ -1,0 +1,114 @@
+# Fixture provenance: where every field that produces a setting comes from.
+#
+# Four connectors shipped settings derived from fields their providers do not
+# return. The values existed only in fixtures, so every offline test passed
+# while the checks were dead on a live tenant -- and two of them raised
+# high-severity false positives. See CHANGELOG "Fixed" for the four.
+#
+# `tests/unit/connectors/test_fixture_provenance.py` derives, by perturbation,
+# which payload fields each normalizer actually consumes to emit a `setting`,
+# and fails when one is not declared here. That half is automatic. This file is
+# the half a human has to be right about: whether the provider really returns
+# the field.
+#
+#   returns   -- fields the documented API response contains. Adding one is a
+#                factual claim about the provider; check it against the linked
+#                docs page, not against the fixture.
+#   synthetic -- fields Kestrel's own collector injects before normalization,
+#                with the reason. Legitimate, but never a claim about the API.
+#
+# This file pins the state audited in September 2026. It does not prove every
+# line was transcribed from a docs page; it makes any *future* addition a
+# deliberate, reviewable act instead of an accidental fixture edit.
+
+sources:
+  domain:
+    endpoint: GET /admin/directory/v1/customer/my_customer/domains/{domain}
+    docs: https://developers.google.com/admin-sdk/directory/reference/rest/v1/domains/get
+    # The Directory `domains` resource is identity only. 2-Step Verification
+    # enforcement, Drive sharing, and Calendar sharing were all emitted from
+    # here and are on none of it -- they live in the Cloud Identity Policy API.
+    returns:
+      - isPrimary
+      - verified
+    synthetic: {}
+
+  domain_list:
+    endpoint: GET /admin/directory/v1/customer/my_customer/domains
+    docs: https://developers.google.com/admin-sdk/directory/reference/rest/v1/domains/list
+    returns:
+      - domainAliases
+      - verified
+    synthetic: {}
+
+  user:
+    endpoint: GET /admin/directory/v1/users
+    docs: https://developers.google.com/admin-sdk/directory/reference/rest/v1/users
+    # Enforcement is per user; there is no domain-level equivalent anywhere in
+    # the Directory API, which is what the fabricated domain setting implied.
+    returns:
+      - isEnforcedIn2Sv
+    synthetic: {}
+
+  group_setting:
+    endpoint: GET /groups/v1/groups/{groupUniqueId}
+    docs: https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups
+    returns:
+      - allowExternalMembers
+      - whoCanJoin
+      - whoCanPostMessage
+      - whoCanViewMembership
+    synthetic:
+      group_id: >-
+        Stitched on by the collector. The Groups Settings API is keyed by group
+        email and does not echo the directory id the graph needs.
+
+  customer:
+    endpoint: GET /admin/directory/v1/customers/my_customer
+    docs: https://developers.google.com/admin-sdk/directory/reference/rest/v1/customers/get
+    returns:
+      - id
+      - customerCreationTime
+    synthetic: {}
+
+  policy:
+    endpoint: GET https://cloudidentity.googleapis.com/v1/policies
+    docs: https://cloud.google.com/identity/docs/reference/rest/v1/policies/list
+    # Each policy object wraps a `setting.value` dict whose schema depends on
+    # the policy type. The entire value dict is stored as-is so that policy
+    # functions can read any field the provider returns without requiring a
+    # normalizer change for each new field.
+    # The normalizer reads the `setting` object as a whole. Nested keys such as
+    # `setting.value` and `type` are inside that object, so they are not separate
+    # payload fields.
+    returns:
+      - setting
+    synthetic: {}
+
+  alert:
+    endpoint: GET https://alertcenter.googleapis.com/v1beta1/alerts
+    docs: https://developers.google.com/admin-sdk/alertcenter/reference/rest/v1beta1/alerts/list
+    returns: []
+    synthetic:
+      is_count_summary: >-
+        Marker on a collector-built summary row. Individual alerts normalize to
+        events, not settings.
+      counts: >-
+        Open-alert counts by severity, computed by the collector. Alert bodies
+        are not stored.
+
+  inbound_sso_profile:
+    endpoint: GET https://cloudidentity.googleapis.com/v1/inboundSamlSsoProfiles
+    docs: https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles/list
+    returns:
+      - displayName
+      - idpConfig
+    synthetic: {}
+
+  inbound_sso_assignment:
+    endpoint: GET https://cloudidentity.googleapis.com/v1/inboundSsoAssignments
+    docs: https://cloud.google.com/identity/docs/reference/rest/v1/inboundSsoAssignments/list
+    returns:
+      - ssoMode
+      - samlSsoInfo
+    synthetic: {}

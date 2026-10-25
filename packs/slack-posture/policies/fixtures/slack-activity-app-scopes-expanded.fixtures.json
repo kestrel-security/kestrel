@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "_subject_id": "match-scope",
+      "event": {
+        "action": "oauth.scope.expand",
+        "action_category": "oauth",
+        "actor_email": "grace@acme.example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "app_scopes_expanded"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "stale-scope",
+      "event": {
+        "action": "oauth.scope.expand",
+        "action_category": "oauth",
+        "occurred_at": {"$days_ago": 45},
+        "summary": "old expansion"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["match-scope"]
+}

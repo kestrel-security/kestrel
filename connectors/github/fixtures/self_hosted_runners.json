@@ -1,0 +1,21 @@
+{
+  "total_count": 1,
+  "runners": [
+    {
+      "id": 91,
+      "name": "build-01",
+      "os": "linux",
+      "status": "online",
+      "labels": [
+        {
+          "id": 1,
+          "name": "self-hosted"
+        },
+        {
+          "id": 2,
+          "name": "linux"
+        }
+      ]
+    }
+  ]
+}

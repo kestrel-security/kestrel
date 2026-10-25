@@ -1,0 +1,98 @@
+version: 2
+
+# Minor and patch updates arrive as one grouped pull request per ecosystem each
+# week; a major version still gets a pull request of its own, because that is
+# the one that needs reading.
+updates:
+  # Workflow actions are pinned to commit SHAs with a `# vX.Y.Z` comment;
+  # Dependabot updates both together.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions-minor-patch:
+        update-types: [minor, patch]
+
+  # `uv`, not `pip`: the pip ecosystem edits pyproject.toml only and never
+  # touches uv.lock, which records the specifier strings too. That left every
+  # Python update failing the determinism job's working-tree check for a
+  # reason that had nothing to do with the dependency.
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      python-minor-patch:
+        update-types: [minor, patch]
+    ignore:
+      # SQLAlchemy 2.1 changes the typing of Select (Select[T] became
+      # Select[tuple[T]]) and breaks mypy across the query layer. The upgrade
+      # is a deliberate piece of work, not a weekly bump; drop this rule when
+      # it is done.
+      - dependency-name: sqlalchemy
+        versions: [">=2.1"]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Tailwind 4 is a migration (config shape, CSS-first setup), not an
+      # upgrade. Drop this rule when the migration is scheduled.
+      - dependency-name: tailwindcss
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7, vitest 5, recharts 3 and @types/node 26 are each a
+      # migration, not a weekly bump. Drop this rule when one is scheduled.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Base images of the api, worker and web Dockerfiles.
+  - package-ecosystem: docker
+    directory: /deployments/docker
+    schedule:
+      interval: weekly
+    groups:
+      docker-minor-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Docker tags have no semver major, so 3.12 -> 3.14 arrives as a "minor"
+      # bump. A Python runtime change is a migration (requires-python, wheels,
+      # the whole suite), not a weekly update. Drop this rule when it is planned.
+      - dependency-name: python
+        versions: [">=3.13"]
+      # The web image tracks the Node line in .nvmrc (22, the floor the README
+      # states). Moving it is a deliberate change made together with .nvmrc
+      # and the docs, not a weekly update. Raise this when .nvmrc moves.
+      - dependency-name: node
+        versions: [">=23"]
+
+  # Third-party images in the development stack and the single-host stack.
+  - package-ecosystem: docker-compose
+    directories:
+      - /
+      - /deployments/compose
+    schedule:
+      interval: weekly
+    groups:
+      compose-minor-patch:
+        update-types: [minor, patch]
+    ignore:
+      # A PostgreSQL major needs every deployment's data directory upgraded
+      # (pg_upgrade or dump and restore) and the README, deployment and
+      # architecture docs changed with it. That is a release-note item, not a
+      # weekly bump. Raise this when the move is planned.
+      - dependency-name: postgres
+        versions: [">=17"]
+
+  # Hook revisions in .pre-commit-config.yaml.
+  - package-ecosystem: pre-commit
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      pre-commit-minor-patch:
+        update-types: [minor, patch]

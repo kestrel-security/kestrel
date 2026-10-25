@@ -1,0 +1,78 @@
+{
+  "rows": [
+    {
+      "_subject_id": "dwd-granted",
+      "event": {
+        "action": "token.grant",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": null,
+        "attributes": {
+          "gws_event_name": "AUTHORIZE_API_CLIENT_ACCESS",
+          "client_id": "dwd-client-123456",
+          "api_scopes": "https://www.googleapis.com/auth/admin.directory.user,https://www.googleapis.com/auth/gmail.readonly"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "token-grant-not-dwd",
+      "event": {
+        "action": "token.grant",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": null,
+        "attributes": {
+          "gws_event_name": "SOMETHING_ELSE"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "dwd-granted-recent",
+      "event": {
+        "action": "token.grant",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "attributes": {
+          "gws_event_name": "AUTHORIZE_API_CLIENT_ACCESS",
+          "client_id": "dwd-client-123456",
+          "api_scopes": "https://www.googleapis.com/auth/admin.directory.user,https://www.googleapis.com/auth/gmail.readonly"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "dwd-granted-outside-window",
+      "event": {
+        "action": "token.grant",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 45
+        },
+        "attributes": {
+          "gws_event_name": "AUTHORIZE_API_CLIENT_ACCESS",
+          "client_id": "dwd-client-123456",
+          "api_scopes": "https://www.googleapis.com/auth/admin.directory.user,https://www.googleapis.com/auth/gmail.readonly"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "dwd-granted",
+    "dwd-granted-recent"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "rows": [
+    {
+      "_subject_id": "sso-changed",
+      "event": {
+        "action": "sso.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": null,
+        "attributes": {
+          "gws_event_name": "CHANGE_SSO_SETTINGS",
+          "SSO_STATUS": "enabled",
+          "IDP_ENTITY_ID": "http://www.okta.com/exkacme1234567"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "config-change-not-sso",
+      "event": {
+        "action": "config.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": null,
+        "attributes": {
+          "gws_event_name": "CHANGE_APPLICATION_SETTING"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "sso-changed-recent",
+      "event": {
+        "action": "sso.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "attributes": {
+          "gws_event_name": "CHANGE_SSO_SETTINGS",
+          "SSO_STATUS": "enabled",
+          "IDP_ENTITY_ID": "http://www.okta.com/exkacme1234567"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "sso-changed-outside-window",
+      "event": {
+        "action": "sso.change",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {
+          "$days_ago": 120
+        },
+        "attributes": {
+          "gws_event_name": "CHANGE_SSO_SETTINGS",
+          "SSO_STATUS": "enabled",
+          "IDP_ENTITY_ID": "http://www.okta.com/exkacme1234567"
+        }
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "sso-changed",
+    "sso-changed-recent"
+  ]
+}

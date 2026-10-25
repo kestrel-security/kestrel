@@ -1,0 +1,268 @@
+name: okta
+display_name: Okta
+version: "0.4.0"
+description: >
+  Collects Okta users, groups, classic and custom IAM admin roles, application
+  assignments, OAuth apps (with scopes), behaviors, authorization servers,
+  log streams, devices, and System Log activity (~100 event-type mappings) for
+  identity-spine, posture, and activity detections. OAuth 2.0 service-app auth
+  recommended; SSWS API token supported as fallback.
+setup_docs: docs/connectors/okta-setup.md
+auth_methods:
+  - id: oauth
+    label: "OAuth 2.0 service app (client credentials, recommended)"
+    secret_fields: [client_id, private_key_pem]
+    config_fields: [org_url]
+    setup_overview: >
+      Create an Okta OAuth 2.0 service app with the read-only scopes below,
+      generate an RSA key pair, and paste the client ID and private key PEM
+      into Kestrel. This method grants exact scopes rather than inheriting
+      admin permissions; use it instead of SSWS for new integrations.
+    scopes_note: >
+      Grant the service app the following OAuth scopes (Okta Admin Console →
+      Security → API → Authorization Servers → default → Scopes, or via the
+      app's Okta API Scopes tab):
+      okta.users.read, okta.groups.read, okta.apps.read, okta.roles.read,
+      okta.policies.read, okta.authenticators.read, okta.logs.read,
+      okta.authorizationServers.read, okta.orgs.read, okta.behaviors.read,
+      okta.devices.read, okta.logStreams.read, okta.brands.read,
+      okta.domains.read, okta.realms.read, okta.apiTokens.read.
+    field_help:
+      org_url: >
+        Okta org base URL, HTTPS only (for example https://acme.okta.com).
+        Not the Admin Console (*-admin.okta.com). Kestrel rewrites that automatically.
+      client_id: >
+        Client ID of the Okta service app (not the API token). Find it on the
+        app's General tab in Admin Console.
+      private_key_pem: >
+        RSA private key PEM that matches the public key registered on the app's
+        JWKS. Envelope-encrypted at rest; never shown again after save.
+    setup_steps:
+      - title: Create an Okta API service app
+        body: >
+          Admin Console → Applications → Create App Integration → API Services.
+          Name it "Kestrel". Note the Client ID.
+        link_url: https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/
+        link_label: Okta service-app docs
+      - title: Add a public key / JWKS
+        body: >
+          On the app's General tab → Client Credentials → Edit → Public key /
+          Private key → Add key. Generate an RSA key pair, save the private key
+          PEM (shown once), and upload the public key to Okta.
+      - title: Grant OAuth scopes
+        body: >
+          On the app's Okta API Scopes tab, grant every scope listed in
+          scopes_note above. Kestrel degrades gracefully on missing scopes
+          but records which families were skipped.
+      - title: Enter credentials in Kestrel
+        body: >
+          Auth method = OAuth 2.0 service app. Config: org_url.
+          Secrets: client_id, private_key_pem. Choose live sync mode.
+      - title: Test connection and sync
+        body: >
+          On the instance page, Test connection then Sync now. OAuth tokens
+          are minted fresh for each sync and re-minted on 401.
+  - id: pat
+    label: "API token (SSWS, legacy)"
+    secret_fields: [api_token]
+    config_fields: [org_url]
+    setup_overview: >
+      Create a read-oriented Okta API token in the Admin Console and paste it
+      into Kestrel with your org URL (https://<tenant>.okta.com). Prefer the
+      OAuth 2.0 service-app method for new integrations.
+    scopes_note: >
+      Okta API tokens inherit the creating admin's permissions — they are not
+      OAuth scopes. Use an admin that can read users, groups, classic roles,
+      apps, and System Log (Org Admin or Super Admin for a complete inventory).
+      Extended families (behaviors, log streams, devices, custom IAM roles,
+      auth servers) require Super Admin or specific OAuth scopes; they degrade
+      visibly on tokens without sufficient permissions.
+    field_help:
+      org_url: >
+        Okta org base URL, HTTPS only (for example https://acme.okta.com).
+        Not the Admin Console (*-admin.okta.com). Must pass Kestrel's SSRF
+        guard (no private IPs).
+      api_token: >
+        SSWS API token from Admin Console → Security → API → Tokens.
+        Envelope-encrypted; never shown again after save.
+    setup_steps:
+      - title: Sign in to the Okta Admin Console
+        body: >
+          Use an administrator who can create API tokens and read directory /
+          app data for the org you want to monitor.
+        link_url: https://login.okta.com/
+        link_label: Okta login
+      - title: Create an API token
+        body: >
+          Security → API → Tokens → Create Token. Name it "Kestrel" (or similar).
+          Copy the token immediately — Okta shows it only once.
+        link_url: https://help.okta.com/en-us/content/topics/security/api.htm
+        link_label: Okta API token docs
+      - title: Note your org URL
+        body: >
+          Paste https://<your-org>.okta.com — not the Admin Console host
+          https://<your-org>-admin.okta.com, and do not include a path. Kestrel
+          rewrites *-admin.okta.com to the Management API host. A custom Okta
+          domain works only if your Kestrel operator allowlists it
+          (KESTREL_CONNECTOR_URL_ALLOWLIST).
+      - title: Enter credentials in Kestrel
+        body: >
+          Auth method = API token (SSWS). Config: org_url. Secrets: api_token.
+          Choose live sync mode for real data, or fixtures for offline demos.
+      - title: Test connection and sync
+        body: >
+          On the instance page, Test connection then Sync now. Live mode walks
+          every Link page for directory, classic roles, app assignments, and
+          System Log (not the first page only). Fixtures remain available for
+          offline demos. Workflows and write-back are not in scope.
+# The read-only OAuth scopes the `oauth` auth method requests at token exchange
+# (kestrel_connector_okta.auth.OAUTH_SCOPES, kept in step with this list). The
+# `pat` method has no scopes: an SSWS token inherits its creator's permissions.
+required_scopes:
+  - okta.users.read
+  - okta.groups.read
+  - okta.apps.read
+  - okta.roles.read
+  - okta.policies.read
+  - okta.authenticators.read
+  - okta.logs.read
+  - okta.authorizationServers.read
+  - okta.orgs.read
+  - okta.behaviors.read
+  - okta.devices.read
+  - okta.logStreams.read
+  - okta.brands.read
+  - okta.domains.read
+  - okta.realms.read
+  - okta.apiTokens.read
+object_types:
+  # The org payload produces tenant `setting` rows. The ApplicationInstance
+  # row is created out of band when the connector instance is configured.
+  - name: org
+    maps_to_entity: setting
+  - name: user
+    maps_to_entity: identity
+  - name: group
+    maps_to_entity: group
+  - name: group_member
+    maps_to_entity: group_membership
+  - name: admin_role
+    maps_to_entity: role
+  - name: role_assignment
+    maps_to_entity: grant
+  - name: app
+    maps_to_entity: oauth_application
+  - name: app_scope
+    maps_to_entity: oauth_scope
+  - name: app_group
+    maps_to_entity: oauth_grant
+  - name: app_user
+    maps_to_entity: oauth_grant
+  - name: system_log
+    maps_to_entity: event
+    supports_incremental: true
+  - name: password_policy
+    maps_to_entity: setting
+  - name: mfa_enroll_policy
+    maps_to_entity: setting
+  - name: threat_insight
+    maps_to_entity: setting
+  - name: api_token
+    maps_to_entity: identity
+  - name: app_sign_on_setting
+    maps_to_entity: setting
+  # Authentication and session policy surface. Okta policies are
+  # containers; each of these is collected with its rules, because that is
+  # where session lifetime, MFA requirement, and network conditions live.
+  - name: access_policy
+    maps_to_entity: setting
+  - name: sign_on_policy
+    maps_to_entity: setting
+  - name: profile_enrollment_policy
+    maps_to_entity: setting
+  - name: idp_discovery_policy
+    maps_to_entity: setting
+  - name: authenticator
+    maps_to_entity: setting
+  - name: device_assurance_policy
+    maps_to_entity: setting
+  # Perimeter and automation surface. Hook callout URLs are reduced
+  # to a host at collection: an inline hook runs during authentication and can
+  # change its outcome, so its endpoint is both a secret and a trust boundary.
+  - name: network_zone
+    maps_to_entity: setting
+  - name: trusted_origin
+    maps_to_entity: setting
+  - name: event_hook
+    maps_to_entity: setting
+  - name: inline_hook
+    maps_to_entity: setting
+  - name: identity_provider
+    maps_to_entity: setting
+  - name: group_rule
+    maps_to_entity: setting
+  # -- Extended: privilege model --------------------------------
+  - name: iam_role
+    maps_to_entity: role
+  - name: resource_set
+    maps_to_entity: setting
+  # -- Extended: security behaviors -----------------------------
+  - name: behavior
+    maps_to_entity: setting
+  # -- Extended: infrastructure ---------------------------------
+  - name: log_stream
+    maps_to_entity: setting
+  - name: auth_server
+    maps_to_entity: setting
+  # -- Extended policy types --------------------------
+  - name: entity_risk_policy
+    maps_to_entity: setting
+  - name: post_auth_session_policy
+    maps_to_entity: setting
+  # -- Extended: devices ----------------------------------------
+  - name: device
+    maps_to_entity: resource
+rate_limit_strategy: header_based
+supports_events: true
+# What this connector collects, as families a policy can require. A policy whose
+# `REQUIRES` names a capability the connector does not declare is reported
+# `not_assessable` rather than passing -- so an undeclared capability makes a
+# working check look like it never ran. Okta declared none, which left nine
+# policies unassessable on a fully collecting tenant.
+#
+# Each name maps to the object types behind it, so the granularity matches what
+# can be gated independently.
+provides_capabilities:
+  - okta:org_settings          # org
+  - okta:identity              # user, api_token
+  - okta:grants                # admin_role, role_assignment
+  - okta:oauth_apps            # app, app_scope, app_group, app_user
+  - okta:password_policies     # password_policy
+  - okta:enrollment_policies   # mfa_enroll_policy, profile_enrollment_policy
+  - okta:signon_policies       # sign_on_policy, idp_discovery_policy
+  - okta:session_policies      # access_policy, sign_on_policy
+  - okta:authenticators        # authenticator, device_assurance_policy
+  - okta:network_zones         # network_zone
+  - okta:trusted_origins       # trusted_origin
+  - okta:hooks                 # event_hook, inline_hook
+  - okta:identity_providers    # identity_provider
+  - okta:group_rules           # group_rule
+  - okta:threat_insight        # threat_insight
+  - okta:system_log            # system_log
+  # Extended capabilities
+  - okta:iam_roles             # iam_role, resource_set
+  - okta:behaviors             # behavior
+  - okta:log_streams           # log_stream
+  - okta:auth_servers          # auth_server
+  - okta:devices               # device
+  - okta:risk_policies         # entity_risk_policy, post_auth_session_policy
+change_classes:
+  - admin_granted
+  - admin_revoked
+  - config_drift
+  - mfa_disabled
+  - oauth_app_installed
+  - oauth_app_revoked
+example_config:
+  org_url: "https://acme.okta.com"
+fixtures_path: fixtures/

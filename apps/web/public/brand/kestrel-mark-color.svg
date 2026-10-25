@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144" role="img" aria-labelledby="title">
+  <title id="title">Kestrel mark</title>
+
+  <defs>
+    <linearGradient id="kestrel-gradient" x1="8" y1="20" x2="98" y2="107" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0"/>
+      <stop offset=".52" stop-color="#5D61F1"/>
+      <stop offset="1" stop-color="#4689ED"/>
+    </linearGradient>
+    <linearGradient id="kestrel-head-gradient" x1="79" y1="20" x2="132.5" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7441F0"/>
+      <stop offset=".52" stop-color="#5D61F1"/>
+      <stop offset="1" stop-color="#4689ED"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 6)">
+    <path d="M8 20h45l45 42v45l-7.5-3L8 20Z" fill="url(#kestrel-gradient)"/>
+      <path d="M87.5 20h27l18 18h-30l-6 9-18-19.5 9-7.5Z" fill="url(#kestrel-head-gradient)"/>
+  </g>
+</svg>

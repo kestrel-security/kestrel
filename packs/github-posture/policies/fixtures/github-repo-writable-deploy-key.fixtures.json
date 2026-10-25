@@ -1,0 +1,92 @@
+{
+  "rows": [
+    {
+      "_subject_id": "writable",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "writable"
+      },
+      "settings_by_key": {
+        "repo_deploy_key:1": {
+          "key": "repo_deploy_key:1",
+          "value": {
+            "title": "deploy",
+            "read_only": false
+          },
+          "category": "security",
+          "label": "repo_deploy_key:1"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_deploy_key:1",
+          "value": {
+            "title": "deploy",
+            "read_only": false
+          },
+          "category": "security",
+          "label": "repo_deploy_key:1"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "readonly",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "readonly"
+      },
+      "settings_by_key": {
+        "repo_deploy_key:2": {
+          "key": "repo_deploy_key:2",
+          "value": {
+            "title": "ro",
+            "read_only": true
+          },
+          "category": "security",
+          "label": "repo_deploy_key:2"
+        }
+      },
+      "settings": [
+        {
+          "key": "repo_deploy_key:2",
+          "value": {
+            "title": "ro",
+            "read_only": true
+          },
+          "category": "security",
+          "label": "repo_deploy_key:2"
+        }
+      ],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "none",
+      "resource": {
+        "resource_type": "repository",
+        "name": "web-app",
+        "visibility": "private",
+        "provider_object_id": "none"
+      },
+      "settings_by_key": {},
+      "settings": [],
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "writable"
+  ]
+}

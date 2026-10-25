@@ -1,0 +1,79 @@
+[
+  {
+    "app_id": "A0INCIDENT",
+    "name": "Incident Bot",
+    "publisher": "Acme Security",
+    "is_app_directory_approved": false,
+    "is_internal": true,
+    "installer_user_id": "U0GRACE",
+    "developer_type": {
+      "type": "internal"
+    },
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "channels:history",
+        "users:read"
+      ],
+      "user": []
+    }
+  },
+  {
+    "app_id": "A0CALENDAR",
+    "name": "Calendar Sync",
+    "publisher": "CalendarCo",
+    "is_app_directory_approved": true,
+    "is_internal": false,
+    "installer_user_id": "U0ALAN",
+    "developer_type": {
+      "type": "third_party"
+    },
+    "scopes": {
+      "bot": [
+        "commands",
+        "chat:write"
+      ],
+      "user": [
+        "users:read.email"
+      ]
+    }
+  },
+  {
+    "app_id": "A0READONLY",
+    "name": "Status Page",
+    "publisher": "StatusCo",
+    "is_app_directory_approved": true,
+    "is_internal": false,
+    "installer_user_id": "U0ADA",
+    "developer_type": {
+      "type": "third_party"
+    },
+    "scopes": {
+      "bot": [
+        "users:read"
+      ],
+      "user": []
+    }
+  },
+  {
+    "app_id": "A0ANALYTICS",
+    "name": "Team Analytics",
+    "publisher": "AnalyticsCo",
+    "is_app_directory_approved": false,
+    "is_internal": false,
+    "installer_user_id": "U0ALAN",
+    "developer_type": {
+      "type": "third_party"
+    },
+    "scopes": {
+      "bot": [
+        "channels:history",
+        "groups:history",
+        "files:read"
+      ],
+      "user": [
+        "users:read.email"
+      ]
+    }
+  }
+]

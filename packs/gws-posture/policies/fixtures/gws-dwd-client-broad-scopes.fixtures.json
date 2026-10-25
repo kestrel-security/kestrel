@@ -1,0 +1,47 @@
+{
+  "rows": [
+    {
+      "_subject_id": "dwd-sensitive",
+      "oauth_application": {
+        "client_id": "dwd-client-123456",
+        "dwd_client": true,
+        "revoked": false,
+        "has_sensitive_scopes": true,
+        "last_changed_by": "ada@acme.example.com",
+        "last_changed_at": "2026-09-16T08:00:00.000Z"
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "dwd-safe",
+      "oauth_application": {
+        "client_id": "dwd-client-789",
+        "dwd_client": true,
+        "revoked": false,
+        "has_sensitive_scopes": false,
+        "last_changed_by": "ada@acme.example.com"
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "dwd-revoked-sensitive",
+      "oauth_application": {
+        "client_id": "dwd-client-old",
+        "dwd_client": true,
+        "revoked": true,
+        "has_sensitive_scopes": true
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "not-dwd",
+      "oauth_application": {
+        "client_id": "user-oauth-client",
+        "dwd_client": false,
+        "has_sensitive_scopes": true
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["dwd-sensitive"]
+}

@@ -1,0 +1,25 @@
+[
+  {
+    "id": "0prunlimited00001",
+    "name": "Default Rule",
+    "status": "ACTIVE",
+    "priority": 1,
+    "conditions": {
+      "network": {
+        "connection": "ANYWHERE"
+      }
+    },
+    "actions": {
+      "signon": {
+        "access": "ALLOW",
+        "requireFactor": false,
+        "factorPromptMode": "NEVER",
+        "session": {
+          "maxSessionLifetimeMinutes": 0,
+          "maxSessionIdleMinutes": 0,
+          "usePersistentCookie": true
+        }
+      }
+    }
+  }
+]

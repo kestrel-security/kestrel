@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "_subject_id": "okta-ti-off",
+      "setting": {
+        "key": "threat_insight_enabled",
+        "value": false,
+        "label": "Threat Insight enabled"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    },
+    {
+      "_subject_id": "okta-ti-on",
+      "setting": {
+        "key": "threat_insight_enabled",
+        "value": true,
+        "label": "Threat Insight enabled"
+      },
+      "application": {"type": "okta", "name": "Okta"}
+    },
+    {
+      "_subject_id": "github-unrelated",
+      "setting": {
+        "key": "threat_insight_enabled",
+        "value": false,
+        "label": "Threat Insight enabled"
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["okta-ti-off"]
+}

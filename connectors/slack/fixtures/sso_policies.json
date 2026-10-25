@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "policies": [
+    {
+      "policy_type": "email_password",
+      "entities": [
+        {
+          "entity_id": "U0BREAK",
+          "entity_type": "user",
+          "policy_type": "email_password"
+        }
+      ],
+      "policy_name": "Email/Password bypass"
+    }
+  ]
+}

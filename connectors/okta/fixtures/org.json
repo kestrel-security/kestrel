@@ -1,0 +1,9 @@
+{
+  "id": "00oacmeorg000000001",
+  "subdomain": "acme",
+  "companyName": "Acme Corp",
+  "website": "https://acme.example.com",
+  "status": "ACTIVE",
+  "created": "2020-01-01T00:00:00.000Z",
+  "lastUpdated": "2026-01-01T00:00:00.000Z"
+}

@@ -1,0 +1,58 @@
+{
+  "rows": [
+    {
+      "_subject_id": "auto",
+      "setting": {
+        "key": "okta_identity_provider:idp1",
+        "value": {
+          "name": "Partner",
+          "status": "ACTIVE",
+          "auto_provisions_users": true
+        },
+        "label": "okta_identity_provider:idp1",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "manual",
+      "setting": {
+        "key": "okta_identity_provider:idp2",
+        "value": {
+          "name": "Partner2",
+          "status": "ACTIVE",
+          "auto_provisions_users": false
+        },
+        "label": "okta_identity_provider:idp2",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "inactive",
+      "setting": {
+        "key": "okta_identity_provider:idp3",
+        "value": {
+          "name": "Old",
+          "status": "INACTIVE",
+          "auto_provisions_users": true
+        },
+        "label": "okta_identity_provider:idp3",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "auto"
+  ]
+}

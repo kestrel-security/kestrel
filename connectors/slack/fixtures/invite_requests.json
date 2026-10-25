@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "invite_requests": [
+    {
+      "id": "IR0001",
+      "invite_id": "IR0001",
+      "email": "newjoin@vendor.example.com",
+      "date_create": 1780000000,
+      "status": "pending",
+      "inviter": {
+        "id": "U0ALAN",
+        "name": "Alan Turing",
+        "email": "alan@acme.example.com"
+      },
+      "channel_ids": ["C0SECURITY"],
+      "enterprise_id": "E0ACMEGRID"
+    },
+    {
+      "id": "IR0002",
+      "invite_id": "IR0002",
+      "email": "stale@old.example.com",
+      "date_create": 1750000000,
+      "status": "pending",
+      "inviter": {
+        "id": "U0GRACE",
+        "name": "Grace Hopper",
+        "email": "grace@acme.example.com"
+      },
+      "channel_ids": ["C0GENERAL"],
+      "enterprise_id": "E0ACMEGRID"
+    }
+  ]
+}

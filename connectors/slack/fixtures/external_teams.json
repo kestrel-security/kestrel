@@ -1,0 +1,12 @@
+[
+  {
+    "team_id": "T0VENDOR",
+    "team_name": "Vendor Co",
+    "team_domain": "vendorco",
+    "public_channel_count": 1,
+    "private_channel_count": 0,
+    "connection_status": "CONNECTED",
+    "last_active_timestamp": 1718656058,
+    "is_sponsored": false
+  }
+]

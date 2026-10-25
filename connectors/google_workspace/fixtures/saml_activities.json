@@ -1,0 +1,27 @@
+{
+  "items": [
+    {
+      "kind": "admin#reports#activity",
+      "id": {
+        "time": "2026-09-19T09:00:00.000Z",
+        "uniqueQualifier": "7001",
+        "applicationName": "saml",
+        "customerId": "C0acme1234"
+      },
+      "actor": {
+        "email": "ada@acme.example.com",
+        "profileId": "100000000000000000001"
+      },
+      "events": [
+        {
+          "name": "login_success",
+          "type": "login",
+          "parameters": [
+            {"name": "application_name", "value": "Okta"},
+            {"name": "initiated_by", "value": "idp"}
+          ]
+        }
+      ]
+    }
+  ]
+}

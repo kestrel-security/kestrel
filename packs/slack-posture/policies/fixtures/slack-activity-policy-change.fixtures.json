@@ -1,0 +1,40 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-policy-change",
+      "event": {
+        "action": "policy.change",
+        "action_category": "policy",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 7},
+        "summary": "Slack Audit Logs: pref.two_factor_authentication_requirement_changed (policy.change)",
+        "attributes": {"slack_action": "pref.two_factor_authentication_requirement_changed"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "stale-policy-change",
+      "event": {
+        "action": "policy.change",
+        "action_category": "policy",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 45},
+        "summary": "Slack Audit Logs: pref.invites_only_admins (policy.change)",
+        "attributes": {"slack_action": "pref.invites_only_admins"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "different-action",
+      "event": {
+        "action": "sso.change",
+        "action_category": "sso",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "sso changed"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["recent-policy-change"]
+}

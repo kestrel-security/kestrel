@@ -1,0 +1,40 @@
+{
+  "rows": [
+    {
+      "_subject_id": "match-priv",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "alan@acme.example.com",
+        "occurred_at": {"$days_ago": 2},
+        "summary": "role_change_to_admin"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "stale-priv",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "ada@acme.example.com",
+        "target_email": "alan@acme.example.com",
+        "occurred_at": {"$days_ago": 60},
+        "summary": "outside window"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "other-scope",
+      "event": {
+        "action": "oauth.scope.expand",
+        "action_category": "oauth",
+        "actor_email": "grace@acme.example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "different action"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["match-priv"]
+}

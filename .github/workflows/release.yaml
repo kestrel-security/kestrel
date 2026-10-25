@@ -1,0 +1,91 @@
+name: Release
+
+# Pushing a vX.Y.Z tag is the whole release (docs/operations/release-process.md):
+#
+#   ci ............ the full pull-request gate (ci.yaml), re-run on the tagged
+#                   commit. A tag is what gets deployed, so a tag is what gets tested.
+#   security ...... locked dependency audits and secret scan on that commit
+#   nightly ....... system tests and all three container scans on that commit
+#   github-release  a GitHub Release whose notes are the tag's CHANGELOG section
+#
+# No container images are published: operators build them from
+# deployments/docker/. The release needs the gate, so a red gate releases nothing.
+on:
+  push:
+    tags: ["v*"]
+
+# Distinct from ci.yaml's own group (`ci-<workflow>-<ref>`), which the called
+# workflow still evaluates; sharing one would make the caller wait on itself.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Gate
+    uses: ./.github/workflows/ci.yaml
+
+  security:
+    name: Security
+    uses: ./.github/workflows/security-scan.yaml
+
+  nightly:
+    name: System and images
+    uses: ./.github/workflows/nightly.yaml
+
+  github-release:
+    name: GitHub Release
+    needs: [ci, security, nightly]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The only job in the repository that writes: it creates the release.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Tag belongs to main
+        run: |
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD origin/main || {
+            echo "::error::Release tag must point to a commit on origin/main"
+            exit 1
+          }
+      # The tag names the release, so every version file must agree with it.
+      - name: Versions match the tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: bash scripts/check-versions.sh "${TAG#v}"
+      # scripts/release.sh moves `## Unreleased` under `## vX.Y.Z — <date>`.
+      # A tag without that section is an error, not an empty release.
+      - name: Release notes from CHANGELOG.md
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          awk -v tag="$TAG" '
+            /^## / { if (found) exit; if ($2 == tag) { found = 1; next } }
+            found { print }
+            END { if (!found) exit 1 }
+          ' CHANGELOG.md > notes.md || {
+            echo "::error::CHANGELOG.md has no '## ${TAG}' section"
+            exit 1
+          }
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::error::CHANGELOG.md's '## ${TAG}' section is empty"
+            exit 1
+          fi
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          prerelease=()
+          # A semver pre-release (v1.2.3-rc.1) is marked as one.
+          [[ "$TAG" == *-* ]] && prerelease=(--prerelease)
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file notes.md "${prerelease[@]}"

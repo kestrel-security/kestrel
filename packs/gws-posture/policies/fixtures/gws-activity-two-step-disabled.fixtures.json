@@ -1,0 +1,30 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-2sv-disable",
+      "event": {"action": "mfa.disable", "action_category": "mfa", "actor_email": "ada@acme.example.com", "target_email": "grace@acme.example.com", "occurred_at": {"$days_ago": 2}, "summary": "2sv_disable"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "outside-the-window",
+      "event": {"action": "mfa.disable", "action_category": "mfa", "actor_email": "ada@acme.example.com", "target_email": "grace@acme.example.com", "occurred_at": {"$days_ago": 60}, "summary": "2sv_disable"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "the-okta-one-is-not-ours",
+      "event": {"action": "mfa.disable", "action_category": "mfa", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 2}, "summary": "Deactivate user factor"},
+      "application": {"type": "okta", "name": "Okta"}
+    },
+    {
+      "_subject_id": "a-different-action",
+      "event": {"action": "credential.change", "action_category": "credential", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 2}, "summary": "password_edit"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "no-timestamp",
+      "event": {"action": "mfa.disable", "action_category": "mfa", "actor_email": "ada@acme.example.com", "occurred_at": null, "summary": "2sv_disable"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    }
+  ],
+  "expected_match_subject_ids": ["recent-2sv-disable"]
+}

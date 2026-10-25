@@ -1,0 +1,45 @@
+{
+  "rows": [
+    {
+      "_subject_id": "external-workflow",
+      "resource": {
+        "name": "Vendor Data Sync",
+        "resource_type": "workflow",
+        "is_external": true,
+        "config": {
+          "is_external": true,
+          "is_published": true,
+          "trigger_type": "webhook",
+          "app_name": "Calendar Sync"
+        }
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "internal-workflow",
+      "resource": {
+        "name": "Employee Onboarding",
+        "resource_type": "workflow",
+        "is_external": false,
+        "config": {
+          "is_external": false,
+          "is_published": false,
+          "trigger_type": "shortcut",
+          "app_name": "Acme Internal"
+        }
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "channel-resource",
+      "resource": {
+        "name": "general",
+        "resource_type": "channel",
+        "is_external": false,
+        "config": {}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["external-workflow"]
+}

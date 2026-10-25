@@ -1,0 +1,31 @@
+{
+  "value": [
+    {
+      "id": "00uada00000000000001",
+      "orn": "orn:okta:directory:00o1:users:00uada00000000000001",
+      "_links": {
+        "roles": {
+          "href": "https://acme.okta.com/api/v1/users/00uada00000000000001/roles"
+        }
+      }
+    },
+    {
+      "id": "00uformer00000000005",
+      "orn": "orn:okta:directory:00o1:users:00uformer00000000005",
+      "_links": {
+        "roles": {
+          "href": "https://acme.okta.com/api/v1/users/00uformer00000000005/roles"
+        }
+      }
+    },
+    {
+      "id": "00ugrace000000000002",
+      "orn": "orn:okta:directory:00o1:users:00ugrace000000000002",
+      "_links": {
+        "roles": {
+          "href": "https://acme.okta.com/api/v1/users/00ugrace000000000002/roles"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "rows": [
+    {
+      "_subject_id": "eng-open",
+      "setting": {
+        "key": "group_allow_external_members",
+        "value": true,
+        "label": "Allows external members (engineering@acme.example.com)"
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "sec-closed",
+      "setting": {
+        "key": "group_allow_external_members",
+        "value": false,
+        "label": "Allows external members (security@acme.example.com)"
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    },
+    {
+      "_subject_id": "other-key",
+      "setting": {
+        "key": "group_who_can_join",
+        "value": "ANYONE_CAN_JOIN",
+        "label": "Who can join"
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "eng-open"
+  ]
+}

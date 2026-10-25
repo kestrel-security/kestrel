@@ -1,0 +1,15 @@
+# Trivy suppressions for container image scans.
+#
+# Only container findings belong here. Never suppress a vulnerability in
+# code this repository owns.
+#
+# Every entry needs:
+#   - the CVE / vulnerability ID
+#   - a written reason
+#   - a reviewer
+#   - an expiry date (YYYY-MM-DD)
+#
+# Example:
+#   CVE-2099-0001  # reason: no runtime path; reviewer: @name; expires: 2026-12-31
+#
+# This file is intentionally empty of CVE entries today.

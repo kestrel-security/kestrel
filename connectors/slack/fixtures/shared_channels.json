@@ -1,0 +1,12 @@
+[
+  {
+    "id": "C0EXTSHARED",
+    "name": "ext-project-alpha",
+    "is_ext_shared": true,
+    "is_shared": true,
+    "is_private": false,
+    "member_count": 12,
+    "internal_team_ids": ["T0ACMEWORK"],
+    "connected_team_ids": ["T0VENDOR"]
+  }
+]

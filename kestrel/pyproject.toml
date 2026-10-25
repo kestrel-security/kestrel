@@ -1,0 +1,56 @@
+[project]
+name = "kestrel"
+version = "0.5.1"
+description = "Kestrel core library: normalized data model, connector SDK, graph, Python policies, findings, CLI."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{name = "The Kestrel Authors"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "sqlalchemy>=2.0",
+    "alembic>=1.19.1",
+    "pydantic>=2.9",
+    "psycopg[binary]>=3.2",
+    "typer>=0.27.2",
+    "cryptography>=50.0.0",
+    "pyyaml>=6.0",
+    "httpx>=0.27",
+    "argon2-cffi>=23.1",
+    "croniter>=3.0",
+    "prometheus-client>=0.26.0",
+    "opentelemetry-api>=1.45.1",
+    "opentelemetry-sdk>=1.45.1",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.1",
+    "RestrictedPython>=7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/kestrel-security/kestrel"
+Repository = "https://github.com/kestrel-security/kestrel"
+Issues = "https://github.com/kestrel-security/kestrel/issues"
+Documentation = "https://github.com/kestrel-security/kestrel/tree/main/docs"
+Changelog = "https://github.com/kestrel-security/kestrel/blob/main/CHANGELOG.md"
+
+[project.scripts]
+kestrel = "kestrel.cli.main:app"
+
+[build-system]
+requires = ["hatchling>=1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# Ships every subpackage under src/kestrel, including `kestrel.testing` --
+# those helpers are part of the public surface for connector authors, not
+# test-only code. See docs/testing.md -> "Shipped test helpers".
+packages = ["src/kestrel"]

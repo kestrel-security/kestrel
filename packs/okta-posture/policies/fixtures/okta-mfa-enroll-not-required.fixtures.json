@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "_subject_id": "all-factors-optional",
+      "setting": {
+        "key": "mfa_enroll_policy_required",
+        "value": false,
+        "label": "MFA enrollment policy requires a factor"
+      },
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "a-factor-is-required",
+      "setting": {
+        "key": "mfa_enroll_policy_required",
+        "value": true,
+        "label": "MFA enrollment policy requires a factor"
+      },
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "unrelated-okta-setting",
+      "setting": {"key": "subdomain", "value": "acme", "label": "Okta subdomain"},
+      "application": {"type": "okta", "name": "Acme Okta"}
+    },
+    {
+      "_subject_id": "other-application",
+      "setting": {"key": "mfa_enroll_policy_required", "value": false},
+      "application": {"type": "slack", "name": "Acme Workspace Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["all-factors-optional"]
+}

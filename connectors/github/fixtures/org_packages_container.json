@@ -1,0 +1,20 @@
+[
+  {
+    "id": 88001,
+    "name": "web-app",
+    "package_type": "container",
+    "visibility": "public",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-09-01T00:00:00Z",
+    "repository": {
+      "id": 9001,
+      "name": "web-app",
+      "private": true,
+      "full_name": "acme-corp/web-app"
+    },
+    "owner": {
+      "login": "acme-corp",
+      "type": "Organization"
+    }
+  }
+]

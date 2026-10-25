@@ -1,0 +1,15 @@
+[
+  {
+    "id": "lgs0000000000001",
+    "name": "Splunk SIEM",
+    "type": "aws_eventbridge",
+    "status": "ACTIVE",
+    "settings": {
+      "accountId": "123456789012",
+      "eventSourceName": "acme-okta-events",
+      "region": "us-east-1"
+    },
+    "created": "2025-01-05T08:00:00.000Z",
+    "lastUpdated": "2025-06-01T10:00:00.000Z"
+  }
+]

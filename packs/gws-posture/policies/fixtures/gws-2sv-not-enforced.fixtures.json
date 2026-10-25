@@ -1,0 +1,75 @@
+{
+  "rows": [
+    {
+      "_subject_id": "2sv-not-enforced",
+      "identity": {
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "mfa_enabled": true,
+        "is_disabled": false
+      },
+      "settings_by_key": {
+        "two_step_verification_enforced": {
+          "key": "two_step_verification_enforced",
+          "value": false,
+          "label": "2-Step Verification enforced"
+        }
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "2sv-enforced",
+      "identity": {
+        "email": "grace@acme.example.com",
+        "display_name": "Grace Hopper",
+        "mfa_enabled": true,
+        "is_disabled": false
+      },
+      "settings_by_key": {
+        "two_step_verification_enforced": {
+          "key": "two_step_verification_enforced",
+          "value": true,
+          "label": "2-Step Verification enforced"
+        }
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "2sv-suspended-account",
+      "identity": {
+        "email": "former@acme.example.com",
+        "display_name": "Former Employee",
+        "mfa_enabled": false,
+        "is_disabled": true
+      },
+      "settings_by_key": {
+        "two_step_verification_enforced": {
+          "key": "two_step_verification_enforced",
+          "value": false,
+          "label": "2-Step Verification enforced"
+        }
+      },
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "2sv-not-reported",
+      "identity": {
+        "email": "unknown@acme.example.com",
+        "display_name": "Enforcement Not Reported",
+        "mfa_enabled": false,
+        "is_disabled": false
+      },
+      "settings_by_key": {},
+      "application": {"type": "google_workspace", "name": "Google Workspace"}
+    },
+    {
+      "_subject_id": "other-app",
+      "identity": {"email": "ada@acme.example.com", "display_name": "Ada Lovelace", "is_disabled": false},
+      "settings_by_key": {
+        "two_step_verification_enforced": {"key": "two_step_verification_enforced", "value": false}
+      },
+      "application": {"type": "okta", "name": "Acme Okta"}
+    }
+  ],
+  "expected_match_subject_ids": ["2sv-not-enforced"]
+}

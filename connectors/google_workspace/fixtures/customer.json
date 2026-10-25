@@ -1,0 +1,13 @@
+{
+  "kind": "admin#directory#customer",
+  "id": "C0acme1234",
+  "etag": "\"acme-customer-etag\"",
+  "customerDomain": "acme.example.com",
+  "alternateEmail": "it-admin@acme.example.com",
+  "customerCreationTime": "2019-03-01T10:00:00.000Z",
+  "postalAddress": {
+    "countryCode": "US",
+    "locality": "San Francisco",
+    "region": "CA"
+  }
+}

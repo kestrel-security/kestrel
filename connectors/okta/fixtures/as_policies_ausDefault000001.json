@@ -1,0 +1,13 @@
+[
+  {
+    "id": "00p0000000000001",
+    "name": "Default Policy",
+    "description": "Default authorization server policy",
+    "priority": 1,
+    "status": "ACTIVE",
+    "system": false,
+    "accessTokenLifetimeMinutes": 60,
+    "refreshTokenLifetimeMinutes": 0,
+    "refreshTokenWindowMinutes": 10080
+  }
+]

@@ -1,0 +1,25 @@
+# Lint config for pack policies (RestrictedPython modules).
+#
+# Policies cannot import: the runtime injects `time` and the shared helpers
+# from kestrel.policies.runtime.helpers into every policy's globals. Declaring
+# them as builtins here, rather than in the root config, keeps F821 working
+# everywhere else. tests/unit/packs/test_pack_lint_config.py fails if this
+# list drifts from what the runtime actually injects.
+extend = "../pyproject.toml"
+builtins = [
+    "PolicyDataError",
+    "application_matches",
+    "days_since",
+    "has_admin_grant",
+    "parse_timestamp",
+    "time",
+    "within_last_days",
+]
+
+[lint]
+# A policy that catches Exception turns any bug or unreadable row into a
+# silent answer. Catch the specific error, or let it fail the evaluation.
+extend-select = ["BLE"]
+# An explicit `return False` / `return True` reads as the policy's
+# non-compliant / compliant decision; folding it into one expression hides that.
+extend-ignore = ["SIM103"]

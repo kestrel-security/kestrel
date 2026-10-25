@@ -1,0 +1,26 @@
+[
+  {
+    "id": "whoevent00000001",
+    "name": "SIEM forwarder",
+    "status": "ACTIVE",
+    "events": {
+      "type": "EVENT_TYPE",
+      "items": [
+        "user.lifecycle.create",
+        "user.account.privilege.grant"
+      ]
+    },
+    "channel": {
+      "type": "HTTP",
+      "version": "1.0.0",
+      "config": {
+        "uri": "https://siem.example.test/okta?token=not-real",
+        "authScheme": {
+          "type": "HEADER",
+          "key": "Authorization",
+          "value": "not-a-real-secret"
+        }
+      }
+    }
+  }
+]

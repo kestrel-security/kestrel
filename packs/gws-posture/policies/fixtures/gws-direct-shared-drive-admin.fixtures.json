@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "_subject_id": "direct-admin",
+      "identity": {"email": "alice@acme.example", "display_name": "alice"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "resource": {"name": "Engineering Drive"},
+      "grant": {"permission_level": "admin", "granted_via": "direct"}
+    },
+    {
+      "_subject_id": "group-admin",
+      "identity": {"email": "bob@acme.example", "display_name": "bob"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "resource": {"name": "Engineering Drive"},
+      "grant": {"permission_level": "admin", "granted_via": "group"}
+    },
+    {
+      "_subject_id": "direct-viewer",
+      "identity": {"email": "carol@acme.example", "display_name": "carol"},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "resource": {"name": "Engineering Drive"},
+      "grant": {"permission_level": "viewer", "granted_via": "direct"}
+    }
+  ],
+  "expected_match_subject_ids": ["direct-admin"]
+}

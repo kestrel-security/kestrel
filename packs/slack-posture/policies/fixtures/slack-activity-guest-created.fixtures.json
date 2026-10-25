@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "_subject_id": "recent-guest",
+      "event": {"action": "identity.guest", "action_category": "identity", "actor_email": "ada@acme.example.com", "target_email": "contractor@partner.example.com", "occurred_at": {"$days_ago": 3}, "summary": "guest_created"},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "outside-the-window",
+      "event": {"action": "identity.guest", "action_category": "identity", "actor_email": "ada@acme.example.com", "target_email": "contractor@partner.example.com", "occurred_at": {"$days_ago": 75}, "summary": "guest_created"},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "a-deactivation-is-not-a-creation",
+      "event": {"action": "identity.deactivate", "action_category": "identity", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 3}, "summary": "guest_deactivated"},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "another-application",
+      "event": {"action": "identity.guest", "action_category": "identity", "actor_email": "ada@acme.example.com", "occurred_at": {"$days_ago": 3}, "summary": "guest_created"},
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["recent-guest"]
+}

@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "_subject_id": "sso-bypass-present",
+      "settings_by_key": {
+        "sso_bypass_count": {"key": "sso_bypass_count", "value": 2, "category": "security"},
+        "sso_policy_type": {"key": "sso_policy_type", "value": "email_password", "category": "security"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "sso-enforced",
+      "settings_by_key": {
+        "sso_bypass_count": {"key": "sso_bypass_count", "value": 0, "category": "security"},
+        "sso_policy_type": {"key": "sso_policy_type", "value": "email_password", "category": "security"}
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "sso-not-collected",
+      "settings_by_key": {},
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "other-app",
+      "settings_by_key": {
+        "sso_bypass_count": {"key": "sso_bypass_count", "value": 5, "category": "security"}
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["sso-bypass-present"]
+}

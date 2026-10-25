@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "_subject_id": "match-share",
+      "event": {
+        "action": "sharing.external",
+        "action_category": "sharing",
+        "actor_email": "ada@acme.example.com",
+        "occurred_at": {"$days_ago": 1},
+        "summary": "external_shared_channel_connected"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    },
+    {
+      "_subject_id": "stale-share",
+      "event": {
+        "action": "sharing.external",
+        "action_category": "sharing",
+        "occurred_at": {"$days_ago": 90},
+        "summary": "old share"
+      },
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["match-share"]
+}

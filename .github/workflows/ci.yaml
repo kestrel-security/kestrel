@@ -1,0 +1,245 @@
+name: CI
+
+# The pull-request gate, budgeted at under 5 minutes. Tiers 0-2 only; Tier 3
+# (CLI e2e, migration replay) and the container scans run in nightly.yaml.
+# Tier definitions: docs/testing.md
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  # release.yaml re-runs this gate against a tagged commit before releasing it.
+  # A tag is what gets deployed, so a tag is what gets tested.
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Read-only token for every job. Nothing in the gate writes to the repository.
+permissions:
+  contents: read
+
+jobs:
+  static:
+    name: Tier 0 — lint, types, migrations, manifests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Ruff lint
+        run: uv run ruff check .
+      - name: Ruff format
+        run: uv run ruff format --check .
+      - name: mypy
+        run: uv run mypy kestrel/src apps/api/src apps/worker/src connectors
+      # Renders the migration chain to SQL without a database. Catches a broken
+      # revision graph or a migration that cannot compile.
+      - name: Alembic SQL dry-run
+        run: uv run alembic upgrade head --sql
+      - name: Connector manifests
+        run: |
+          for dir in connectors/*/; do
+            uv run kestrel connector validate "$dir"
+          done
+      # docs/api.md route tables are generated from the OpenAPI schema.
+      - name: API docs freshness
+        run: uv run python scripts/gen-api-docs.py --check
+
+  unit:
+    name: Tier 1 — unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # No services. KESTREL_ASSERT_NO_DB makes a unit test that opens a database
+    # connection fail rather than quietly depending on one.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Tier 1
+        env:
+          KESTREL_ASSERT_NO_DB: "1"
+        run: uv run pytest -m unit -n auto -q
+
+  integration:
+    name: Tier 2 — integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: kestrel
+          POSTGRES_PASSWORD: kestrel_dev
+          POSTGRES_DB: kestrel
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U kestrel"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+      # The API and worker default to redis://localhost:6380/0. CI had no Redis
+      # service and relied on a fixture force-disabling rate limiting to hide it.
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg://kestrel:kestrel_dev@localhost:5432/kestrel
+      REDIS_URL: redis://localhost:6379/0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      # No `alembic upgrade` step: the harness applies migrations once into its
+      # own template database and clones a database per xdist worker.
+      - name: Tier 2
+        run: uv run pytest -m integration -n auto -q
+
+  determinism:
+    name: Order independence — seed ${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # A matrix rather than two steps in one job: the seeds are independent, so
+    # running them in parallel keeps this job's wall clock at one suite length
+    # instead of two, which is what keeps the gate inside its budget.
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [1234, 9876]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: kestrel
+          POSTGRES_PASSWORD: kestrel_dev
+          POSTGRES_DB: kestrel
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U kestrel"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg://kestrel:kestrel_dev@localhost:5432/kestrel
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      # The old suite was order-dependent and nobody noticed: two tests that
+      # failed in isolation passed when an earlier test left state behind.
+      # Two seeds must agree.
+      - name: Seed ${{ matrix.seed }}
+        run: uv run pytest -m "unit or integration" -n auto -p randomly --randomly-seed=${{ matrix.seed }} -q
+      - name: Working tree must be clean
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "A test wrote inside the repository:"
+            git status --porcelain
+            exit 1
+          fi
+
+  coverage:
+    name: Coverage floor
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Measured across the whole PR-gated suite (Tiers 1+2), not one tier: the
+    # integration tier alone reads ~8 points lower and would fail a floor set
+    # from the combined figure. Runs in parallel, so it costs no wall clock.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: kestrel
+          POSTGRES_PASSWORD: kestrel_dev
+          POSTGRES_DB: kestrel
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U kestrel"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg://kestrel:kestrel_dev@localhost:5432/kestrel
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      # fail_under lives in pyproject.toml and only ever ratchets up.
+      - name: Coverage
+        run: uv run pytest -m "unit or integration" -n auto -q --cov --cov-report=term:skip-covered
+
+  web:
+    name: Web — lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # No `version:` here on purpose. pnpm/action-setup refuses to start when
+      # the action config and package.json's `packageManager` disagree, which is
+      # what had been failing this workflow. Omitting it makes `packageManager`
+      # the single source of truth, so the two cannot drift again.
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm --filter kestrel-web lint
+      - name: Typecheck
+        run: pnpm --filter kestrel-web typecheck
+      - name: Unit tests
+        run: pnpm --filter kestrel-web test:unit
+      - name: Build
+        run: pnpm --filter kestrel-web build
+
+  docs:
+    name: Documentation links and version consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Docs check
+        run: bash scripts/docs-check.sh
+      - name: Version consistency
+        run: bash scripts/check-versions.sh
+      # Denylist of strings that must never appear in this repository
+      # (private identifiers and the like). gitleaks runs in
+      # security-scan.yaml, so the secret half of the script is skipped here.
+      # Tree only: commit metadata is checked per pull request in commits.yaml.
+      # HYGIENE_EXTRA_PATTERNS is an optional maintainer secret of private
+      # patterns; it is empty on fork pull requests, which is fine.
+      - name: Repository hygiene
+        env:
+          HYGIENE_EXTRA_PATTERNS: ${{ secrets.HYGIENE_EXTRA_PATTERNS }}
+        run: bash scripts/oss-hygiene.sh --tree

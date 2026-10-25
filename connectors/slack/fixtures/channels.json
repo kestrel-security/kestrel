@@ -1,0 +1,49 @@
+[
+  {
+    "id": "C0GENERAL",
+    "name": "general",
+    "is_channel": true,
+    "is_private": false,
+    "is_archived": false,
+    "is_shared": false,
+    "is_ext_shared": false,
+    "num_members": 6,
+    "created": 1700000000
+  },
+  {
+    "id": "C0SECURITY",
+    "name": "security-incidents",
+    "is_channel": true,
+    "is_private": true,
+    "is_archived": false,
+    "is_shared": false,
+    "is_ext_shared": false,
+    "num_members": 3,
+    "created": 1700000100
+  },
+  {
+    "id": "C0FINANCE",
+    "name": "finance-private",
+    "is_channel": true,
+    "is_private": true,
+    "is_archived": false,
+    "is_shared": false,
+    "is_ext_shared": false,
+    "num_members": 3,
+    "created": 1700000200
+  },
+  {
+    "id": "C0EXTSHARED",
+    "name": "ext-project-alpha",
+    "is_channel": true,
+    "is_private": false,
+    "is_archived": false,
+    "is_shared": true,
+    "is_ext_shared": true,
+    "num_members": 12,
+    "connected_team_ids": [
+      "T0VENDOR"
+    ],
+    "created": 1700000300
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "rows": [
+    {
+      "_subject_id": "inline-http",
+      "setting": {
+        "key": "okta_inline_hook:cal1",
+        "value": {
+          "name": "Import",
+          "status": "ACTIVE",
+          "insecure_scheme": true
+        },
+        "label": "okta_inline_hook:cal1",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "event-http",
+      "setting": {
+        "key": "okta_event_hook:who1",
+        "value": {
+          "name": "SIEM",
+          "status": "ACTIVE",
+          "insecure_scheme": true
+        },
+        "label": "okta_event_hook:who1",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "inline-https",
+      "setting": {
+        "key": "okta_inline_hook:cal2",
+        "value": {
+          "name": "Ok",
+          "status": "ACTIVE",
+          "insecure_scheme": false
+        },
+        "label": "okta_inline_hook:cal2",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    },
+    {
+      "_subject_id": "inactive",
+      "setting": {
+        "key": "okta_inline_hook:cal3",
+        "value": {
+          "name": "Off",
+          "status": "INACTIVE",
+          "insecure_scheme": true
+        },
+        "label": "okta_inline_hook:cal3",
+        "category": "security"
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "inline-http",
+    "event-http"
+  ]
+}

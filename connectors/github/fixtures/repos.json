@@ -1,0 +1,74 @@
+[
+  {
+    "id": 9001,
+    "node_id": "R_9001",
+    "name": "web-app",
+    "full_name": "acme-corp/web-app",
+    "private": true,
+    "visibility": "private",
+    "archived": false,
+    "default_branch": "main",
+    "security_and_analysis": {
+      "advanced_security": {
+        "status": "enabled"
+      },
+      "secret_scanning": {
+        "status": "enabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "disabled"
+      },
+      "dependabot_security_updates": {
+        "status": "enabled"
+      }
+    }
+  },
+  {
+    "id": 9002,
+    "node_id": "R_9002",
+    "name": "secrets-vault",
+    "full_name": "acme-corp/secrets-vault",
+    "private": true,
+    "visibility": "private",
+    "archived": false,
+    "default_branch": "main",
+    "security_and_analysis": {
+      "advanced_security": {
+        "status": "disabled"
+      },
+      "secret_scanning": {
+        "status": "disabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "disabled"
+      },
+      "dependabot_security_updates": {
+        "status": "disabled"
+      }
+    }
+  },
+  {
+    "id": 9003,
+    "node_id": "R_9003",
+    "name": "public-docs",
+    "full_name": "acme-corp/public-docs",
+    "private": false,
+    "visibility": "public",
+    "archived": false,
+    "default_branch": "main",
+    "security_and_analysis": {
+      "advanced_security": {
+        "status": "enabled"
+      },
+      "secret_scanning": {
+        "status": "enabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "enabled"
+      },
+      "dependabot_security_updates": {
+        "status": "enabled"
+      }
+    }
+  }
+]

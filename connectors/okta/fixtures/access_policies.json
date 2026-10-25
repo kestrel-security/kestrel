@@ -1,0 +1,16 @@
+[
+  {
+    "id": "00padmin0000000001",
+    "name": "Admin app policy",
+    "type": "ACCESS_POLICY",
+    "status": "ACTIVE",
+    "system": false
+  },
+  {
+    "id": "00pdefault00000002",
+    "name": "Default Policy",
+    "type": "ACCESS_POLICY",
+    "status": "ACTIVE",
+    "system": true
+  }
+]

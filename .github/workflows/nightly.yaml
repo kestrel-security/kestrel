@@ -1,0 +1,98 @@
+name: Nightly
+
+# Tier 3 and the container scans: everything too slow to sit on the PR path.
+# The PR gate (.github/workflows/ci.yaml) is budgeted at under 5 minutes and
+# runs Tiers 0-2; this is where the expensive work lives.
+#
+# Schedule, manual and release runs. Running on every push to main would rebuild all
+# three images per merge -- the cost that moved them off the PR path -- while a
+# regression still surfaces within a day. Dispatch it by hand before a release.
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: nightly-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# The gha build cache uses the runtime token, not GITHUB_TOKEN, so read is enough.
+permissions:
+  contents: read
+
+jobs:
+  system:
+    name: Tier 3 — CLI e2e, migration replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: kestrel
+          POSTGRES_PASSWORD: kestrel_dev
+          POSTGRES_DB: kestrel
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U kestrel"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg://kestrel:kestrel_dev@localhost:5432/kestrel
+      REDIS_URL: redis://localhost:6379/0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Tier 3
+        run: uv run pytest -m system -q
+
+  images:
+    name: Trivy — ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: api
+            dockerfile: deployments/docker/api.Dockerfile
+          - image: worker
+            dockerfile: deployments/docker/worker.Dockerfile
+          - image: web
+            dockerfile: deployments/docker/web.Dockerfile
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Layer caching: these three builds ran uncached on every pull request
+      # before they were moved here, rebuilding from scratch each time.
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          tags: kestrel-${{ matrix.image }}:${{ github.sha }}
+          load: true
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+      - name: Trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: kestrel-${{ matrix.image }}:${{ github.sha }}
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+          trivyignores: .trivyignore

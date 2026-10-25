@@ -1,0 +1,26 @@
+{
+  "rows": [
+    {
+      "_subject_id": "ext-admin-grant",
+      "identity": {"email": "vendor@ext.example", "display_name": "Vendor", "is_external": true},
+      "application": {"type": "github", "name": "GitHub"},
+      "resource": {"name": "secrets-repo"},
+      "grant": {"permission_level": "admin", "granted_via": "direct"}
+    },
+    {
+      "_subject_id": "ext-read-grant",
+      "identity": {"email": "vendor2@ext.example", "display_name": "Vendor2", "is_external": true},
+      "application": {"type": "github", "name": "GitHub"},
+      "resource": {"name": "docs"},
+      "grant": {"permission_level": "read", "granted_via": "direct"}
+    },
+    {
+      "_subject_id": "internal-admin-grant",
+      "identity": {"email": "dev@acme.example", "display_name": "Dev", "is_external": false},
+      "application": {"type": "github", "name": "GitHub"},
+      "resource": {"name": "secrets-repo"},
+      "grant": {"permission_level": "admin", "granted_via": "direct"}
+    }
+  ],
+  "expected_match_subject_ids": ["ext-admin-grant"]
+}

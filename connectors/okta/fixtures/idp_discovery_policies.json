@@ -1,0 +1,9 @@
+[
+  {
+    "id": "00pidpdisc00000001",
+    "name": "Idp Discovery Policy",
+    "type": "IDP_DISCOVERY",
+    "status": "ACTIVE",
+    "system": true
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "S0ENGINEERING",
+    "team_id": "T0ACMEWORK",
+    "name": "Engineering",
+    "handle": "engineering",
+    "description": "Product engineering",
+    "date_create": 1700000000,
+    "user_count": 2
+  },
+  {
+    "id": "S0SECURITY",
+    "team_id": "T0ACMEWORK",
+    "name": "Security",
+    "handle": "security",
+    "description": "Security team",
+    "date_create": 1700001000,
+    "user_count": 2
+  }
+]

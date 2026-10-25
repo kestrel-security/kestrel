@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "_subject_id": "privileged-custom-role",
+      "role": {
+        "name": "Release admin",
+        "provider_object_id": "custom-org-role:123",
+        "is_privileged": true
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "narrow-custom-role",
+      "role": {
+        "name": "Triage",
+        "provider_object_id": "custom-org-role:456",
+        "is_privileged": false
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "built-in-role",
+      "role": {
+        "name": "admin",
+        "provider_object_id": "role:admin",
+        "is_privileged": true
+      },
+      "application": {"type": "github", "name": "GitHub"}
+    }
+  ],
+  "expected_match_subject_ids": ["privileged-custom-role"]
+}

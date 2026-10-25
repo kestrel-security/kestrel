@@ -1,0 +1,12 @@
+[
+  {
+    "id": "req_analytics_001",
+    "user_id": "U0ALAN",
+    "team_id": "T0ACMEWORK",
+    "app": {
+      "id": "A0PENDING",
+      "name": "Pending Analytics"
+    },
+    "date_created": 1700003000
+  }
+]

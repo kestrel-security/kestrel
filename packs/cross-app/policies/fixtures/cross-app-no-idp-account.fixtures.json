@@ -1,0 +1,150 @@
+{
+  "rows": [
+    {
+      "_subject_id": "local-github-account",
+      "identity": {
+        "identity_type": "user",
+        "email": "contractor.dev@acme.example.com",
+        "display_name": "Local Dev",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "absent",
+        "idp_connected": true,
+        "application_types": [
+          "github"
+        ],
+        "accounts": [
+          {
+            "application_type": "github"
+          }
+        ]
+      }
+    },
+    {
+      "_subject_id": "sso-backed",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "active",
+        "idp_connected": true,
+        "application_types": [
+          "okta",
+          "github"
+        ],
+        "accounts": []
+      }
+    },
+    {
+      "_subject_id": "outside-collaborator",
+      "identity": {
+        "identity_type": "user",
+        "email": "vendor@partner.example.net",
+        "display_name": "Vendor",
+        "is_disabled": false,
+        "is_external": true
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "absent",
+        "idp_connected": true,
+        "application_types": [
+          "github"
+        ],
+        "accounts": []
+      }
+    },
+    {
+      "_subject_id": "the-okta-account-itself",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Ada Lovelace",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "active",
+        "idp_connected": true,
+        "application_types": [
+          "okta"
+        ],
+        "accounts": []
+      }
+    },
+    {
+      "_subject_id": "no-idp-connected-yet",
+      "identity": {
+        "identity_type": "user",
+        "email": "solo@acme.example.com",
+        "display_name": "Solo",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "absent",
+        "idp_connected": false,
+        "application_types": [
+          "github"
+        ],
+        "accounts": []
+      }
+    },
+    {
+      "_subject_id": "bot",
+      "identity": {
+        "identity_type": "service_account",
+        "email": "ci@acme.example.com",
+        "display_name": "CI",
+        "is_disabled": false,
+        "is_external": false
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "cluster": {
+        "idp_status": "absent",
+        "idp_connected": true,
+        "application_types": [
+          "github"
+        ],
+        "accounts": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "local-github-account"
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "rows": [
+    {
+      "_subject_id": "guest-private",
+      "identity": {
+        "email": "guest@partner.example.net",
+        "display_name": "Vendor Guest",
+        "is_external": true
+      },
+      "resource": {
+        "name": "finance-private",
+        "resource_type": "channel",
+        "visibility": "private",
+        "config": {
+          "is_private": true,
+          "is_external": false
+        }
+      },
+      "grant": {
+        "granted_via": "direct",
+        "permission_level": "member"
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    },
+    {
+      "_subject_id": "guest-public",
+      "identity": {
+        "email": "guest@partner.example.net",
+        "display_name": "Vendor Guest",
+        "is_external": true
+      },
+      "resource": {
+        "name": "general",
+        "resource_type": "channel",
+        "visibility": "public",
+        "config": {
+          "is_private": false,
+          "is_external": false
+        }
+      },
+      "grant": {
+        "granted_via": "direct",
+        "permission_level": "member"
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    },
+    {
+      "_subject_id": "member-private",
+      "identity": {
+        "email": "ada@acme.example.com",
+        "display_name": "Ada",
+        "is_external": false
+      },
+      "resource": {
+        "name": "finance-private",
+        "resource_type": "channel",
+        "visibility": "private",
+        "config": {
+          "is_private": true
+        }
+      },
+      "grant": {
+        "granted_via": "direct",
+        "permission_level": "member"
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    },
+    {
+      "_subject_id": "guest-connect",
+      "identity": {
+        "email": "guest@partner.example.net",
+        "display_name": "Vendor Guest",
+        "is_external": true
+      },
+      "resource": {
+        "name": "ext-project-alpha",
+        "resource_type": "channel",
+        "visibility": "public",
+        "config": {
+          "is_private": false,
+          "is_external": true
+        }
+      },
+      "grant": {
+        "granted_via": "direct",
+        "permission_level": "member"
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "guest-private",
+    "guest-connect"
+  ]
+}

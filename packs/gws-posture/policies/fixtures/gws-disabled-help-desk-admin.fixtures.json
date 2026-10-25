@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "hd-disabled",
+      "identity": {"email": "helpdesk@acme.example", "display_name": "Help Desk", "is_disabled": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Help Desk Admin"]
+    },
+    {
+      "_subject_id": "hd-active",
+      "identity": {"email": "hd2@acme.example", "display_name": "Help Desk 2", "is_disabled": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Help Desk Admin"]
+    },
+    {
+      "_subject_id": "user-disabled",
+      "identity": {"email": "user@acme.example", "display_name": "User", "is_disabled": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["hd-disabled"]
+}

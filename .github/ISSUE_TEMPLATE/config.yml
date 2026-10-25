@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/kestrel-security/kestrel/discussions
+    about: Ask how to do something, or float an idea before filing a feature request. See SUPPORT.md.
+  - name: Security vulnerability
+    url: https://github.com/kestrel-security/kestrel/security/advisories/new
+    about: Do not open a public issue for security reports. Report it privately through this form. See SECURITY.md.
+  - name: Contributor guide
+    url: https://github.com/kestrel-security/kestrel/blob/main/CONTRIBUTING.md
+    about: Setup, conventions, and how to submit a change.

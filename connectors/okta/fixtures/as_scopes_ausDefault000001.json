@@ -1,0 +1,20 @@
+[
+  {
+    "id": "scpDefault000001",
+    "name": "openid",
+    "description": "OpenID Connect scope",
+    "default": true,
+    "system": true,
+    "displayName": "OpenID Connect",
+    "consent": "IMPLICIT"
+  },
+  {
+    "id": "scpDefault000002",
+    "name": "profile",
+    "description": "Profile scope",
+    "default": false,
+    "system": true,
+    "displayName": "Profile",
+    "consent": "FLEXIBLE"
+  }
+]

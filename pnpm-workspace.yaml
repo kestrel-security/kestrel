@@ -1,0 +1,55 @@
+packages:
+  - "apps/web"
+
+# pnpm 10 runs no dependency install scripts unless listed here. None are
+# needed: unrs-resolver's postinstall only downloads a native binary when the
+# platform's optional dependency is missing, which pnpm already installs.
+allowBuilds:
+  unrs-resolver: false
+
+# Force patched versions of transitive dependencies that reach us only
+# through next, which pins vulnerable ranges of its own:
+#   sharp           <0.35.5  -> inherited libvips, libheif, and librsvg CVEs (high)
+#   postcss         <8.5.23  -> incomplete fix of the </style> XSS (moderate)
+#   dompurify       <3.4.17  -> ALLOWED_ATTR pollution + detached-node hook (moderate),
+#                               two sanitizer bypasses (critical, high), reached
+#                               only through monaco-editor
+#   brace-expansion <1.1.18 / <5.0.9 -> DoS via unbounded expansion (high)
+#   js-yaml         <4.3.1   -> quadratic CPU in !!omap (high)
+#   nanoid          <3.3.18  -> custom generators loop indefinitely (high)
+#
+# This file is the only home for pnpm settings: pnpm 10 (pinned by
+# `packageManager` in package.json) ignores the old `pnpm` field there.
+#
+# Drop an entry once next's own range covers the patched version.
+overrides:
+  # Upper bound for the same reason as js-yaml and nanoid below: cap at the
+  # next true major so a security floor can never pull sharp 1.x in on its own.
+  sharp: ">=0.35.5 <1"
+  postcss: ">=8.5.23 <9"
+  # GHSA for quadratic selector parsing; tailwindcss pins an older line.
+  postcss-selector-parser: ">=7.1.6 <8"
+  # Two entries: the 1.x and 5.x lines are both present in the tree and each
+  # has its own patched floor. All four bumps are patch-level within a major.
+  "brace-expansion@1": ">=1.1.20 <2"
+  "brace-expansion@5": ">=5.0.11 <6"
+  # Upper bounds matter: a bare ">=4.3.1" resolved js-yaml to 5.4.1 and
+  # nanoid to 6.0.1 -- major bumps of transitive deps, which is not what a
+  # security patch override should do.
+  js-yaml: ">=4.3.1 <5"
+  nanoid: ">=3.3.18 <4"
+  # monaco-editor pins an unpatched 3.4.x; the bumps are patch-level.
+  dompurify: ">=3.4.17 <4"
+  # GHSA-mrhx-c7xc-m3w5 (memory exhaustion); reached via eslint-config-next >
+  # eslint-plugin-react-hooks, lint tooling only. Patch-level within 4.x.
+  zod: ">=4.6.6 <5"
+
+# Audit exceptions. Each entry needs a reason and a removal condition;
+# everything else still blocks.
+auditConfig:
+  ignoreGhsas:
+    # braces <=3.0.3 stack-exhaustion DoS. No patched release exists. Reached
+    # only through build/lint tooling (eslint-config-next, tailwindcss via
+    # micromatch/chokidar), never the production bundle, and only on patterns
+    # we author. Remove once braces ships a fix and add an override instead.
+    - GHSA-vfj7-8cjw-p6xm

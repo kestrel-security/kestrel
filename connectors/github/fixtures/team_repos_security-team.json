@@ -1,0 +1,12 @@
+[
+  {
+    "id": 9002,
+    "node_id": "R_9002",
+    "name": "secrets-vault",
+    "full_name": "acme-corp/secrets-vault",
+    "private": true,
+    "visibility": "private",
+    "archived": false,
+    "permissions": {"admin": true, "maintain": true, "push": true, "triage": true, "pull": true}
+  }
+]

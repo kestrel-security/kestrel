@@ -1,0 +1,8 @@
+[
+  {
+    "id": "rol-grace-sa",
+    "type": "SUPER_ADMIN",
+    "status": "ACTIVE",
+    "assignmentType": "USER"
+  }
+]

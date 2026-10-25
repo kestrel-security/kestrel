@@ -1,0 +1,177 @@
+# Fixture provenance: where every field that produces a setting comes from.
+# Format and rationale: see connectors/google_workspace/fixtures/PROVENANCE.yaml.
+#
+# Okta's bug was the subtlest of the four. `GET /api/v1/org` is the Org Settings
+# resource -- company name, contact, address, status -- and carries no security
+# configuration. `_normalize_org` derived `mfa_enroll_required` from it with a
+# `setdefault` whose fallback was `bool(None or None)`, so a live tenant got a
+# confident `False` for a field Okta never returned, and a high-severity finding
+# with it. Enrollment is read from the MFA_ENROLL policy instead.
+
+sources:
+  org:
+    endpoint: GET /api/v1/org
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/OrgSetting/
+    # Identity only. Anything security-shaped read from here is fabricated.
+    returns: [subdomain]
+    synthetic: {}
+
+  password_policy:
+    endpoint: GET /api/v1/policies?type=PASSWORD
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    # Minimum length and complexity live under settings.password.complexity.
+    returns: [settings]
+    synthetic: {}
+
+  mfa_enroll_policy:
+    endpoint: GET /api/v1/policies?type=MFA_ENROLL
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    # settings.factors[*].enroll.self == REQUIRED is what makes enrollment
+    # mandatory. The normalizer returns nothing when it cannot tell, which is
+    # why "unknown" never becomes "not required".
+    returns: [settings]
+    synthetic: {}
+
+  threat_insight:
+    endpoint: GET /api/v1/threats/configuration
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ThreatInsight/
+    returns: [action]
+    synthetic: {}
+
+  app_sign_on_setting:
+    endpoint: GET /api/v1/apps
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/
+    returns: [name, signOnMode, status]
+    synthetic: {}
+
+  authenticator:
+    endpoint: GET /api/v1/authenticators
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Authenticator/
+    returns: [status, type]
+    synthetic: {}
+
+  device_assurance_policy:
+    endpoint: GET /api/v1/device-assurances
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/DeviceAssurance/
+    returns:
+      - diskEncryptionType
+      - name
+      - platform
+      - screenLockType
+      - secureHardwarePresent
+    synthetic: {}
+
+  network_zone:
+    endpoint: GET /api/v1/zones
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/NetworkZone/
+    returns: [gateways, name, status, type, usage]
+    synthetic: {}
+
+  trusted_origin:
+    endpoint: GET /api/v1/trustedOrigins
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/TrustedOrigin/
+    returns: [name, origin, scopes, status]
+    synthetic: {}
+
+  event_hook:
+    endpoint: GET /api/v1/eventHooks
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/EventHook/
+    # `channel` is redacted to host and scheme at collection: an event hook
+    # endpoint is both a secret and a trust boundary.
+    returns: [channel, events, name, status]
+    synthetic: {}
+
+  inline_hook:
+    endpoint: GET /api/v1/inlineHooks
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/InlineHook/
+    returns: [channel, name, status, type]
+    synthetic: {}
+
+  identity_provider:
+    endpoint: GET /api/v1/idps
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/
+    returns: [name, policy, status, type]
+    synthetic: {}
+
+  group_rule:
+    endpoint: GET /api/v1/groups/rules
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupRule/
+    returns: [actions, conditions, name, status]
+    synthetic: {}
+
+  # The six policy families below share a shape: the policy object from
+  # /api/v1/policies, plus its rules fetched separately and attached.
+  access_policy:
+    endpoint: GET /api/v1/policies?type=ACCESS_POLICY (+ /policies/{id}/rules)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    returns: [name, status, system, type]
+    synthetic:
+      rules: Fetched from /api/v1/policies/{id}/rules and attached by the collector.
+
+  sign_on_policy:
+    endpoint: GET /api/v1/policies?type=OKTA_SIGN_ON (+ /policies/{id}/rules)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    returns: [name, status, system, type]
+    synthetic:
+      rules: Fetched from /api/v1/policies/{id}/rules and attached by the collector.
+
+  profile_enrollment_policy:
+    endpoint: GET /api/v1/policies?type=PROFILE_ENROLLMENT (+ /policies/{id}/rules)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    returns: [name, status, system, type]
+    synthetic:
+      rules: Fetched from /api/v1/policies/{id}/rules and attached by the collector.
+
+  idp_discovery_policy:
+    endpoint: GET /api/v1/policies?type=IDP_DISCOVERY (+ /policies/{id}/rules)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    returns: [name, status, system, type]
+    synthetic:
+      rules: Fetched from /api/v1/policies/{id}/rules and attached by the collector.
+
+  entity_risk_policy:
+    endpoint: GET /api/v1/policies?type=ENTITY_RISK (+ /policies/{id}/rules)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    returns: [name, status, system, type]
+    synthetic:
+      rules: Fetched from /api/v1/policies/{id}/rules and attached by the collector.
+
+  post_auth_session_policy:
+    endpoint: GET /api/v1/policies?type=POST_AUTH_SESSION (+ /policies/{id}/rules)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/
+    returns: [name, status, system, type]
+    synthetic:
+      rules: Fetched from /api/v1/policies/{id}/rules and attached by the collector.
+
+  # IAM roles normalize to role resources, not settings, so they are not listed here.
+
+  resource_set:
+    endpoint: GET /api/v1/iam/resource-sets
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/ResourceSet/
+    returns: [label, description]
+    synthetic: {}
+
+  # Extended: security behaviors
+  behavior:
+    endpoint: GET /api/v1/behaviors
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Behavior/
+    returns: [name, status, type, settings]
+    synthetic: {}
+
+  # Extended: infrastructure
+  log_stream:
+    endpoint: GET /api/v1/logStreams
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/LogStream/
+    returns: [name, type, status]
+    synthetic: {}
+
+  auth_server:
+    endpoint: GET /api/v1/authorizationServers (+ /authorizationServers/{id}/policies + /scopes)
+    docs: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/AuthorizationServer/
+    returns: [name, description, audiences, issuer, status]
+    synthetic:
+      policies: Fetched from /api/v1/authorizationServers/{id}/policies and attached.
+      scopes: Fetched from /api/v1/authorizationServers/{id}/scopes and attached.
+      max_access_token_lifetime_minutes: Derived from policy accessTokenLifetimeMinutes fields.
+
+  # Devices normalize to resource rows, not settings, so they are not listed here.

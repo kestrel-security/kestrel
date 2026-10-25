@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "id": {
+        "time": "2026-09-01T09:00:00.000Z",
+        "uniqueQualifier": "7001"
+      },
+      "actor": {
+        "email": "grace@acme.example.com",
+        "profileId": "2"
+      },
+      "events": [
+        {
+          "name": "DEVICE_REGISTER_UNREGISTER_EVENT",
+          "parameters": [
+            {"name": "DEVICE_TYPE", "value": "IOS"},
+            {"name": "DEVICE_ID", "value": "mob-001"}
+          ]
+        }
+      ]
+    }
+  ]
+}

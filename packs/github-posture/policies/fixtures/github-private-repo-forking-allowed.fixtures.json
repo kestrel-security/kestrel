@@ -1,0 +1,30 @@
+{
+  "rows": [
+    {
+      "_subject_id": "forking-allowed",
+      "setting": {"key": "members_can_fork_private_repositories", "value": true, "label": "Members can fork private repositories"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "forking-blocked",
+      "setting": {"key": "members_can_fork_private_repositories", "value": false, "label": "Members can fork private repositories"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "not-collected",
+      "setting": {"key": "members_can_fork_private_repositories", "value": null, "label": "Members can fork private repositories"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "a-different-setting",
+      "setting": {"key": "members_can_create_repositories", "value": true, "label": "Members can create repositories"},
+      "application": {"type": "github", "name": "GitHub"}
+    },
+    {
+      "_subject_id": "another-application",
+      "setting": {"key": "members_can_fork_private_repositories", "value": true, "label": "Members can fork private repositories"},
+      "application": {"type": "slack", "name": "Slack"}
+    }
+  ],
+  "expected_match_subject_ids": ["forking-allowed"]
+}

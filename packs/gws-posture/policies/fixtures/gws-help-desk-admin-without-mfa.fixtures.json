@@ -1,0 +1,23 @@
+{
+  "rows": [
+    {
+      "_subject_id": "hd-no-mfa",
+      "identity": {"email": "helpdesk@acme.example", "display_name": "Help Desk", "mfa_enabled": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Help Desk Admin"]
+    },
+    {
+      "_subject_id": "hd-mfa",
+      "identity": {"email": "hd2@acme.example", "display_name": "Help Desk 2", "mfa_enabled": true},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": ["Help Desk Admin"]
+    },
+    {
+      "_subject_id": "user-no-mfa",
+      "identity": {"email": "user@acme.example", "display_name": "User", "mfa_enabled": false},
+      "application": {"type": "google_workspace", "name": "Google Workspace"},
+      "roles": []
+    }
+  ],
+  "expected_match_subject_ids": ["hd-no-mfa"]
+}

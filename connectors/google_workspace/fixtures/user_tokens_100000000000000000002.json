@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "admin#directory#token",
+    "clientId": "1234567890-slackworkspace.apps.googleusercontent.com",
+    "displayText": "Slack",
+    "anonymous": false,
+    "nativeApp": false,
+    "userKey": "100000000000000000002",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "openid"
+    ]
+  },
+  {
+    "kind": "admin#directory#token",
+    "clientId": "5566778899-driveexplorer.apps.googleusercontent.com",
+    "displayText": "Drive Explorer Sync",
+    "anonymous": true,
+    "nativeApp": true,
+    "userKey": "100000000000000000002",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.metadata.readonly"
+    ]
+  }
+]

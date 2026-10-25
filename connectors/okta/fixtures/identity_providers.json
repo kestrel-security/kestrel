@@ -1,0 +1,13 @@
+[
+  {
+    "id": "0oapartner000001",
+    "name": "Partner SAML",
+    "type": "SAML2",
+    "status": "ACTIVE",
+    "policy": {
+      "provisioning": {
+        "action": "AUTO"
+      }
+    }
+  }
+]

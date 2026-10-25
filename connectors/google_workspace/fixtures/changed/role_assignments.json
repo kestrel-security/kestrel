@@ -1,0 +1,30 @@
+[
+  {
+    "kind": "admin#directory#roleAssignment",
+    "roleAssignmentId": "400000000000001",
+    "roleId": "300000000000001",
+    "assignedTo": "100000000000000000001",
+    "scopeType": "CUSTOMER"
+  },
+  {
+    "kind": "admin#directory#roleAssignment",
+    "roleAssignmentId": "400000000000002",
+    "roleId": "300000000000002",
+    "assignedTo": "100000000000000000002",
+    "scopeType": "CUSTOMER"
+  },
+  {
+    "kind": "admin#directory#roleAssignment",
+    "roleAssignmentId": "400000000000003",
+    "roleId": "300000000000003",
+    "assignedTo": "100000000000000000003",
+    "scopeType": "CUSTOMER"
+  },
+  {
+    "kind": "admin#directory#roleAssignment",
+    "roleAssignmentId": "400000000000099",
+    "roleId": "300000000000001",
+    "assignedTo": "100000000000000000003",
+    "scopeType": "CUSTOMER"
+  }
+]
