@@ -13,6 +13,8 @@ started on them.
 
 ## Unreleased
 
+## v0.5.3 — 2026-10-24
+
 ### Added
 
 - Documentation site at [docs.kestrelsecurity.io](https://docs.kestrelsecurity.io/),

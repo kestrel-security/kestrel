@@ -1,6 +1,6 @@
 [project]
 name = "kestrel"
-version = "0.5.2"
+version = "0.5.3"
 description = "Kestrel core library: normalized data model, connector SDK, graph, Python policies, findings, CLI."
 readme = "README.md"
 license = "Apache-2.0"
