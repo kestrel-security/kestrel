@@ -7,6 +7,8 @@ name: Release
 #   security ...... locked dependency audits and secret scan on that commit
 #   nightly ....... system tests and all three container scans on that commit
 #   github-release  a GitHub Release whose notes are the tag's CHANGELOG section
+#   docs .......... docs.kestrelsecurity.io rebuilt from the tag (docs.yaml);
+#                   skipped for a pre-release, so the site stays on the latest release
 #
 # No container images are published: operators build them from
 # deployments/docker/. The release needs the gate, so a red gate releases nothing.
@@ -41,7 +43,8 @@ jobs:
     needs: [ci, security, nightly]
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # The only job in the repository that writes: it creates the release.
+    # The only job in the repository that writes to it: it creates the release.
+    # (docs writes a Pages deployment, not the repository.)
     permissions:
       contents: write
     steps:
@@ -89,3 +92,15 @@ jobs:
           # A semver pre-release (v1.2.3-rc.1) is marked as one.
           [[ "$TAG" == *-* ]] && prerelease=(--prerelease)
           gh release create "$TAG" --verify-tag --title "$TAG" --notes-file notes.md "${prerelease[@]}"
+
+  docs:
+    name: Docs site
+    needs: [github-release]
+    if: ${{ !contains(github.ref_name, '-') }}
+    uses: ./.github/workflows/docs.yaml
+    with:
+      tag: ${{ github.ref_name }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

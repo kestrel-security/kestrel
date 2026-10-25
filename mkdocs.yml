@@ -1,0 +1,157 @@
+# Copyright 2026 The Kestrel Authors
+# SPDX-License-Identifier: Apache-2.0
+#
+# The documentation site, docs.kestrelsecurity.io, built from docs/ as-is.
+#
+#   make docs-serve    # live preview at http://127.0.0.1:8000
+#   make docs-build    # what CI and the release run: --strict, into site/
+#
+# A release tag publishes it (.github/workflows/docs.yaml); see
+# docs/operations/release-process.md. Every page must be in `nav` below, the
+# same rule docs-check.sh applies to docs/README.md: --strict turns an omitted
+# page or a broken link into a failed build.
+site_name: Kestrel
+site_description: Open-source security for SaaS — documentation
+site_url: https://docs.kestrelsecurity.io/
+repo_url: https://github.com/kestrel-security/kestrel
+repo_name: kestrel-security/kestrel
+edit_uri: edit/main/docs/
+copyright: Copyright 2026 The Kestrel Authors · Apache-2.0
+
+docs_dir: docs
+site_dir: site
+# MkDocs skips templates/ by default; docs/templates/ is a page here.
+exclude_docs: |
+  !/templates/
+
+# Links that leave docs/ go to GitHub at the ref being built (KESTREL_DOCS_REF),
+# and heading anchors match GitHub's.
+hooks:
+  - docs-site/hooks.py
+
+theme:
+  name: material
+  custom_dir: docs-site/overrides
+  logo: assets/kestrel-mark.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+extra_css:
+  - stylesheets/kestrel.css
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  # Heading anchors are GitHub's (set in docs-site/hooks.py).
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
+nav:
+  - Overview: README.md
+  - Start here:
+      - getting-started.md
+      - faq.md
+      - demo.md
+      - architecture.md
+      - threat-model.md
+  - Features:
+      - connectors.md
+      - policies.md
+      - findings.md
+      - changes.md
+      - identity-graph.md
+      - dashboards.md
+      - ticketing.md
+      - gitops.md
+      - domain-model.md
+  - Connectors:
+      - connectors/github-setup.md
+      - connectors/google-workspace-setup.md
+      - connectors/okta-setup.md
+      - connectors/slack-setup.md
+      - connectors/authoring-tutorial.md
+  - Posture baselines:
+      - posture-baselines/README.md
+      - posture-baselines/github.md
+      - posture-baselines/google-workspace.md
+      - posture-baselines/okta.md
+      - posture-baselines/slack.md
+  - API and operations:
+      - api.md
+      - deployment.md
+      - observability.md
+      - operations/scheduled-syncs.md
+      - operations/rate-limiting.md
+      - operations/data-retention.md
+  - Project:
+      - product.md
+      - roadmap.md
+      - testing.md
+      - api-guidelines.md
+      - user-experience-principles.md
+      - operations/release-process.md
+      - brand.md
+      - images/README.md
+      - Decisions:
+          - decisions.md
+          - adr/0001-monorepo-tooling.md
+          - adr/0002-legacy-policy-dsl-implementation-approach.md
+          - adr/0003-graph-representation-in-postgres.md
+          - adr/0004-secrets-storage-and-encryption.md
+          - adr/0005-connector-sdk-interface-design.md
+          - adr/0006-multi-tenancy-approach.md
+          - adr/0007-job-worker-framework.md
+          - adr/0008-opaque-tokens-for-operator-auth.md
+          - adr/0009-python-policies.md
+          - templates/decision-record.md

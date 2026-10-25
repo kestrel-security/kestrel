@@ -88,6 +88,8 @@ service-account*.json
 # Local output and data: snapshot and export dumps, captured API responses
 # from real tenants (fixtures must be synthetic), and local runtime state.
 /snapshots/
+# mkdocs build output (make docs-build)
+/site/
 /exports/
 /output/
 /.kestrel/

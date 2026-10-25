@@ -1,6 +1,6 @@
 # Copyright 2026 The Kestrel Authors
 # SPDX-License-Identifier: Apache-2.0
-.PHONY: demo-verify sync dev down migrate revision test coverage lint format seed docs-check check-versions hygiene api-docs demo demo-up demo-down demo-change db-reset validate release screenshots
+.PHONY: demo-verify sync dev down migrate revision test coverage lint format seed docs-check docs-serve docs-build check-versions hygiene api-docs demo demo-up demo-down demo-change db-reset validate release screenshots
 
 sync:
 	uv sync
@@ -82,6 +82,14 @@ seed:
 
 docs-check:
 	bash scripts/docs-check.sh
+
+# The documentation site (mkdocs.yml). Links that leave docs/ point at main
+# unless KESTREL_DOCS_REF names another ref.
+docs-serve:
+	uv run --only-group docs mkdocs serve
+
+docs-build:
+	uv run --only-group docs mkdocs build --strict
 
 # Regenerate the route tables in docs/api.md from the OpenAPI schema.
 api-docs:
