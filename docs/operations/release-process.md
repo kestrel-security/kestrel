@@ -102,16 +102,41 @@ push v0.5.0
   nightly ........... system tests and api/worker/web Trivy scans
   github-release .... scripts/check-versions.sh 0.5.0, then a GitHub Release
                       whose notes are CHANGELOG.md's `## v0.5.0` section
+  docs .............. docs.kestrelsecurity.io rebuilt from the tag (docs.yaml)
 ```
 
 - The GitHub Release is created only when its CHANGELOG section exists and is
-  not empty. It is the only job in the repository with write access.
+  not empty. It is the only job with write access to the repository; the docs
+  job writes a GitHub Pages deployment and nothing else.
 - Images are built for scanning and are never pushed. The nightly workflow
   (`nightly.yaml`) builds all three images from the tagged commit during a
   release, and from `main` on its daily schedule, then scans them with Trivy
   (CRITICAL/HIGH with a released fix fails), so a Dockerfile or base image that
   has gone stale shows up within a day. Accepted exceptions go in
   `.trivyignore`, each with a reason.
+
+## The documentation site
+
+docs.kestrelsecurity.io is `docs/` rendered by `mkdocs.yml`, and it always shows
+the latest release. The release workflow's `docs` job calls
+`.github/workflows/docs.yaml`, which checks out the tag, runs `mkdocs build
+--strict`, and deploys the result to GitHub Pages with the Pages OIDC token —
+there is no stored secret. Links that leave `docs/` (`../SECURITY.md`,
+`../examples/custom-connector/`) are rewritten by `docs-site/hooks.py` to the
+same path on GitHub at that tag.
+
+- A pre-release (`v0.6.0-rc.1`) does not replace the site.
+- The CI `docs-site` job builds the site the same way on every pull request, so
+  a page missing from `mkdocs.yml`'s `nav`, a broken link, or a missing anchor
+  fails the pull request, not the release.
+- To redeploy a tag (a failed deploy, or a fix to the site's styling), run
+  **Docs site** from the Actions tab with that tag. Only a tag that contains
+  `mkdocs.yml` can be published.
+- Preview locally with `make docs-serve`; `make docs-build` is the CI build.
+
+The Pages settings this needs, once: **Settings → Pages → Source: GitHub
+Actions**, custom domain `docs.kestrelsecurity.io` with **Enforce HTTPS**, and the
+`github-pages` environment's deployment rule allowing `v*` tags.
 
 ## Rolling back
 

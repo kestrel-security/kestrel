@@ -1,0 +1,59 @@
+/* Copyright 2026 The Kestrel Authors */
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Brand tokens from brand/tokens.css, mapped onto Material's palette. */
+:root {
+  --kestrel-violet: #7441F0;
+  --kestrel-periwinkle: #5D61F1;
+  --kestrel-blue: #4689ED;
+  --kestrel-ink: #090C11;
+  --kestrel-dark-slate: #0F1117;
+  --kestrel-surface: #151922;
+  --kestrel-border: #2A3140;
+  --kestrel-gradient: linear-gradient(135deg, #7441F0 0%, #5D61F1 52%, #4689ED 100%);
+}
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--kestrel-ink);
+  --md-primary-fg-color--light: var(--kestrel-dark-slate);
+  --md-primary-fg-color--dark: var(--kestrel-ink);
+  --md-accent-fg-color: var(--kestrel-periwinkle);
+  --md-typeset-a-color: #4b4fd6;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--kestrel-ink);
+  --md-primary-fg-color--light: var(--kestrel-dark-slate);
+  --md-primary-fg-color--dark: var(--kestrel-ink);
+  --md-accent-fg-color: #8b8ef7;
+  --md-typeset-a-color: #9a9df8;
+  --md-default-bg-color: var(--kestrel-dark-slate);
+  --md-code-bg-color: var(--kestrel-surface);
+  --md-footer-bg-color: var(--kestrel-ink);
+  --md-footer-bg-color--dark: var(--kestrel-ink);
+}
+
+/* The header carries the brand gradient as a hairline, not a fill. */
+.md-header {
+  box-shadow: none;
+  border-bottom: 1px solid transparent;
+  border-image: var(--kestrel-gradient) 1;
+}
+
+.md-tabs {
+  background-color: var(--kestrel-ink);
+}
+
+.md-header__button.md-logo img {
+  height: 1.5rem;
+}
+
+/* Wide reference tables (route tables, baseline matrices) scroll, not squash. */
+.md-typeset table:not([class]) {
+  font-size: 0.7rem;
+}
+
+.md-typeset h1 {
+  color: var(--md-default-fg-color);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}

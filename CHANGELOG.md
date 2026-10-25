@@ -13,6 +13,13 @@ started on them.
 
 ## Unreleased
 
+### Added
+
+- Documentation site at [docs.kestrelsecurity.io](https://docs.kestrelsecurity.io/),
+  built from `docs/` by `mkdocs.yml` and published to GitHub Pages by the
+  release workflow for every release tag (pre-releases excluded). CI builds it
+  with `--strict` on every pull request; `make docs-serve` previews it locally.
+
 ## v0.5.2 — 2026-10-24
 
 ### Changed

@@ -459,6 +459,8 @@ Full policy, scope, and known limitations: [`SECURITY.md`](SECURITY.md). Assets,
 
 ## Documentation
 
+The documentation for the latest release is at **[docs.kestrelsecurity.io](https://docs.kestrelsecurity.io/)**; the same pages are under [`docs/`](docs/).
+
 | Document | Purpose |
 |---|---|
 | [docs/README.md](docs/README.md) | Index of every page under `docs/` |

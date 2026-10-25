@@ -3,6 +3,10 @@
 Every page under `docs/` is listed here; `scripts/docs-check.sh` fails when
 one is not. Start with [`getting-started.md`](getting-started.md).
 
+These pages are published at [docs.kestrelsecurity.io](https://docs.kestrelsecurity.io/)
+for each release. A new page also goes in `mkdocs.yml`'s `nav`; preview the site
+with `make docs-serve`.
+
 References like `DEC-024` throughout these pages are entries in the decision log,
 [`decisions.md`](decisions.md); `ADR-0004` and similar are the full records under
 [`adr/`](adr/).

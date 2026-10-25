@@ -223,6 +223,26 @@ jobs:
       - name: Build
         run: pnpm --filter kestrel-web build
 
+  # docs.kestrelsecurity.io. --strict fails on a page missing from mkdocs.yml's
+  # nav or a broken link or anchor, so a change that breaks the site fails here
+  # rather than at release (docs.yaml builds the same way).
+  docs-site:
+    name: Documentation site builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+          enable-cache: true
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --only-group docs --locked
+      - name: Build
+        run: uv run --only-group docs mkdocs build --strict
+
   docs:
     name: Documentation links and version consistency
     runs-on: ubuntu-latest
