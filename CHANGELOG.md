@@ -13,6 +13,14 @@ started on them.
 
 ## Unreleased
 
+### Fixed
+
+- AI-drafted policies no longer reach for `datetime`, which the sandbox does
+  not provide: the generate prompt now lists every policy global (built from
+  the helper table), and Validate reports any name the policy reads but
+  nothing defines, so the repair pass fixes it before the draft reaches the
+  editor. Shipped and stored policies load exactly as before.
+
 ## v0.5.4 — 2026-10-26
 
 ### Changed

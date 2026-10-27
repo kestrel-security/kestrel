@@ -73,6 +73,61 @@ def _protected_module_names() -> frozenset[str]:
     return frozenset(_policy_safe_builtins()) | frozenset(POLICY_HELPERS) | _LITERAL_WRAPPERS | {"time"}
 
 
+#: Names an author (or an LLM) reaches for that the sandbox does not provide.
+_TIME_LIKE_NAMES = frozenset({"datetime", "timedelta", "date", "timezone", "UTC", "dateutil", "arrow", "pytz"})
+
+
+def _bound_names(tree: ast.Module) -> set[str]:
+    """Every name the policy binds anywhere: module constants, functions,
+    parameters, locals, loop and comprehension targets, ``except ... as``.
+
+    Deliberately flat (not per scope): a name bound in one function and read
+    in another is not reported. The check exists to catch names nothing in the
+    policy defines, and a flat set cannot reject valid code.
+    """
+    bound: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)):
+            bound.add(node.id)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            bound.add(node.name)
+        elif isinstance(node, ast.arg):
+            bound.add(node.arg)
+        elif isinstance(node, (ast.ExceptHandler, ast.MatchAs, ast.MatchStar)) and node.name:
+            bound.add(node.name)
+        elif isinstance(node, ast.MatchMapping) and node.rest:
+            bound.add(node.rest)
+    return bound
+
+
+def unknown_name_errors(source_text: str) -> list[PolicyCompileError]:
+    """One error per name the policy reads but nothing provides.
+
+    A policy runs with only the safe builtins, ``time`` and ``POLICY_HELPERS``
+    as globals, so ``datetime.now()`` compiles fine and then raises NameError
+    on the first row that reaches it, which fixture tests can miss. This is an
+    authoring-time check (Validate, generate, save); it is not part of
+    ``compile`` so policies already stored or shipped keep loading as before.
+    Assumes ``source_text`` already compiled.
+    """
+    tree = ast.parse(source_text)
+    known = _protected_module_names() | _bound_names(tree)
+    # First use of each unknown name, in source order (ast.walk is breadth-first).
+    first_use: dict[str, tuple[int, int]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id not in known:
+            location = (node.lineno, node.col_offset + 1)
+            first_use[node.id] = min(location, first_use.get(node.id, location))
+    errors: list[PolicyCompileError] = []
+    for name, (line, column) in sorted(first_use.items(), key=lambda item: item[1]):
+        if name in _TIME_LIKE_NAMES:
+            hint = "Policies cannot import; use within_last_days / days_since for time checks."
+        else:
+            hint = "Policies cannot import; define it in the policy or use a builtin or policy helper."
+        errors.append(PolicyCompileError(f"Unknown name {name!r}. {hint}", line=line, column=column))
+    return errors
+
+
 def _is_numeric_expr(node: ast.expr) -> bool:
     if isinstance(node, ast.Constant):
         return isinstance(node.value, (int, float)) and not isinstance(node.value, bool)

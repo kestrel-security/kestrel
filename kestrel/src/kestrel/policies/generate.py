@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import logging
 import re
@@ -30,6 +31,7 @@ from kestrel.policies.llm_settings import (
     resolve_llm_credentials,
 )
 from kestrel.policies.resource_schemas import FIXTURE_DEMOS, fixture_demo_for, schema_docs_for_prompt
+from kestrel.policies.runtime.helpers import POLICY_HELPERS
 from kestrel.policies.testing import run_fixture_test_dict
 
 logger = logging.getLogger(__name__)
@@ -51,9 +53,9 @@ def policy(resource):
 def evidence(resource):
     # Return a flat dict of evidence field paths -> values.
 
-Optional helper: time module is available (time.time) for freshness windows on events.
-Use only safe Python: no imports, no I/O, no exec. Match existing pack style.
-Never enable the policy — this is a human-reviewed draft only.
+__POLICY_RULES__
+
+Match existing pack style. Never enable the policy — this is a human-reviewed draft only.
 
 __SCHEMAS__
 
@@ -64,13 +66,57 @@ _REPAIR_SYSTEM = """You repair Kestrel Python security policies that failed vali
 
 Return ONLY corrected valid Python source (no markdown fences). Keep the same intent.
 The policy must define POLICY_ID, TITLE, SEVERITY, RESOURCE_TYPE, DESCRIPTION, REMEDIATION,
-policy(resource), and evidence(resource). No imports, no I/O, no exec.
+policy(resource), and evidence(resource).
 Return True from policy() when compliant; False to open a finding.
+
+__POLICY_RULES__
 
 __SCHEMAS__
 
 __CONNECTOR_CATALOG__
 """
+
+
+def _helper_line(name: str, value: Any) -> str:
+    """``- name(params): first paragraph of its docstring``, without RST markup."""
+    label = name
+    if inspect.isfunction(value):
+        params = [p.replace(annotation=inspect.Parameter.empty) for p in inspect.signature(value).parameters.values()]
+        label = f"{name}({', '.join(str(p) for p in params)})"
+    summary = (inspect.getdoc(value) or "").split("\n\n", 1)[0]
+    return f"- {label}: {' '.join(summary.replace('``', '').split())}"
+
+
+def _policy_rules() -> str:
+    """What a policy may call, built from POLICY_HELPERS so it cannot drift
+    from the sandbox. Without this list models reach for ``datetime``, which
+    compiles and then raises NameError on the first row that reaches it."""
+    lines = [
+        "Names available as globals (nothing else exists; there are no imports):",
+        *(_helper_line(name, value) for name, value in POLICY_HELPERS.items()),
+        "- time: the standard time module (time.time() is the current Unix time in seconds).",
+        "- Safe builtins: len, str, int, float, bool, isinstance, any, all, min, max, sum, sorted,",
+        "  list, dict, set, frozenset, tuple, enumerate, range, zip, reversed, filter, map.",
+        "",
+        "Rules:",
+        "- datetime, timedelta, and any import are unavailable. Do not write `import` or",
+        "  `from ... import`, and do not reference datetime or timedelta.",
+        "- Use within_last_days / days_since for every recency and age check. Never compare",
+        "  timestamps directly: row timestamps may be timezone-aware datetimes or ISO strings.",
+        '- within_last_days treats a missing timestamp (None) as "not recent", so',
+        '  `return within_last_days(identity.get("last_active_at"), 30)` flags both stale and',
+        "  never-signed-in accounts. Check for None first if absence should mean compliant.",
+        "- When the intent or connector hint names an application, return True early for rows",
+        '  whose application.type is anything else, e.g. `if application.get("type") != "okta":',
+        "  return True`. Use application_matches only to scope by name (custom connectors).",
+        "- No I/O, no exec/eval/open.",
+    ]
+    return "\n".join(lines)
+
+
+_POLICY_RULES = _policy_rules()
+_LLM_SYSTEM = _LLM_SYSTEM.replace("__POLICY_RULES__", _POLICY_RULES)
+_REPAIR_SYSTEM = _REPAIR_SYSTEM.replace("__POLICY_RULES__", _POLICY_RULES)
 
 _TEMPLATE_PROVIDER = "template"
 _UNCONFIGURED_PROVIDER = "unconfigured"
