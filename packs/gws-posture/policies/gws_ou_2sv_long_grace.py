@@ -19,20 +19,9 @@ MAX_GRACE_DAYS = 7
 
 
 def grace_days(grace_period):
-    """Grace period in days, from ISO 8601 `P{n}D` or protobuf-JSON `{seconds}s`.
-
-    A missing value means no grace period. Any other format raises: reading an
-    unrecognized value as 0 days would pass every tenant whatever its setting.
-    """
-    text = str(grace_period or "P0D").strip()
-    try:
-        if text.startswith("P") and text.endswith("D"):
-            return int(text[1:-1])
-        if text.endswith("s"):
-            return float(text[:-1]) / 86400
-    except ValueError:
-        pass
-    raise PolicyDataError(f"unrecognized gracePeriod {grace_period!r}")
+    """Grace period in days. A missing value means no grace period; a value
+    `duration_seconds` cannot read raises rather than passing as 0 days."""
+    return (duration_seconds(grace_period) or 0) / 86400
 
 
 def policy(resource):

@@ -163,7 +163,14 @@ def test_unknown_names_fail_validation(body: str, name: str) -> None:
 
 def test_time_like_names_point_at_the_helpers() -> None:
     (message,) = _errors(_policy("def policy(resource):\n    return datetime.now().year > 2000\n"))
-    assert message == "Unknown name 'datetime'. Policies cannot import; use within_last_days / days_since for time checks."
+    assert message == (
+        "Unknown name 'datetime'. Policies cannot import; use now / within_last_days / days_since for time checks."
+    )
+
+
+def test_a_misspelled_helper_gets_a_suggestion() -> None:
+    (message,) = _errors(_policy("def policy(resource):\n    return within_last_day(None, 3)\n"))
+    assert message == "Unknown name 'within_last_day'. Did you mean 'within_last_days'?"
 
 
 def test_known_names_pass_validation() -> None:

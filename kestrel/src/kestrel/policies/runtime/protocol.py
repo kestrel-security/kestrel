@@ -31,11 +31,19 @@ class PolicyRuntime(Protocol):
         """
         ...
 
-    def match_rows(self, compiled: CompiledPolicy, rows: list[dict[str, Any]]) -> list[int]:
+    def match_rows(
+        self,
+        compiled: CompiledPolicy,
+        rows: list[dict[str, Any]],
+        *,
+        now: float | None = None,
+    ) -> list[int]:
         """Indices of the ``rows`` that ``policy()`` reports non-compliant.
 
         For callers that have rows in hand (fixture tests, fixture capture) and
         must still run author code under this runtime's isolation and limits
         rather than calling ``compiled.policy_fn`` in their own process.
+        ``now`` pins the policy clock (Unix seconds); omitted, it is the time
+        of the call, the same for every row.
         """
         ...

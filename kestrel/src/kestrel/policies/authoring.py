@@ -275,7 +275,9 @@ def activate_policy_version(
         version.is_enabled = previous_enabled
 
     parsed = parse_policy_source(version.source_text)
-    if parsed.is_valid and parsed.compiled is not None:
+    # A stored version that compiles still refreshes the title even when an
+    # authoring-time check (unknown names) would now reject it on save.
+    if parsed.compiled is not None:
         policy.title = parsed.compiled.contract.title
         policy.description = parsed.compiled.contract.description or None
     repoint_findings_to_current_version(session, policy)

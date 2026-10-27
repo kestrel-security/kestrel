@@ -153,9 +153,9 @@ def policy(resource):
 
 
 def test_days_ago_macro_produces_a_value_close_to_now_minus_the_offset():
-    from kestrel.policies.testing import _expand_relative_timestamps
+    from kestrel.policies.testing import expand_relative_timestamps
 
-    expanded = _expand_relative_timestamps({"seen_at": {"$days_ago": 10}})
+    expanded = expand_relative_timestamps({"seen_at": {"$days_ago": 10}})
     expected = datetime.now(UTC) - timedelta(days=10)
 
     assert abs((expanded["seen_at"] - expected).total_seconds()) < 5

@@ -6,9 +6,9 @@ from __future__ import annotations
 
 import ast
 import copy
+import difflib
 import operator
 import re
-import time
 import uuid
 from typing import Any
 
@@ -29,7 +29,7 @@ from kestrel.db.models.policy import Severity
 from kestrel.policies.dataload import LOADERS, RESOURCE_TYPE_TO_FROM_TYPE, load_rows
 from kestrel.policies.evidence_baseline import merge_baseline_evidence
 from kestrel.policies.identifiers import validate_policy_id
-from kestrel.policies.runtime.helpers import POLICY_HELPERS, PolicyDataError
+from kestrel.policies.runtime.helpers import POLICY_HELPERS, POLICY_TIME, PolicyDataError, pinned_now
 from kestrel.policies.runtime.serialize import row_to_jsonable
 from kestrel.policies.runtime.types import (
     CompiledPolicy,
@@ -120,11 +120,31 @@ def unknown_name_errors(source_text: str) -> list[PolicyCompileError]:
             first_use[node.id] = min(location, first_use.get(node.id, location))
     errors: list[PolicyCompileError] = []
     for name, (line, column) in sorted(first_use.items(), key=lambda item: item[1]):
+        close = difflib.get_close_matches(name, sorted(known), n=1, cutoff=0.8)
         if name in _TIME_LIKE_NAMES:
-            hint = "Policies cannot import; use within_last_days / days_since for time checks."
+            hint = "Policies cannot import; use now / within_last_days / days_since for time checks."
+        elif close:
+            hint = f"Did you mean {close[0]!r}?"
         else:
             hint = "Policies cannot import; define it in the policy or use a builtin or policy helper."
         errors.append(PolicyCompileError(f"Unknown name {name!r}. {hint}", line=line, column=column))
+    # ``time`` is a subset of the module; time.sleep reads as None and fails
+    # only when called, so report it here too.
+    time_names = {name for name in vars(POLICY_TIME) if not name.startswith("_")}
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "time"
+            and node.attr not in time_names
+        ):
+            errors.append(
+                PolicyCompileError(
+                    f"time.{node.attr} is not available in policies; use now() or one of: {', '.join(sorted(time_names))}.",
+                    line=node.lineno,
+                    column=node.col_offset + 1,
+                )
+            )
     return errors
 
 
@@ -301,7 +321,8 @@ def _restricted_namespace() -> dict[str, Any]:
     namespace["_unpack_sequence_"] = guarded_unpack_sequence
     namespace["_write_"] = full_write_guard
     namespace["_inplacevar_"] = _inplacevar
-    namespace["time"] = time
+    # A subset of ``time`` (no sleep) whose time() reads the pinned run clock.
+    namespace["time"] = POLICY_TIME
     # Shared, reviewed helpers (within_last_days, has_admin_grant, ...) so packs
     # do not each paste their own copy. See kestrel.policies.runtime.helpers.
     namespace.update(POLICY_HELPERS)
@@ -553,6 +574,16 @@ class RestrictedPythonRuntime:
             policy_name=compiled.contract.policy_id,
             evaluated_row_count=len(rows),
         )
+        with pinned_now():
+            self._evaluate_rows_into(compiled, rows, result)
+        return result
+
+    def _evaluate_rows_into(
+        self,
+        compiled: CompiledPolicy,
+        rows: list[dict[str, Any]],
+        result: PolicyEvaluationResult,
+    ) -> None:
         for row in rows:
             # The policy gets its own copy. ``rows`` may come from a RowCache
             # shared by every policy in the pass, and a policy may write to the
@@ -587,16 +618,22 @@ class RestrictedPythonRuntime:
                     evidence=row_to_jsonable(evidence),
                 )
             )
-        return result
 
-    def match_rows(self, compiled: CompiledPolicy, rows: list[dict[str, Any]]) -> list[int]:
+    def match_rows(
+        self,
+        compiled: CompiledPolicy,
+        rows: list[dict[str, Any]],
+        *,
+        now: float | None = None,
+    ) -> list[int]:
         """In-process: no isolation and no time limit. Fine for tests and for
         trusted pack code; the API's default runtime is the subprocess one."""
         matched: list[int] = []
-        for index, row in enumerate(rows):
-            compliant = compiled.policy_fn(copy.deepcopy(row))
-            if not isinstance(compliant, bool):
-                raise TypeError(f"policy() must return bool, got {type(compliant).__name__}")
-            if not compliant:
-                matched.append(index)
+        with pinned_now(now):
+            for index, row in enumerate(rows):
+                compliant = compiled.policy_fn(copy.deepcopy(row))
+                if not isinstance(compliant, bool):
+                    raise TypeError(f"policy() must return bool, got {type(compliant).__name__}")
+                if not compliant:
+                    matched.append(index)
         return matched

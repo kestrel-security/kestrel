@@ -13,11 +13,20 @@ import pytest
 from kestrel.policies.runtime import RestrictedPythonRuntime, worker
 from kestrel.policies.runtime.helpers import (
     POLICY_HELPERS,
+    POLICY_TIME,
     PolicyDataError,
     application_matches,
     days_since,
+    domain_matches,
+    duration_seconds,
+    email_domain,
+    get_path,
     has_admin_grant,
+    ip_in_networks,
+    matches_any,
+    now,
     parse_timestamp,
+    pinned_now,
     within_last_days,
 )
 from kestrel.policies.runtime.serialize import rows_to_jsonable
@@ -219,3 +228,163 @@ def test_malformed_value_fails_a_fixture_test_instead_of_passing_it() -> None:
     }
     with pytest.raises(PolicyDataError):
         run_fixture_test_dict(_HELPER_POLICY, fixture)
+
+
+# --- now / pinned clock -------------------------------------------------------
+
+_FROZEN = datetime(2026, 6, 1, 12, 0, tzinfo=UTC).timestamp()
+
+
+def _policy_body(body: str) -> str:
+    return _HELPER_POLICY.replace('return within_last_days(identity.get("last_active_at"), 90)', body)
+
+
+def test_now_is_aware_utc_and_follows_the_pinned_clock() -> None:
+    with pinned_now(_FROZEN):
+        assert now() == datetime(2026, 6, 1, 12, 0, tzinfo=UTC)
+        assert days_since(datetime(2026, 5, 22, 12, 0, tzinfo=UTC)) == pytest.approx(10.0)
+        assert within_last_days("2026-05-30T12:00:00Z", 2)
+        assert not within_last_days("2026-05-29T11:00:00Z", 3)
+    assert now().tzinfo is UTC
+
+
+def test_the_sandbox_time_reads_the_pinned_clock_and_cannot_sleep() -> None:
+    assert not hasattr(POLICY_TIME, "sleep")
+    assert not hasattr(POLICY_TIME, "tzset")
+    with pinned_now(_FROZEN):
+        assert POLICY_TIME.time() == _FROZEN
+        assert POLICY_TIME.time_ns() == int(_FROZEN * 1_000_000_000)
+    assert POLICY_TIME.strftime("%Y", POLICY_TIME.gmtime(0)) == "1970"
+
+
+def test_policies_cannot_reach_time_sleep() -> None:
+    source = _policy_body("time.sleep(0)\n    return True")
+    compiled = RestrictedPythonRuntime().compile(source)
+    # RestrictedPython's getattr guard reads a missing attribute as None.
+    with pytest.raises(TypeError, match="not callable"):
+        RestrictedPythonRuntime().match_rows(compiled, _rows())
+
+
+def test_match_rows_pins_one_clock_for_every_row() -> None:
+    source = _policy_body("return now().year != 2001")
+    compiled = RestrictedPythonRuntime().compile(source)
+    frozen_2001 = datetime(2001, 1, 1, tzinfo=UTC).timestamp()
+    assert RestrictedPythonRuntime().match_rows(compiled, _rows(), now=frozen_2001) == [0, 1, 2]
+    assert RestrictedPythonRuntime().match_rows(compiled, _rows()) == []
+
+
+def test_the_worker_honours_the_parent_clock(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    import io
+    import json
+
+    source = _policy_body("return now().year != 2001")
+    payload = {
+        "source_text": source,
+        "rows": rows_to_jsonable(_rows()),
+        "mode": "match_rows",
+        "now": datetime(2001, 1, 1, tzinfo=UTC).timestamp(),
+    }
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(payload)))
+    assert worker.main() == 0
+    assert json.loads(capsys.readouterr().out)["matched_indices"] == [0, 1, 2]
+
+
+# --- duration_seconds ---------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("P30D", 30 * 86400),
+        ("PT12H", 12 * 3600),
+        ("PT90M", 90 * 60),
+        ("P1DT6H", 30 * 3600),
+        ("P2W", 14 * 86400),
+        ("PT0.5S", 0.5),
+        ("pt1h", 3600),
+        ("86400s", 86400),
+        ("1.5s", 1.5),
+    ],
+)
+def test_duration_seconds_reads_iso_and_protobuf(value, expected) -> None:
+    assert duration_seconds(value) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize("value", [None, "", "  "])
+def test_duration_seconds_reports_missing_as_none(value) -> None:
+    assert duration_seconds(value) is None
+
+
+@pytest.mark.parametrize("value", ["P1Y", "P1M", "P", "PT", "P1DT", "12", "12h", "soon", 12, 1.5, True, {}])
+def test_duration_seconds_raises_on_what_it_cannot_read(value) -> None:
+    with pytest.raises(PolicyDataError):
+        duration_seconds(value)
+
+
+# --- get_path -----------------------------------------------------------------
+
+
+def test_get_path() -> None:
+    row = {"identity": {"email": "a@x.com", "mfa": None, "meta": {"n": 0}}, "roles": ["x"]}
+    assert get_path(row, "identity.email") == "a@x.com"
+    assert get_path(row, "identity.meta.n") == 0
+    assert get_path(row, "identity.mfa", "unknown") == "unknown"
+    assert get_path(row, "identity.missing.deeper") is None
+    assert get_path(row, "roles.0") is None
+    assert get_path(None, "a") is None
+    with pytest.raises(ValueError, match="non-empty dotted path"):
+        get_path(row, "")
+
+
+# --- email_domain / domain_matches --------------------------------------------
+
+
+def test_email_domain() -> None:
+    assert email_domain("Ana@EU.Acme.COM") == "eu.acme.com"
+    assert email_domain("weird@local@acme.com.") == "acme.com"
+    assert email_domain(None) is None
+    assert email_domain(" ") is None
+    for bad in ["no-at-sign", "@acme.com", "ana@", 42]:
+        with pytest.raises(PolicyDataError):
+            email_domain(bad)
+
+
+def test_domain_matches() -> None:
+    assert domain_matches("ana@eu.acme.com", ["acme.com"])
+    assert domain_matches("ana@acme.com", "ACME.com")
+    assert domain_matches("hooks.acme.com", [".acme.com"])
+    assert not domain_matches("ana@notacme.com", ["acme.com"])
+    assert not domain_matches("ana@acme.com.evil.io", ["acme.com"])
+    assert not domain_matches(None, ["acme.com"])
+    assert not domain_matches("ana@acme.com", [])
+    with pytest.raises(PolicyDataError):
+        domain_matches("ana@", ["acme.com"])
+
+
+# --- ip_in_networks -----------------------------------------------------------
+
+
+def test_ip_in_networks() -> None:
+    assert ip_in_networks("10.1.2.3", ["10.0.0.0/8"])
+    assert ip_in_networks("10.1.2.3", "10.1.2.0/24")
+    assert ip_in_networks("2001:db8::1", ["192.0.2.0/24", "2001:db8::/32"])
+    assert not ip_in_networks("192.168.1.1", ["10.0.0.0/8"])
+    assert not ip_in_networks("10.1.2.3", ["2001:db8::/32"])
+    assert not ip_in_networks(None, ["10.0.0.0/8"])
+    assert ip_in_networks("10.1.2.3", ["10.1.2.3/8"])  # host bits allowed, as providers write them
+    for bad_ip, nets in [("10.1.2", ["10.0.0.0/8"]), (167837955, ["10.0.0.0/8"]), ("10.1.2.3", ["10.0.0.0/33"])]:
+        with pytest.raises(PolicyDataError):
+            ip_in_networks(bad_ip, nets)
+
+
+# --- matches_any --------------------------------------------------------------
+
+
+def test_matches_any() -> None:
+    assert matches_any("Prod-API", ["prod-*"])
+    assert matches_any("billing-secrets", ("*-secrets", "x"))
+    assert matches_any("abc", "a?c")
+    assert not matches_any("staging-api", ["prod-*"])
+    assert not matches_any(None, ["*"])
+    with pytest.raises(PolicyDataError):
+        matches_any(5, ["*"])

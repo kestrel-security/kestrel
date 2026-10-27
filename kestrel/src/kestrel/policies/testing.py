@@ -19,6 +19,7 @@ from kestrel.policies.runtime import (
     compile_and_validate,
     get_default_runtime,
 )
+from kestrel.policies.runtime.helpers import PolicyDataError
 
 
 @dataclass
@@ -36,13 +37,14 @@ class FixtureTestResult:
         return self.actual_subject_ids - self.expected_subject_ids
 
 
-def _expand_relative_timestamps(value: Any) -> Any:
+def expand_relative_timestamps(value: Any) -> Any:
+    """Replace ``{"$days_ago": n}`` with a datetime ``n`` days before now."""
     if isinstance(value, dict):
         if set(value.keys()) == {"$days_ago"} and isinstance(value["$days_ago"], (int, float)):
             return datetime.now(UTC) - timedelta(days=float(value["$days_ago"]))
-        return {k: _expand_relative_timestamps(v) for k, v in value.items()}
+        return {k: expand_relative_timestamps(v) for k, v in value.items()}
     if isinstance(value, list):
-        return [_expand_relative_timestamps(v) for v in value]
+        return [expand_relative_timestamps(v) for v in value]
     return value
 
 
@@ -58,13 +60,16 @@ def run_fixture_test_compiled(
     """Run ``policy()`` over the fixture rows under ``runtime`` (default: the
     configured runtime, so the API's fixture tests get the subprocess runtime's
     timeout and memory limit rather than running author code in-process)."""
-    rows = _expand_relative_timestamps(fixtures.get("rows", []))
+    rows = expand_relative_timestamps(fixtures.get("rows", []))
     runtime = runtime if runtime is not None else get_default_runtime()
     try:
         matched_indices = runtime.match_rows(compiled, rows)
-    except (TypeError, RuntimeError, TimeoutError) as exc:
-        # A wrong return type, a worker crash, or a timeout: the draft's fault, not the server's.
-        raise FixtureRunError(f"Evaluation failed: {exc}") from exc
+    except PolicyDataError:
+        raise  # malformed fixture data, reported as such (docs/policies.md)
+    except Exception as exc:
+        # A wrong return type, a worker crash, a timeout, or (in the in-process
+        # runtime) whatever policy() raised: the draft's fault, not the server's.
+        raise FixtureRunError(f"Evaluation failed: {type(exc).__name__}: {exc}") from exc
     matched_ids = {str(rows[index]["_subject_id"]) for index in matched_indices}
     expected = set(fixtures.get("expected_match_subject_ids", []))
     return FixtureTestResult(

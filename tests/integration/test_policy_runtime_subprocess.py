@@ -43,17 +43,30 @@ def _evaluate(runtime: SubprocessPolicyRuntime, body: str, rows: list[dict] | No
     return runtime.evaluate_all(compiled, None, uuid.uuid4(), rows=rows or _rows())  # type: ignore[arg-type]
 
 
-@pytest.mark.parametrize(
-    "body",
-    ["while True:\n    pass", "time.sleep(3600)\nreturn True"],
-    ids=["busy_loop", "sleep"],
-)
-def test_a_policy_that_never_returns_is_killed_at_the_timeout(body: str) -> None:
+def test_a_policy_that_never_returns_is_killed_at_the_timeout() -> None:
     runtime = SubprocessPolicyRuntime(timeout_seconds=1)
     started = time.monotonic()
     with pytest.raises(TimeoutError, match="timed out"):
-        _evaluate(runtime, body)
+        _evaluate(runtime, "while True:\n    pass")
     assert time.monotonic() - started < 15
+
+
+def test_a_worker_blocked_without_using_cpu_is_killed_at_the_wall_clock_timeout(tmp_path) -> None:
+    # Policies can no longer call time.sleep, so stand in a worker that blocks
+    # without burning CPU: only the parent's wall-clock timeout can stop it.
+    blocked = tmp_path / "blocked-python"
+    blocked.write_text("#!/bin/sh\nexec sleep 3600\n")
+    blocked.chmod(0o755)
+    runtime = SubprocessPolicyRuntime(timeout_seconds=1, python_executable=str(blocked))
+    started = time.monotonic()
+    with pytest.raises(TimeoutError, match="timed out"):
+        _evaluate(runtime, "return True")
+    assert time.monotonic() - started < 15
+
+
+def test_time_sleep_is_not_available_in_the_worker() -> None:
+    with pytest.raises(RuntimeError, match="not callable"):
+        _evaluate(SubprocessPolicyRuntime(), "time.sleep(3600)\nreturn True")
 
 
 def test_shared_helpers_are_available_in_the_worker() -> None:
@@ -163,3 +176,10 @@ def test_the_worker_child_does_not_inherit_the_parents_secrets(monkeypatch) -> N
 def test_augmented_assignment_works_in_the_worker() -> None:
     result = _evaluate(SubprocessPolicyRuntime(), "count = 0\nfor _ in range(3):\n    count += 1\nreturn count != 3")
     assert len(result.matches) == 2
+
+
+def test_one_clock_for_every_batch() -> None:
+    runtime = SubprocessPolicyRuntime(batch_size=1)
+    frozen_2001 = datetime(2001, 1, 1, tzinfo=UTC).timestamp()
+    compiled = runtime.compile(_HEADER + "\ndef policy(resource):\n    return now().year != 2001\n")
+    assert runtime.match_rows(compiled, _rows(), now=frozen_2001) == list(range(len(_rows())))
