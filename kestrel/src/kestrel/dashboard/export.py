@@ -7,6 +7,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import logging
 import re
 import uuid
 from datetime import UTC, datetime
@@ -21,6 +22,8 @@ from kestrel.dashboard.query_dsl import execute_query, parse_query_spec
 from kestrel.db.models.dashboard import DashboardExport
 from kestrel.db.models.operator import Operator
 from kestrel.security.csv_safe import csv_safe_values
+
+logger = logging.getLogger(__name__)
 
 
 def _escape(s: str) -> str:
@@ -94,8 +97,16 @@ def build_snapshot(
                     spec=parse_query_spec(qspec),
                     viewer_operator_id=operator.id,
                 )
-            except Exception as exc:  # noqa: BLE001 — surface per-widget errors in snapshot
+            # The DSL rejects a bad spec with a ValueError (pydantic's
+            # ValidationError is one) written for the operator, so that text
+            # goes in the export. Anything else is an internal failure whose
+            # text can carry SQL or driver detail, and exports leave the
+            # system, so it is logged and replaced.
+            except ValueError as exc:
                 data = {"kind": "error", "error": str(exc), "series": [], "rows": []}
+            except Exception:  # one failing widget must not fail the export
+                logger.warning("dashboard export widget query failed widget_id=%s", w.get("id"), exc_info=True)
+                data = {"kind": "error", "error": "query failed", "series": [], "rows": []}
         widgets_out.append({**w, "data": data})
     return {
         "exported_at": datetime.now(UTC).isoformat(),
