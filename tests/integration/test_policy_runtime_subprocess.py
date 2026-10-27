@@ -178,6 +178,21 @@ def test_augmented_assignment_works_in_the_worker() -> None:
     assert len(result.matches) == 2
 
 
+def test_probe_failure_names_the_probe_row_under_the_subprocess_runtime() -> None:
+    from kestrel.policies.generate_catalog import OKTA_STALE_EXTERNAL_FIXTURES
+    from kestrel.policies.probes import probe_policy
+
+    source = _HEADER + (
+        "\ndef policy(resource):\n"
+        '    last = (resource.get("identity") or {}).get("last_active_at")\n'
+        "    return last is None or last > now()\n"
+    )
+    result = probe_policy(source, OKTA_STALE_EXTERNAL_FIXTURES, runtime=SubprocessPolicyRuntime())
+    assert result is not None
+    assert not result["passed"]
+    assert "with identity.last_active_at=" in result["errors"][0]
+
+
 def test_one_clock_for_every_batch() -> None:
     runtime = SubprocessPolicyRuntime(batch_size=1)
     frozen_2001 = datetime(2001, 1, 1, tzinfo=UTC).timestamp()

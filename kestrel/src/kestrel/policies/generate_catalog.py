@@ -384,6 +384,44 @@ OKTA_DORMANT_ADMIN_FIXTURES: dict[str, Any] = {
     "expected_match_subject_ids": ["grace-id"],
 }
 
+
+def _okta_user(
+    subject_id: str, email: str, *, is_external: bool, days_ago: int | None, disabled: bool = False
+) -> dict[str, Any]:
+    return {
+        "_subject_id": subject_id,
+        "identity": {
+            "email": email,
+            "display_name": subject_id.removesuffix("-id").replace("-", " ").title(),
+            "is_external": is_external,
+            "is_disabled": disabled,
+            "mfa_enabled": True,
+            "last_active_at": None if days_ago is None else {"$days_ago": days_ago},
+        },
+        "application": {"type": "okta", "name": "Okta"},
+        "roles": [],
+    }
+
+
+# Active external users who are stale or never signed in, beside every near
+# miss an unscoped or naive policy gets wrong: a recent contractor, a disabled
+# one, a stale employee, and a stale guest in another app. "Stale" is 400 days
+# and "recent" 3, so any threshold an intent names (30, 90, 365) agrees.
+OKTA_STALE_EXTERNAL_FIXTURES: dict[str, Any] = {
+    "rows": [
+        _okta_user("stale-contractor-id", "pat@vendor.example.com", is_external=True, days_ago=400),
+        _okta_user("never-signed-in-id", "lee@vendor.example.com", is_external=True, days_ago=None),
+        _okta_user("recent-contractor-id", "sam@vendor.example.com", is_external=True, days_ago=3),
+        _okta_user("disabled-contractor-id", "kim@vendor.example.com", is_external=True, days_ago=200, disabled=True),
+        _okta_user("stale-employee-id", "ada@acme.example.com", is_external=False, days_ago=400),
+        {
+            **_okta_user("github-guest-id", "guest@vendor.example.com", is_external=True, days_ago=400),
+            "application": {"type": "github", "name": "GitHub"},
+        },
+    ],
+    "expected_match_subject_ids": ["never-signed-in-id", "stale-contractor-id"],
+}
+
 OKTA_PASSWORD_POLICY_FIXTURES: dict[str, Any] = {
     "rows": [
         {
@@ -579,6 +617,66 @@ INTENT_TEMPLATES: tuple[IntentTemplate, ...] = (
         fixtures=OKTA_BOOKMARK_SWA_FIXTURES,
     ),
 )
+
+
+@dataclass(frozen=True)
+class IntentFixtures:
+    """Fixtures whose expected matches are right for intents like ``pattern``.
+
+    The LLM path has no template, so without this every Okta identity draft
+    was tested against the admin-without-MFA pair: a correct policy for any
+    other intent failed it, and the repair turn was told to break the policy
+    until it matched.
+    """
+
+    name: str
+    connector: str
+    resource_type: str
+    pattern: re.Pattern[str]
+    fixtures: dict[str, Any]
+
+
+INTENT_FIXTURES: tuple[IntentFixtures, ...] = (
+    IntentFixtures(
+        name="okta-stale-external-users",
+        connector="okta",
+        resource_type="identity",
+        pattern=re.compile(
+            r"(?=.*\b(external|contractors?|guests?|vendors?|third[- ]part(y|ies)|non[- ]employees?)\b)"
+            r"(?=.*(inactive|dormant|stale|unused|never|signed? ?in|logged? ?in|log ?in|login|sign-in|activity|\d+\s*days))",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        fixtures=OKTA_STALE_EXTERNAL_FIXTURES,
+    ),
+    *(
+        IntentFixtures(
+            name=template.name,
+            connector=template.connector or "",
+            resource_type=template.resource_type,
+            pattern=template.pattern,
+            fixtures=template.fixtures,
+        )
+        for template in INTENT_TEMPLATES
+        if template.connector
+    ),
+)
+
+
+def fixtures_for_intent(intent: str, *, connector_hint: str | None, resource_type: str | None) -> dict[str, Any] | None:
+    """Fixtures whose expectations fit ``intent``, or None when nothing does
+    (the caller then falls back to a generic scaffold and treats its fixture
+    test as advisory)."""
+    connector = normalize_connector_hint(connector_hint)
+    for entry in INTENT_FIXTURES:
+        # The rows are connector-shaped: an unscoped intent would rightly
+        # match the other-app row these fixtures expect it to skip.
+        if entry.connector != connector:
+            continue
+        if resource_type and entry.resource_type != resource_type:
+            continue
+        if entry.pattern.search(intent):
+            return entry.fixtures
+    return None
 
 
 def match_intent_template(

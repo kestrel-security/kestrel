@@ -1464,6 +1464,15 @@ export interface PolicyGenerateFixtureTest {
   missing?: string[];
   unexpected?: string[];
   error?: string | null;
+  /** The scaffold was written for another intent: informational only. */
+  advisory?: boolean;
+}
+
+/** policy()/evidence() over edge-case rows; only crashes count. */
+export interface PolicyGenerateProbeTest {
+  passed: boolean;
+  probed: number;
+  errors: string[];
 }
 
 export interface PolicyGenerateResult {
@@ -1479,6 +1488,7 @@ export interface PolicyGenerateResult {
     expected_match_subject_ids: string[];
   } | null;
   fixture_test?: PolicyGenerateFixtureTest | null;
+  probe_test?: PolicyGenerateProbeTest | null;
 }
 
 export interface PolicyGenerateIntentChip {

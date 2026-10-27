@@ -28,6 +28,7 @@ References like `DEC-024` throughout these pages are entries in the decision log
 |------|----------------|
 | [`connectors.md`](connectors.md) | First-party connectors, lifecycle, SDK and manifest contract, instances and secrets, custom connectors, live smoke checklist |
 | [`policies.md`](policies.md) | Policy contract, runtime, evaluation, workbench, AI drafts, packs, coverage, marketplace |
+| [`policies-for-agents.md`](policies-for-agents.md) | Writing policies with an outside AI agent: the authoring contract and the checks to run |
 | [`posture-baselines/README.md`](posture-baselines/README.md) | Control-mapping matrices per application: baseline control, profile, required data, collection status, implementing policy |
 | [`posture-baselines/github.md`](posture-baselines/github.md), [`okta.md`](posture-baselines/okta.md), [`slack.md`](posture-baselines/slack.md), [`google-workspace.md`](posture-baselines/google-workspace.md) | The per-application matrices (CIS GitHub Benchmark v1.2.0; DISA Okta IDaaS STIG; NIST CSF 1.1 / CIS Controls v8.1 for Slack; CISA SCuBA for Google Workspace) |
 | [`findings.md`](findings.md) | Lifecycle, search, detail surfaces, handoff and tickets, personal notifications, verification, toxic combinations |

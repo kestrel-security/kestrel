@@ -105,10 +105,10 @@ def test_system_prompt_lists_every_policy_global(connector_hint: str | None) -> 
     prompt = generate._system_prompt(resource_type="identity", connector_hint=connector_hint)
     for name in [*POLICY_HELPERS, "time"]:
         assert f"- {name}" in prompt, name
-    assert "datetime, timedelta, and any import are unavailable" in prompt
+    assert "datetime, timedelta, re, json and every other module are unavailable" in prompt
     assert "within_last_days" in prompt
     assert "not recent" in prompt
-    assert "application.type" in prompt
+    assert 'application.get("type") !=' in prompt
 
 
 def test_repair_prompt_carries_the_same_rules() -> None:
@@ -124,11 +124,11 @@ def test_prompt_descriptions_come_from_helper_docstrings() -> None:
     assert "days_since(value): Days elapsed since value, or None if it is missing." in prompt
 
 
-def test_prompt_names_only_builtins_the_sandbox_has() -> None:
-    listed = generate._POLICY_RULES.split("- Safe builtins:", 1)[1].split("\n\nRules:", 1)[0]
-    names = [name.strip(" .") for name in listed.replace("\n", ",").split(",") if name.strip(" .")]
-    assert len(names) > 10
-    assert [name for name in names if name not in _policy_safe_builtins()] == []
+def test_prompt_names_exactly_the_builtins_the_sandbox_has() -> None:
+    listed = generate._POLICY_RULES.split("- Safe builtins:", 1)[1].split("\n", 1)[0]
+    names = [name.strip(" .") for name in listed.split(",") if name.strip(" .")]
+    expected = sorted(n for n in _policy_safe_builtins() if n[0].islower())
+    assert names == expected
 
 
 @pytest.mark.parametrize("resource_type", [None, "identity", "tenant_setting", "event"])

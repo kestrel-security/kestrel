@@ -13,13 +13,45 @@ started on them.
 
 ## Unreleased
 
+### Added
+
+- Policy helpers `now`, `duration_seconds`, `get_path`, `email_domain`,
+  `domain_matches`, `ip_in_networks`, and `matches_any`. The two Google
+  Workspace duration policies use `duration_seconds` and now read every ISO
+  8601 duration (`PT90M`, `P1D`, `P2W`), not just one unit each.
+- The policy authoring contract: helpers, builtins, rules, idioms from shipped
+  packs, and row shapes, generated from the sandbox. Available from
+  `kestrel policy contract` and `GET /api/v1/policies/authoring-contract`,
+  and used to build the generate prompt. See
+  [Writing policies with an AI agent](docs/policies-for-agents.md).
+- AI drafts run over edge-case rows (`probe_test`): missing, string, naive,
+  and aware timestamps, another application, and sparse fields. A crash goes
+  to the repair turn.
+
+### Changed
+
+- One evaluation pass reads one clock: `now()`, `days_since`,
+  `within_last_days`, and `time.time()` in the sandbox are pinned when the
+  pass starts, in both runtimes.
+- The sandbox's `time` is now a subset of the module, without `sleep`,
+  `tzset`, or the process clocks.
+- AI generate picks fixtures whose expected matches fit the intent when it has
+  them. Otherwise the generic scaffold's result is marked `advisory` and no
+  longer drives the repair turn.
+- The generate prompt includes up to two shipped pack policies for the
+  selected connector.
+- `kestrel policy validate` runs the same checks as the API's Validate,
+  including unknown names.
+
 ### Fixed
 
 - AI-drafted policies no longer reach for `datetime`, which the sandbox does
   not provide: the generate prompt now lists every policy global (built from
   the helper table), and Validate reports any name the policy reads but
-  nothing defines, so the repair pass fixes it before the draft reaches the
-  editor. Shipped and stored policies load exactly as before.
+  nothing defines, with a "did you mean" for typos, so the repair pass fixes it
+  before the draft reaches the editor. Shipped and stored policies load as before.
+- Activating a stored policy version refreshes the policy title even when that
+  version reads a name the new authoring check rejects.
 
 ## v0.5.4 — 2026-10-26
 

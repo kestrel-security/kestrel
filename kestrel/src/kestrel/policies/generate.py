@@ -5,7 +5,6 @@
 from __future__ import annotations
 
 import hashlib
-import inspect
 import json
 import logging
 import re
@@ -18,8 +17,10 @@ from sqlalchemy.orm import Session
 
 from kestrel.db.models.llm_settings import PROVIDER_ANTHROPIC, PROVIDER_OPENAI
 from kestrel.policies.authoring import parse_policy_source
+from kestrel.policies.authoring_contract import pack_examples, render_prompt_rules
 from kestrel.policies.generate_catalog import (
     connector_catalog_for_prompt,
+    fixtures_for_intent,
     match_intent_template,
     normalize_connector_hint,
 )
@@ -30,8 +31,8 @@ from kestrel.policies.llm_settings import (
     LlmCredentials,
     resolve_llm_credentials,
 )
+from kestrel.policies.probes import probe_policy
 from kestrel.policies.resource_schemas import FIXTURE_DEMOS, fixture_demo_for, schema_docs_for_prompt
-from kestrel.policies.runtime.helpers import POLICY_HELPERS
 from kestrel.policies.testing import run_fixture_test_dict
 
 logger = logging.getLogger(__name__)
@@ -42,7 +43,7 @@ _LLM_SYSTEM = """You write Kestrel Python security policies for SaaS configurati
 Return ONLY valid Python source (no markdown fences) defining:
 - POLICY_ID (kebab-case slug string)
 - TITLE, SEVERITY (low|medium|high|critical), RESOURCE_TYPE
-  (identity | grant | tenant_setting | event | application)
+  (identity | grant | tenant_setting | event | resource | application)
 - DESCRIPTION, REMEDIATION
 - Optional COMPLIANCE = {"framework": ["control"]}
 
@@ -60,6 +61,8 @@ Match existing pack style. Never enable the policy — this is a human-reviewed 
 __SCHEMAS__
 
 __CONNECTOR_CATALOG__
+
+__PACK_EXAMPLES__
 """
 
 _REPAIR_SYSTEM = """You repair Kestrel Python security policies that failed validation or fixture tests.
@@ -77,44 +80,10 @@ __CONNECTOR_CATALOG__
 """
 
 
-def _helper_line(name: str, value: Any) -> str:
-    """``- name(params): first paragraph of its docstring``, without RST markup."""
-    label = name
-    if inspect.isfunction(value):
-        params = [p.replace(annotation=inspect.Parameter.empty) for p in inspect.signature(value).parameters.values()]
-        label = f"{name}({', '.join(str(p) for p in params)})"
-    summary = (inspect.getdoc(value) or "").split("\n\n", 1)[0]
-    return f"- {label}: {' '.join(summary.replace('``', '').split())}"
-
-
-def _policy_rules() -> str:
-    """What a policy may call, built from POLICY_HELPERS so it cannot drift
-    from the sandbox. Without this list models reach for ``datetime``, which
-    compiles and then raises NameError on the first row that reaches it."""
-    lines = [
-        "Names available as globals (nothing else exists; there are no imports):",
-        *(_helper_line(name, value) for name, value in POLICY_HELPERS.items()),
-        "- time: the standard time module (time.time() is the current Unix time in seconds).",
-        "- Safe builtins: len, str, int, float, bool, isinstance, any, all, min, max, sum, sorted,",
-        "  list, dict, set, frozenset, tuple, enumerate, range, zip, reversed, filter, map.",
-        "",
-        "Rules:",
-        "- datetime, timedelta, and any import are unavailable. Do not write `import` or",
-        "  `from ... import`, and do not reference datetime or timedelta.",
-        "- Use within_last_days / days_since for every recency and age check. Never compare",
-        "  timestamps directly: row timestamps may be timezone-aware datetimes or ISO strings.",
-        '- within_last_days treats a missing timestamp (None) as "not recent", so',
-        '  `return within_last_days(identity.get("last_active_at"), 30)` flags both stale and',
-        "  never-signed-in accounts. Check for None first if absence should mean compliant.",
-        "- When the intent or connector hint names an application, return True early for rows",
-        '  whose application.type is anything else, e.g. `if application.get("type") != "okta":',
-        "  return True`. Use application_matches only to scope by name (custom connectors).",
-        "- No I/O, no exec/eval/open.",
-    ]
-    return "\n".join(lines)
-
-
-_POLICY_RULES = _policy_rules()
+# What a policy may call, built from the sandbox by authoring_contract so it
+# cannot drift. Without this list models reach for ``datetime``, which compiles
+# and then raises NameError on the first row that reaches it.
+_POLICY_RULES = render_prompt_rules()
 _LLM_SYSTEM = _LLM_SYSTEM.replace("__POLICY_RULES__", _POLICY_RULES)
 _REPAIR_SYSTEM = _REPAIR_SYSTEM.replace("__POLICY_RULES__", _POLICY_RULES)
 
@@ -309,12 +278,20 @@ def _post_llm(
     raise RuntimeError("LLM request retries exhausted")  # pragma: no cover
 
 
+def _pack_examples_block(connector: str | None, resource_type: str | None) -> str:
+    """Reviewed pack policies for this connector, so drafts copy shipped style."""
+    examples = pack_examples(connector, resource_type)
+    if not examples:
+        return ""
+    return "Shipped pack policies for this connector (match their style):\n\n" + "\n\n".join(examples)
+
+
 def _system_prompt(*, resource_type: str | None, connector_hint: str | None) -> str:
-    catalog = connector_catalog_for_prompt(normalize_connector_hint(connector_hint), resource_type)
+    connector = normalize_connector_hint(connector_hint)
+    catalog = connector_catalog_for_prompt(connector, resource_type)
     system = _LLM_SYSTEM.replace("__SCHEMAS__", schema_docs_for_prompt(resource_type))
-    if catalog:
-        return system.replace("__CONNECTOR_CATALOG__", catalog)
-    return system.replace("__CONNECTOR_CATALOG__", "")
+    system = system.replace("__PACK_EXAMPLES__", _pack_examples_block(connector, resource_type))
+    return system.replace("__CONNECTOR_CATALOG__", catalog or "")
 
 
 def _openai_chat(
@@ -457,10 +434,10 @@ def _repair_draft(
     errors: list[str],
     fixture_test: dict[str, Any] | None = None,
 ) -> str:
-    """One optional repair chat turn after validation or fixture-test failure."""
+    """One optional repair chat turn after validation, probe, or fixture-test failure."""
     error_block = "\n".join(f"- {e}" for e in errors) or "- (unknown error)"
     user = f"Intent:\n{intent}\n\nErrors:\n{error_block}\n\nPrevious source:\n{source_text}"
-    if fixture_test and not fixture_test.get("passed"):
+    if fixture_test and not fixture_test.get("passed") and not fixture_test.get("advisory"):
         user += (
             f"\n\nFixture test failed:\n"
             f"- expected matches: {fixture_test.get('expected')}\n"
@@ -489,20 +466,53 @@ def _repair_draft(
 def _resolve_fixtures(
     *,
     include_fixtures: bool,
+    intent: str,
     resource_type: str | None,
     source_text: str,
     connector_hint: str | None,
     template: Any,
-) -> dict[str, Any] | None:
+) -> tuple[dict[str, Any] | None, bool]:
+    """Fixtures for the draft, and whether their expected matches fit the intent.
+
+    A template's fixtures, or ones picked for the intent, are authoritative and
+    a mismatch triggers repair. Otherwise the generic scaffold's expectations
+    were written for another intent: its result is advisory, shown to the
+    operator but never used to steer the repair turn.
+    """
     if not include_fixtures:
-        return None
+        return None, False
+    if template is not None:
+        return dict(template.fixtures), True
     rt = resource_type or _resource_type_from_source(source_text)
-    return scaffold_fixtures(
-        resource_type=rt,
-        source_text=source_text,
-        connector_hint=connector_hint,
-        template=template,
-    )
+    matched = fixtures_for_intent(intent, connector_hint=connector_hint, resource_type=rt)
+    if matched is not None:
+        return json.loads(json.dumps(matched)), True
+    return scaffold_fixtures(resource_type=rt, source_text=source_text, connector_hint=connector_hint), False
+
+
+def _checks(
+    source_text: str,
+    fixtures: dict[str, Any] | None,
+    *,
+    fixtures_fit_intent: bool,
+    probe: bool,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """(fixture_test, probe_test) payloads for a draft."""
+    fixture_test = _fixture_test_payload(source_text, fixtures) if fixtures else None
+    if fixture_test is not None and not fixtures_fit_intent:
+        fixture_test["advisory"] = True
+    probe_test = probe_policy(source_text, fixtures) if (probe and fixtures and source_text.strip()) else None
+    return fixture_test, probe_test
+
+
+def _needs_repair(
+    validation: dict[str, Any], fixture_test: dict[str, Any] | None, probe_test: dict[str, Any] | None
+) -> bool:
+    if not validation["valid"]:
+        return True
+    if probe_test is not None and not probe_test["passed"]:
+        return True
+    return fixture_test is not None and not fixture_test.get("passed") and not fixture_test.get("advisory")
 
 
 def generate_policy_draft(
@@ -587,22 +597,27 @@ def generate_policy_draft(
             message = llm_error
 
     validation = _validation_payload(source_text)
-    fixtures = _resolve_fixtures(
+    fixtures, fixtures_fit_intent = _resolve_fixtures(
         include_fixtures=include_fixtures,
+        intent=cleaned_intent,
         resource_type=resource_type,
         source_text=source_text,
         connector_hint=connector,
         template=template,
     )
-    fixture_test = _fixture_test_payload(source_text, fixtures) if fixtures else None
+    # Probe rows only for model output: templates are reviewed and tested.
+    fixture_test, probe_test = _checks(
+        source_text, fixtures, fixtures_fit_intent=fixtures_fit_intent, probe=used_llm and validation["valid"]
+    )
 
-    # Repair pass: compile errors or fixture mismatch when LLM was used.
-    # The `creds is not None` test stays in the `if` rather than folding into
-    # needs_repair so the type narrowing reaches _repair_draft below.
-    needs_repair = used_llm and (not validation["valid"] or (fixture_test is not None and not fixture_test.get("passed")))
-    if needs_repair and creds is not None:
+    # Repair pass: compile errors, a probe-row crash, or a fixture mismatch
+    # when the LLM was used. The `creds is not None` test stays in the `if`
+    # so the type narrowing reaches _repair_draft below.
+    if used_llm and creds is not None and _needs_repair(validation, fixture_test, probe_test):
         repair_errors = list(validation["errors"])
-        if fixture_test and not fixture_test.get("passed"):
+        if probe_test and not probe_test["passed"]:
+            repair_errors.extend(f"edge-case row failed: {err}" for err in probe_test["errors"])
+        if fixture_test and not fixture_test.get("passed") and not fixture_test.get("advisory"):
             repair_errors.append(
                 f"fixture test failed: expected {fixture_test.get('expected')}, got {fixture_test.get('actual')}"
             )
@@ -618,15 +633,17 @@ def generate_policy_draft(
             )
             source_text = repaired
             validation = _validation_payload(source_text)
-            if include_fixtures:
-                fixtures = _resolve_fixtures(
-                    include_fixtures=True,
-                    resource_type=resource_type,
-                    source_text=source_text,
-                    connector_hint=connector,
-                    template=template,
-                )
-            fixture_test = _fixture_test_payload(source_text, fixtures) if fixtures else None
+            fixtures, fixtures_fit_intent = _resolve_fixtures(
+                include_fixtures=include_fixtures,
+                intent=cleaned_intent,
+                resource_type=resource_type,
+                source_text=source_text,
+                connector_hint=connector,
+                template=template,
+            )
+            fixture_test, probe_test = _checks(
+                source_text, fixtures, fixtures_fit_intent=fixtures_fit_intent, probe=validation["valid"]
+            )
         except Exception:
             logger.warning(
                 "LLM policy draft repair failed; returning prior draft with errors",
@@ -641,6 +658,7 @@ def generate_policy_draft(
         "validation": validation,
         "fixtures": fixtures,
         "fixture_test": fixture_test,
+        "probe_test": probe_test,
     }
     if llm_error:
         result["error"] = llm_error
