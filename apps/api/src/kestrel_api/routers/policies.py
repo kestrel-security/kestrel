@@ -28,6 +28,7 @@ from kestrel.policies.authoring import (
     publish_new_version,
     set_current_version_enabled,
 )
+from kestrel.policies.authoring_contract import policy_authoring_contract, render_markdown
 from kestrel.policies.custom_fixtures import (
     DEFAULT_CAPTURE_CAP,
     MAX_CAPTURE_CAP,
@@ -110,6 +111,18 @@ class PolicyValidateOut(BaseModel):
     description: str | None = None
 
 
+@router.get("/authoring-contract")
+def get_policy_authoring_contract(
+    format: str = Query(default="json", pattern="^(json|markdown)$"),
+    _actor: Operator = Depends(require_role(OperatorRole.READ_ONLY)),
+) -> dict:
+    """Helpers, builtins, rules, idioms and row shapes a policy may use: the same contract the AI generate prompt uses."""
+    contract = policy_authoring_contract()
+    if format == "markdown":
+        return {"version": contract["version"], "markdown": render_markdown()}
+    return contract
+
+
 @router.post("/validate")
 def validate_policy_source(
     body: PolicySourceIn,
@@ -140,6 +153,18 @@ class PolicyGenerateFixtureTestOut(BaseModel):
     missing: list[str] | None = None
     unexpected: list[str] | None = None
     error: str | None = None
+    # True when the scaffold's expected matches were written for a different
+    # intent: shown to the operator, never used to steer the repair turn.
+    advisory: bool = False
+
+
+class PolicyGenerateProbeTestOut(BaseModel):
+    """policy() and evidence() over edge-case rows (missing / naive / aware /
+    string timestamps, another application, sparse fields): crashes only."""
+
+    passed: bool
+    probed: int
+    errors: list[str] = Field(default_factory=list)
 
 
 class PolicyGenerateIn(BaseModel):
@@ -160,6 +185,7 @@ class PolicyGenerateOut(BaseModel):
     validation: PolicyGenerateValidationOut
     fixtures: dict | None = None
     fixture_test: PolicyGenerateFixtureTestOut | None = None
+    probe_test: PolicyGenerateProbeTestOut | None = None
 
 
 @router.post("/generate")

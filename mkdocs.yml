@@ -108,6 +108,7 @@ nav:
   - Features:
       - connectors.md
       - policies.md
+      - policies-for-agents.md
       - findings.md
       - changes.md
       - identity-graph.md

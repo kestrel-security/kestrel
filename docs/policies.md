@@ -34,8 +34,10 @@ def evidence(resource) -> dict:
 
 `kestrel.policies.authoring` validates and compiles the source with
 RestrictedPython: no imports, no I/O, a safe set of builtins (`any`, `all`,
-`list`, `dict`, `len`, `isinstance`, …), the `time` module, and the shared
-helpers below. Rows for the declared `RESOURCE_TYPE`
+`list`, `dict`, `len`, `isinstance`, …), a subset of the `time` module, and
+the shared helpers below. Validate also rejects any name the policy reads that
+nothing provides (`datetime`, a misspelled helper), since such a name compiles
+and only fails on the first row that reaches it. Rows for the declared `RESOURCE_TYPE`
 are loaded by `kestrel.policies.dataload`; the nested `application` object on
 every row carries the catalog `type` and `name` plus the instance
 `display_name`, `external_tenant_ref`, and `status`.
@@ -61,12 +63,28 @@ Use them instead of pasting a local copy.
 
 | Helper | Returns |
 |--------|---------|
+| `now()` | The current time as a UTC `datetime`, fixed for the whole evaluation run |
 | `parse_timestamp(value)` | A UTC `datetime` from a `datetime`, `date`, epoch number, or ISO 8601 string; `None` if missing |
 | `days_since(value)` | Days elapsed since the timestamp (negative if in the future); `None` if missing |
 | `within_last_days(value, days)` | `True` if the timestamp is at most `days` days ago; `False` if missing |
+| `duration_seconds(value)` | Seconds in an ISO 8601 (`P30D`, `PT90M`) or protobuf (`"86400s"`) duration; `None` if missing |
+| `get_path(value, path, default=None)` | `value["a"]["b"]` for `path="a.b"`; `default` when a step is missing, `None`, or not a dict |
 | `has_admin_grant(resource)` | `True` if any grant in `resource["_related"]["grants"]` (identity rows) has `permission_level == "admin"` |
 | `application_matches(resource, types, name_contains=None)` | `True` if `application.type` is in `types`, or its name contains `name_contains` (case-insensitive) |
+| `email_domain(value)` | The lowercased domain of an email address; `None` if missing |
+| `domain_matches(value, domains)` | `True` if the email or host is in one of `domains` or a subdomain of it; `False` if missing |
+| `ip_in_networks(value, networks)` | `True` if the IP address is inside one of the CIDR `networks`; `False` if missing |
+| `matches_any(value, patterns)` | `True` if the string matches one of the shell-style globs (case-insensitive); `False` if missing |
 | `PolicyDataError` | The exception the helpers raise on malformed data; raise it yourself for the same reason |
+
+Every helper that takes row data raises `PolicyDataError` on a value it cannot
+read (an unparseable timestamp, an address with no `@`, a duration in months).
+
+`now()`, `days_since`, `within_last_days`, and the sandbox's `time.time()` all
+read one clock, pinned when an evaluation pass starts, so every row in the pass
+is judged against the same instant. The sandbox's `time` has the clock and
+formatting functions (`time`, `gmtime`, `strftime`, …) but not `sleep`,
+`tzset`, or the process clocks. Prefer `now()` and the helpers over raw `time`.
 
 `packs/ruff.toml` declares these names as builtins so pack policies lint
 cleanly; a unit test keeps that list in step with what the runtime injects.
@@ -170,6 +188,7 @@ Evaluation runs after every successful sync and on demand:
 ```bash
 uv run kestrel policy validate path/to/policy.py
 uv run kestrel policy test path/to/policy.py --fixtures path/to/policy.fixtures.json
+uv run kestrel policy contract            # helpers, rules, idioms, row shapes (--format json)
 ```
 
 Fixtures are JSON rows for the resource type plus `expected_match_subject_ids`.
@@ -195,18 +214,40 @@ fork the policy (`POST /policies/{id}/fork`, disabled by default) to edit it.
 
 `POST /policies/generate` (Analyst+) takes `{ intent, resource_type?,
 connector_hint?, include_fixtures? }` and returns `{ source_text, provider,
-model, validation, fixtures?, fixture_test? }`. Credentials resolve in order:
+model, validation, fixtures?, fixture_test?, probe_test? }`. Credentials resolve in order:
 
 1. Org **Settings → AI** (`org_llm_settings`): OpenAI or Anthropic; the key is envelope-encrypted and never returned after save (`GET`/`PUT`/`DELETE /settings/ai`).
 2. `KESTREL_LLM_API_KEY` with optional `KESTREL_LLM_PROVIDER`, `KESTREL_LLM_BASE_URL`, `KESTREL_LLM_MODEL`.
 3. Deterministic intent templates for high-confidence intents (Okta administrators without MFA, MFA enrollment not required, disabled or dormant admins, weak password policy, bookmark/SWA apps, unused API tokens, Threat Insight disabled). Novel intents without a provider return `provider=unconfigured` and empty source, never a silent `return True` stub.
 
-Prompts include the dataload schema for the resource type and, when a
-connector or connected application is selected, its field catalog and
-redacted live samples (`GET /policies/generate/catalog`). Drafts are compiled
-with RestrictedPython, fixture-tested when fixtures were requested, and given
-one repair pass on failure. Provider errors surface as operator-facing
-messages (a 429 says the provider is rate-limiting, not a raw URL).
+Prompts are built from the policy authoring contract
+([`kestrel/policies/authoring_contract.py`](../kestrel/src/kestrel/policies/authoring_contract.py)):
+every helper with its signature and docstring, the sandbox builtins, the
+authoring rules, and idioms taken from shipped pack policies. They also
+include the dataload schema for the resource type, up to two reviewed pack
+policies for the selected connector, and, when a connector or connected
+application is selected, its field catalog and redacted live samples
+(`GET /policies/generate/catalog`).
+
+Each model draft then goes through three checks, and one repair turn sees
+every failure:
+
+- **Validate**: compile errors and names nothing defines.
+- **Edge-case rows** (`probe_test`): `policy()` and `evidence()` run over the
+  fixture rows again with each timestamp missing, an ISO string, naive, and
+  timezone-aware; with another application; and with optional fields left out.
+  Only crashes count. This catches code a fixture never reaches.
+- **Fixture test**: fixtures are chosen for the intent when Kestrel has a set
+  whose expected matches fit it (for example Okta external users who are stale
+  or never signed in). Otherwise the generic connector scaffold is used and
+  its result is marked `advisory`: it is shown, but it never steers the repair
+  turn, because its expected matches were written for another intent.
+
+Provider errors surface as operator-facing messages (a 429 says the provider
+is rate-limiting, not a raw URL).
+
+Outside agents (Claude Code, Cursor, MCP clients) should read the same
+contract: see [Writing policies with an AI agent](policies-for-agents.md).
 
 Drafts are never auto-enabled. The human gate is validate → fixture test →
 dry run → create and enable a version. Generation is separate from runtime

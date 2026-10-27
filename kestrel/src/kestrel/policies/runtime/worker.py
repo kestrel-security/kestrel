@@ -23,6 +23,7 @@ import traceback
 from typing import Any
 
 from kestrel.policies.evidence_baseline import merge_baseline_evidence
+from kestrel.policies.runtime.helpers import pinned_now
 from kestrel.policies.runtime.restricted import RestrictedPythonRuntime
 from kestrel.policies.runtime.serialize import row_from_jsonable, row_to_jsonable
 from kestrel.policies.runtime.types import PolicyCompileError
@@ -156,8 +157,12 @@ def main() -> int:
         json.dump({"ok": False, "error": "stdin JSON must be an object"}, sys.stdout)
         return 1
     _apply_limits(payload.get("limits"))
+    # The parent picks one instant per evaluation pass; every batch uses it.
+    raw_now = payload.get("now")
+    now = float(raw_now) if isinstance(raw_now, (int, float)) and not isinstance(raw_now, bool) else None
     try:
-        result = _run(payload)
+        with pinned_now(now):
+            result = _run(payload)
     except Exception as exc:  # noqa: BLE001 -- worker top level: report any crash, with traceback, to the parent
         json.dump(
             {

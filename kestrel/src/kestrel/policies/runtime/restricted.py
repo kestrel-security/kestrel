@@ -6,9 +6,9 @@ from __future__ import annotations
 
 import ast
 import copy
+import difflib
 import operator
 import re
-import time
 import uuid
 from typing import Any
 
@@ -29,7 +29,7 @@ from kestrel.db.models.policy import Severity
 from kestrel.policies.dataload import LOADERS, RESOURCE_TYPE_TO_FROM_TYPE, load_rows
 from kestrel.policies.evidence_baseline import merge_baseline_evidence
 from kestrel.policies.identifiers import validate_policy_id
-from kestrel.policies.runtime.helpers import POLICY_HELPERS, PolicyDataError
+from kestrel.policies.runtime.helpers import POLICY_HELPERS, POLICY_TIME, PolicyDataError, pinned_now
 from kestrel.policies.runtime.serialize import row_to_jsonable
 from kestrel.policies.runtime.types import (
     CompiledPolicy,
@@ -71,6 +71,81 @@ def _protected_module_names() -> frozenset[str]:
     reason, and underscore names are RestrictedPython's own guards.
     """
     return frozenset(_policy_safe_builtins()) | frozenset(POLICY_HELPERS) | _LITERAL_WRAPPERS | {"time"}
+
+
+#: Names an author (or an LLM) reaches for that the sandbox does not provide.
+_TIME_LIKE_NAMES = frozenset({"datetime", "timedelta", "date", "timezone", "UTC", "dateutil", "arrow", "pytz"})
+
+
+def _bound_names(tree: ast.Module) -> set[str]:
+    """Every name the policy binds anywhere: module constants, functions,
+    parameters, locals, loop and comprehension targets, ``except ... as``.
+
+    Deliberately flat (not per scope): a name bound in one function and read
+    in another is not reported. The check exists to catch names nothing in the
+    policy defines, and a flat set cannot reject valid code.
+    """
+    bound: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)):
+            bound.add(node.id)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            bound.add(node.name)
+        elif isinstance(node, ast.arg):
+            bound.add(node.arg)
+        elif isinstance(node, (ast.ExceptHandler, ast.MatchAs, ast.MatchStar)) and node.name:
+            bound.add(node.name)
+        elif isinstance(node, ast.MatchMapping) and node.rest:
+            bound.add(node.rest)
+    return bound
+
+
+def unknown_name_errors(source_text: str) -> list[PolicyCompileError]:
+    """One error per name the policy reads but nothing provides.
+
+    A policy runs with only the safe builtins, ``time`` and ``POLICY_HELPERS``
+    as globals, so ``datetime.now()`` compiles fine and then raises NameError
+    on the first row that reaches it, which fixture tests can miss. This is an
+    authoring-time check (Validate, generate, save); it is not part of
+    ``compile`` so policies already stored or shipped keep loading as before.
+    Assumes ``source_text`` already compiled.
+    """
+    tree = ast.parse(source_text)
+    known = _protected_module_names() | _bound_names(tree)
+    # First use of each unknown name, in source order (ast.walk is breadth-first).
+    first_use: dict[str, tuple[int, int]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id not in known:
+            location = (node.lineno, node.col_offset + 1)
+            first_use[node.id] = min(location, first_use.get(node.id, location))
+    errors: list[PolicyCompileError] = []
+    for name, (line, column) in sorted(first_use.items(), key=lambda item: item[1]):
+        close = difflib.get_close_matches(name, sorted(known), n=1, cutoff=0.8)
+        if name in _TIME_LIKE_NAMES:
+            hint = "Policies cannot import; use now / within_last_days / days_since for time checks."
+        elif close:
+            hint = f"Did you mean {close[0]!r}?"
+        else:
+            hint = "Policies cannot import; define it in the policy or use a builtin or policy helper."
+        errors.append(PolicyCompileError(f"Unknown name {name!r}. {hint}", line=line, column=column))
+    # ``time`` is a subset of the module; time.sleep reads as None and fails
+    # only when called, so report it here too.
+    time_names = {name for name in vars(POLICY_TIME) if not name.startswith("_")}
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "time"
+            and node.attr not in time_names
+        ):
+            errors.append(
+                PolicyCompileError(
+                    f"time.{node.attr} is not available in policies; use now() or one of: {', '.join(sorted(time_names))}.",
+                    line=node.lineno,
+                    column=node.col_offset + 1,
+                )
+            )
+    return errors
 
 
 def _is_numeric_expr(node: ast.expr) -> bool:
@@ -246,7 +321,8 @@ def _restricted_namespace() -> dict[str, Any]:
     namespace["_unpack_sequence_"] = guarded_unpack_sequence
     namespace["_write_"] = full_write_guard
     namespace["_inplacevar_"] = _inplacevar
-    namespace["time"] = time
+    # A subset of ``time`` (no sleep) whose time() reads the pinned run clock.
+    namespace["time"] = POLICY_TIME
     # Shared, reviewed helpers (within_last_days, has_admin_grant, ...) so packs
     # do not each paste their own copy. See kestrel.policies.runtime.helpers.
     namespace.update(POLICY_HELPERS)
@@ -498,6 +574,16 @@ class RestrictedPythonRuntime:
             policy_name=compiled.contract.policy_id,
             evaluated_row_count=len(rows),
         )
+        with pinned_now():
+            self._evaluate_rows_into(compiled, rows, result)
+        return result
+
+    def _evaluate_rows_into(
+        self,
+        compiled: CompiledPolicy,
+        rows: list[dict[str, Any]],
+        result: PolicyEvaluationResult,
+    ) -> None:
         for row in rows:
             # The policy gets its own copy. ``rows`` may come from a RowCache
             # shared by every policy in the pass, and a policy may write to the
@@ -532,16 +618,22 @@ class RestrictedPythonRuntime:
                     evidence=row_to_jsonable(evidence),
                 )
             )
-        return result
 
-    def match_rows(self, compiled: CompiledPolicy, rows: list[dict[str, Any]]) -> list[int]:
+    def match_rows(
+        self,
+        compiled: CompiledPolicy,
+        rows: list[dict[str, Any]],
+        *,
+        now: float | None = None,
+    ) -> list[int]:
         """In-process: no isolation and no time limit. Fine for tests and for
         trusted pack code; the API's default runtime is the subprocess one."""
         matched: list[int] = []
-        for index, row in enumerate(rows):
-            compliant = compiled.policy_fn(copy.deepcopy(row))
-            if not isinstance(compliant, bool):
-                raise TypeError(f"policy() must return bool, got {type(compliant).__name__}")
-            if not compliant:
-                matched.append(index)
+        with pinned_now(now):
+            for index, row in enumerate(rows):
+                compliant = compiled.policy_fn(copy.deepcopy(row))
+                if not isinstance(compliant, bool):
+                    raise TypeError(f"policy() must return bool, got {type(compliant).__name__}")
+                if not compliant:
+                    matched.append(index)
         return matched

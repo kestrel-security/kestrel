@@ -138,7 +138,7 @@ behavior behind each group.
 
 <!-- BEGIN GENERATED ROUTES -->
 
-_173 operations, generated from the application's OpenAPI schema by `scripts/gen-api-docs.py`. Do not edit by hand._
+_174 operations, generated from the application's OpenAPI schema by `scripts/gen-api-docs.py`. Do not edit by hand._
 
 ### Auth
 
@@ -308,6 +308,7 @@ _173 operations, generated from the application's OpenAPI schema by `scripts/gen
 |--------|------|---------|
 | `GET` | `/api/v1/policies` | List installed policies with resource_type, open findings, and last eval |
 | `POST` | `/api/v1/policies` | Create Policy |
+| `GET` | `/api/v1/policies/authoring-contract` | Helpers, builtins, rules, idioms and row shapes a policy may use: the same contract the AI generate prompt uses |
 | `POST` | `/api/v1/policies/dry-run-draft` | Evaluate unsaved Python policy source against live inventory without writing findings |
 | `POST` | `/api/v1/policies/fixtures/from-matches` | Build fixture JSON from live matches for unsaved draft source |
 | `POST` | `/api/v1/policies/generate` | Return an AI, template, or unconfigured draft — never persists or enables |

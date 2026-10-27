@@ -22,6 +22,7 @@ from kestrel.policies.runtime import (
     PolicyCompileError,
     compile_and_validate,
 )
+from kestrel.policies.runtime.restricted import unknown_name_errors
 
 SOURCE_PREVIEW_LEN = 96
 
@@ -79,7 +80,12 @@ def parse_policy_source(source_text: str) -> ParsedPolicySource:
                 PolicySourceError(message=exc.message, line=exc.line, column=exc.column),
             ],
         )
-    return ParsedPolicySource(source_text=source_text, compiled=compiled, errors=[])
+    # A name nothing defines (``datetime``, a typo) only fails when a row
+    # reaches it, so report it here rather than at evaluation time.
+    errors = [
+        PolicySourceError(message=err.message, line=err.line, column=err.column) for err in unknown_name_errors(source_text)
+    ]
+    return ParsedPolicySource(source_text=source_text, compiled=compiled, errors=errors)
 
 
 def create_custom_policy(
@@ -269,7 +275,9 @@ def activate_policy_version(
         version.is_enabled = previous_enabled
 
     parsed = parse_policy_source(version.source_text)
-    if parsed.is_valid and parsed.compiled is not None:
+    # A stored version that compiles still refreshes the title even when an
+    # authoring-time check (unknown names) would now reject it on save.
+    if parsed.compiled is not None:
         policy.title = parsed.compiled.contract.title
         policy.description = parsed.compiled.contract.description or None
     repoint_findings_to_current_version(session, policy)

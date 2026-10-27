@@ -19,6 +19,7 @@ import os
 import signal
 import subprocess
 import sys
+import time
 import uuid
 from typing import Any
 
@@ -169,6 +170,8 @@ class SubprocessPolicyRuntime:
         all_matches: list[PolicyMatch] = []
         total_evaluated = 0
         resolved_name = policy_name
+        # Every batch judges its rows against the same instant.
+        now = time.time()
 
         for start in range(0, len(rows), self.batch_size):
             batch = rows[start : start + self.batch_size]
@@ -176,6 +179,7 @@ class SubprocessPolicyRuntime:
                 source_text,
                 batch,
                 policy_name=policy_name,
+                now=now,
             )
             all_matches.extend(batch_result.matches)
             total_evaluated += batch_result.evaluated_row_count
@@ -193,9 +197,10 @@ class SubprocessPolicyRuntime:
         rows: list[dict[str, Any]],
         *,
         policy_name: str,
+        now: float,
     ) -> PolicyEvaluationResult:
         result = self._run_worker(
-            {"source_text": source_text, "rows": rows_to_jsonable(rows)},
+            {"source_text": source_text, "rows": rows_to_jsonable(rows), "now": now},
             policy_name=policy_name,
         )
 
@@ -222,13 +227,25 @@ class SubprocessPolicyRuntime:
             evaluated_row_count=int(result.get("evaluated_row_count") or len(rows)),
         )
 
-    def match_rows(self, compiled: CompiledPolicy, rows: list[dict[str, Any]]) -> list[int]:
+    def match_rows(
+        self,
+        compiled: CompiledPolicy,
+        rows: list[dict[str, Any]],
+        *,
+        now: float | None = None,
+    ) -> list[int]:
         policy_name = compiled.contract.policy_id
+        pinned = time.time() if now is None else float(now)
         matched: list[int] = []
         for start in range(0, len(rows), self.batch_size):
             batch = rows[start : start + self.batch_size]
             result = self._run_worker(
-                {"source_text": compiled.source_text, "rows": rows_to_jsonable(batch), "mode": "match_rows"},
+                {
+                    "source_text": compiled.source_text,
+                    "rows": rows_to_jsonable(batch),
+                    "mode": "match_rows",
+                    "now": pinned,
+                },
                 policy_name=policy_name,
             )
             matched.extend(start + int(index) for index in result.get("matched_indices") or [])

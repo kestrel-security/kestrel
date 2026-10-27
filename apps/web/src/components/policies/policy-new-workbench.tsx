@@ -13,6 +13,7 @@ import type {
   PolicyGenerateCatalog,
   PolicyGenerateFixtureTest,
   PolicyGenerateIntentChip,
+  PolicyGenerateProbeTest,
 } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
@@ -40,6 +41,7 @@ export function PolicyNewWorkbench({
   const [generateMeta, setGenerateMeta] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [fixtureTest, setFixtureTest] = useState<PolicyGenerateFixtureTest | null>(null);
+  const [probeTest, setProbeTest] = useState<PolicyGenerateProbeTest | null>(null);
   const [loadedFixtures, setLoadedFixtures] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
   const [catalog, setCatalog] = useState<PolicyGenerateCatalog | null>(initialCatalog);
@@ -81,6 +83,7 @@ export function PolicyNewWorkbench({
     setGenerateMeta(null);
     setValidationErrors([]);
     setFixtureTest(null);
+    setProbeTest(null);
     setLoadedFixtures(false);
     startTransition(async () => {
       const outcome = await generatePolicyDraft({
@@ -129,6 +132,7 @@ export function PolicyNewWorkbench({
       if (result.fixture_test) {
         setFixtureTest(result.fixture_test);
       }
+      setProbeTest(result.probe_test ?? null);
 
       const slugNote = validation?.slug ? ` slug=${validation.slug}` : "";
       if (result.provider === "template") {
@@ -276,9 +280,10 @@ export function PolicyNewWorkbench({
           {generateError ? <Callout tone="error">{generateError}</Callout> : null}
           {generateMeta ? <p className="text-xs text-muted-foreground">{generateMeta}</p> : null}
           {fixtureTest ? (
-            <Callout tone={fixtureTest.passed ? "success" : "warning"}>
+            <Callout tone={fixtureTest.passed ? "success" : fixtureTest.advisory ? "info" : "warning"}>
               <p className="font-medium">
                 Fixture test: {fixtureTest.passed ? "passed" : "failed"}
+                {fixtureTest.advisory ? " (generic scaffold)" : ""}
               </p>
               {!fixtureTest.passed ? (
                 <p className="mt-1 font-mono text-xs">
@@ -286,6 +291,22 @@ export function PolicyNewWorkbench({
                   {JSON.stringify(fixtureTest.actual)}
                 </p>
               ) : null}
+              {!fixtureTest.passed && fixtureTest.advisory ? (
+                <p className="mt-1 text-xs">
+                  These sample rows were not written for this intent. Edit the expected matches before relying on the
+                  result.
+                </p>
+              ) : null}
+            </Callout>
+          ) : null}
+          {probeTest && !probeTest.passed ? (
+            <Callout tone="warning">
+              <p className="font-medium">Edge-case rows: failed</p>
+              <ul className="mt-1 list-disc space-y-0.5 pl-5 font-mono text-xs">
+                {probeTest.errors.map((err) => (
+                  <li key={err}>{err}</li>
+                ))}
+              </ul>
             </Callout>
           ) : null}
           {validationErrors.length > 0 ? (

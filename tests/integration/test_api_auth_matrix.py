@@ -120,6 +120,7 @@ ENDPOINTS: list[tuple[str, str, str]] = [
     ("GET", "/api/v1/policies", "read_only"),
     ("POST", "/api/v1/policies/generate", "analyst"),
     ("GET", "/api/v1/policies/generate/catalog", "analyst"),
+    ("GET", "/api/v1/policies/authoring-contract", "read_only"),
     ("GET", "/api/v1/policies/{id}", "read_only"),
     ("GET", "/api/v1/policies/{id}/fixtures", "read_only"),
     ("PUT", "/api/v1/policies/{id}/fixtures", "analyst"),

@@ -18,21 +18,9 @@ MAX_SESSION_HOURS = 12
 
 
 def duration_hours(duration):
-    """Duration in hours, from ISO 8601 `PT{n}H` or protobuf-JSON `{seconds}s`.
-
-    A missing value means 0. Any other format raises: reading an unrecognized
-    value (`P1D`, `PT90M`) as 0 hours would pass every tenant whatever its
-    setting.
-    """
-    text = str(duration or "PT0H").strip()
-    try:
-        if text.startswith("PT") and text.endswith("H"):
-            return float(text[2:-1])
-        if text.endswith("s"):
-            return float(text[:-1]) / 3600
-    except ValueError:
-        pass
-    raise PolicyDataError(f"unrecognized session duration {duration!r}")
+    """Session length in hours. A missing value means 0; a value
+    `duration_seconds` cannot read raises rather than passing as 0 hours."""
+    return (duration_seconds(duration) or 0) / 3600
 
 
 def policy(resource):
