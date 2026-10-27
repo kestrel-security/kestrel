@@ -41,23 +41,23 @@ name: my-app
 display_name: My App
 version: "0.1.0"
 description: >
- What this connector collects and why.
+  What this connector collects and why.
 auth_methods:
- - id: api_key
- label: "API Key"
- secret_fields: [api_key] # never logged, sent to an LLM, or returned by the API
- config_fields: [base_url] # non-secret; safe to store and display
+  - id: api_key
+    label: "API Key"
+    secret_fields: [api_key] # never logged, sent to an LLM, or returned by the API
+    config_fields: [base_url] # non-secret; safe to store and display
 required_scopes: []
 object_types:
- - name: user
- maps_to_entity: identity
- supports_incremental: false
+  - name: user
+    maps_to_entity: identity
+    supports_incremental: false
 rate_limit_strategy: fixed_delay # or "header_based"
 supports_events: false
 change_classes: # the change-coverage contract; see "Change coverage" below
- - identity_added
+  - identity_added
 example_config:
- base_url: "https://api.example.com"
+  base_url: "https://api.example.com"
 fixtures_path: fixtures/
 ```
 
@@ -69,24 +69,24 @@ Every auth method should include an end-to-end setup guide so **Integrations →
 
 ```yaml
 auth_methods:
- - id: api_key
- label: "API Key"
- secret_fields: [api_key]
- config_fields: [base_url]
- setup_overview: Short intro for this auth method.
- scopes_note: Optional elaboration of required_scopes.
- field_help:
- base_url: Where to find this value in the provider UI.
- api_key: What to paste; remind that it is encrypted at rest.
- setup_steps:
- - title: Open the provider console
- body: Concrete clicks / navigation.
- link_url: https://example.com/admin/api-keys
- link_label: Provider API keys
- - title: Create a read-only key
- body: Scopes and options to select.
- - title: Paste into Kestrel and test
- body: Config + Secrets steps, then Test connection / Sync now.
+  - id: api_key
+    label: "API Key"
+    secret_fields: [api_key]
+    config_fields: [base_url]
+    setup_overview: Short intro for this auth method.
+    scopes_note: Optional elaboration of required_scopes.
+    field_help:
+      base_url: Where to find this value in the provider UI.
+      api_key: What to paste; remind that it is encrypted at rest.
+    setup_steps:
+      - title: Open the provider console
+        body: Concrete clicks / navigation.
+        link_url: https://example.com/admin/api-keys
+        link_label: Provider API keys
+      - title: Create a read-only key
+        body: Scopes and options to select.
+      - title: Paste into Kestrel and test
+        body: Config + Secrets steps, then Test connection / Sync now.
 setup_docs: docs/connectors/my-app-setup.md # optional long-form doc path
 ```
 
@@ -98,20 +98,20 @@ setup_docs: docs/connectors/my-app-setup.md # optional long-form doc path
 
 ```python
 class MyAppClient:
- def __init__(self, transport: Transport, base_url: str) -> None:
- self.transport = transport
- self.base_url = base_url
+    def __init__(self, transport: Transport, base_url: str) -> None:
+        self.transport = transport
+        self.base_url = base_url
 
- def list_users(self) -> list[dict[str, Any]]:
- return list(self.transport.paginate("GET", "/users"))
+    def list_users(self) -> list[dict[str, Any]]:
+        return list(self.transport.paginate("GET", "/users"))
 ```
 
 `collector.py` translates client responses into `RawObject`s, one per manifest object type:
 
 ```python
 def _collect_user(self, now: datetime) -> Iterable[RawObject]:
- for user in self.client.list_users():
- yield RawObject(object_type="user", provider_id=str(user["id"]), payload=user, collected_at=now)
+    for user in self.client.list_users():
+        yield RawObject(object_type="user", provider_id=str(user["id"]), payload=user, collected_at=now)
 ```
 
 If your source system needs cross-referencing between endpoints before yielding an object (e.g. GitHub's normalizer needs to know both a member's org role *and* their 2FA status, which come from two different endpoints), do that enrichment in the collector, so the normalizer can stay a pure single-object mapping function. See `connectors/github/src/kestrel_connector_github/collector.py`'s `_collect_member` for a real example.
@@ -231,7 +231,7 @@ from `maps_to_entity`):
 
 ```yaml
 change_classes:
- - admin_granted
+  - admin_granted
 ```
 
 Ship a `fixtures/changed/` overlay (only the files that differ). `kestrel
@@ -241,11 +241,11 @@ for t1, diffs normalized objects, and **fails** if a claimed class is missing.
 Rules of thumb:
 
 - Privileged role assignments must emit a `grant` with `role_ref` and/or
- `permission_level=admin` — a graph edge alone is not coverage.
+  `permission_level=admin` — a graph edge alone is not coverage.
 - `supports_events: false` is fine; audit logs feed optional event policies in Findings,
- not a requirement for Changes.
+  not a requirement for Changes.
 - The scaffold claims `identity_added` and includes `fixtures/changed/users.json`
- with one extra user so validate passes out of the box.
+  with one extra user so validate passes out of the box.
 
 ### `maps_to_entity` must name a kind you actually emit
 
@@ -262,8 +262,8 @@ Two near-misses are worth calling out because four first-party manifests had
 them before `validate` started catching them:
 
 - **`application_instance`** is not one. That row is created out of band when
- the connector instance is configured; an org or team payload that produces
- tenant configuration maps to `setting`.
+  the connector instance is configured; an org or team payload that produces
+  tenant configuration maps to `setting`.
 - **`tenant_setting`** is the *table*. The kind is `setting`.
 
 `kestrel connector validate` fails on both, and on a kind your normalizer does
@@ -295,10 +295,10 @@ A scaffolded connector works standalone (via `sys.path` injection) for `kestrel 
 
 1. Add the connector's directory to the root `pyproject.toml`'s `[tool.uv.workspace].members`.
 2. Run `uv sync` from the repo root. This installs the connector in editable mode and registers its `kestrel.connectors` entry point (declared in the connector's own `pyproject.toml`):
- ```toml
- [project.entry-points."kestrel.connectors"]
- my-app = "kestrel_connector_my_app.connector:MyAppConnector"
- ```
+   ```toml
+   [project.entry-points."kestrel.connectors"]
+   my-app = "kestrel_connector_my_app.connector:MyAppConnector"
+   ```
 3. `kestrel.connectors.sdk.registry.discover_connectors()` (used by `kestrel sync`, the worker, and the API) now finds it by name — Kestrel's core code never imports a specific connector directly.
 
 Alternatively, set `KESTREL_CUSTOM_CONNECTORS_DIR` to a directory of connector packages (each with `manifest.yaml`). Those appear in Integrations under **Custom** without a Dockerfile edit. `examples/custom-connector` is the reference package for this path.
