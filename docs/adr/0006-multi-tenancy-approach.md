@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Kestrel is a self-hosted product; multi-team / multi-organization delegation may come later. We need a tenancy model that fits single-org self-hosting today without making multi-org a schema migration later (DEC-009: one complete product, no gated abstractions).
+Kestrel is a self-hosted product; multi-team / multi-organization delegation may come later. We need a tenancy model that fits single-org self-hosting today without making multi-org a schema migration later (DEC-009: one build, everything ships enabled).
 
 ## Decision
 

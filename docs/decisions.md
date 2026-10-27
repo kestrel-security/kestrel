@@ -27,7 +27,7 @@ How to use this file:
 | DEC-006 | Protocol-based Connector SDK + entry-point discovery | 2026-07-21 | Accepted | [ADR-0005](adr/0005-connector-sdk-interface-design.md) |
 | DEC-007 | Single-org deployment UX with `org_id` everywhere | 2026-07-21 | Accepted | [ADR-0006](adr/0006-multi-tenancy-approach.md) |
 | DEC-008 | Celery + Redis for background jobs | 2026-07-21 | Accepted | [ADR-0007](adr/0007-job-worker-framework.md) |
-| DEC-009 | One complete product — no editions or feature gating | 2026-08-10 | Accepted | below |
+| DEC-009 | One build — everything in this repository ships enabled | 2026-08-10 | Accepted | below |
 | DEC-010 | Developer Certificate of Origin, no CLA | 2026-08-13 | Accepted | below |
 | DEC-011 | Opaque tokens for operator auth, 3-role RBAC | 2026-07-22 | Accepted | [ADR-0008](adr/0008-opaque-tokens-for-operator-auth.md) |
 | DEC-012 | Prometheus + optional OTLP, no APM vendor SDK | 2026-07-22 | Accepted | below |
@@ -82,11 +82,11 @@ How to use this file:
 - **Alternatives considered:** MIT (weaker patent language); AGPL-3.0 (network copyleft complicates adoption of a security tool inside many organizations); source-available licenses (not open source; rejected on principle).
 - **Consequences:** Anyone may use, modify, and redistribute Kestrel, including in derived products. Inbound contributions use the DCO (DEC-010); inbound = outbound Apache-2.0. Any change to `LICENSE` needs explicit maintainer approval ([`GOVERNANCE.md`](../GOVERNANCE.md)).
 
-### DEC-009: One complete product — no editions or feature gating
+### DEC-009: One build — everything in this repository ships enabled
 - **Date:** 2026-08-10
-- **Context:** Some open-source security tools ship a reduced build and hold capabilities back behind editions, license keys, or feature flags. That model makes the published code less useful and less trustworthy.
-- **Decision:** Kestrel is a single complete product. There are no editions, license keys, tier flags, or edition branding in code, configuration, or documentation. Org-scale features (SSO, multi-org, KMS) are ordinary roadmap items built in the open when they are built.
-- **Consequences:** Contributions must not introduce gating abstractions or edition language. Everything in this repository ships enabled.
+- **Context:** A single build is simpler to test, review, and support than several variants of the same code.
+- **Decision:** This repository produces one build, and every capability in it ships enabled. Org-scale features (SSO, multi-org, KMS) are tracked on the [roadmap](roadmap.md).
+- **Consequences:** Contributions keep that property: new capabilities ship enabled.
 
 ### DEC-010: Developer Certificate of Origin, no CLA
 - **Date:** 2026-07-22; accepted 2026-08-13

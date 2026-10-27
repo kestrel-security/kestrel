@@ -46,7 +46,7 @@ Kestrel internals.
 2. Evidence and provenance on every security claim.
 3. Policies and connectors are code: versioned and testable.
 4. Smallest useful self-hosted deployment first.
-5. One complete product. The Connector SDK and policy engine are never stubs or gated (DEC-009).
+5. One build. The Connector SDK and policy engine ship complete, not as stubs (DEC-009).
 6. Secure defaults; fail closed on authorization.
 7. AI assists; it does not silently decide risk.
 

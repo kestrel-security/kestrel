@@ -3,9 +3,9 @@
 Professional vector and raster assets based on the approved folded-bird Kestrel
 lockup.
 
-The package includes horizontal and stacked lockups, product and formal company
-wordmarks, color/mono/outline bird marks, favicons, app icons, and dark/light
-social cards. All SVGs use one canonical geometry and palette.
+The package includes horizontal and stacked lockups, wordmarks,
+color/mono/outline bird marks, favicons, app icons, and dark/light social cards.
+All SVGs use one canonical geometry and palette.
 
 See `BRAND_GUIDELINES.md` for identity rules, `UI_STYLE_GUIDE.md` for
 product/landing-page implementation guidance, and `docs/brand.md` for names
