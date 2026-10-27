@@ -53,6 +53,7 @@ def scaffold_connector(name: str, parent_dir: Path) -> Path:
     (target / "fixtures" / "changed").mkdir()
     _write(target / "fixtures" / "changed" / "users.json", _FIXTURE_USERS_CHANGED_JSON)
     _write(target / "tests" / "__init__.py", "")
+    _write(target / "tests" / "conftest.py", _CONFTEST_TEMPLATE)
     _write(target / "tests" / "test_normalizer.py", _TEST_TEMPLATE.format(package=package, pascal=pascal))
 
     return target
@@ -361,6 +362,20 @@ _FIXTURE_USERS_CHANGED_JSON = """\
   {"id": 2, "name": "Grace Hopper", "email": "grace@example.com"},
   {"id": 3, "name": "Alan Turing", "email": "alan@example.com"}
 ]
+"""
+
+_CONFTEST_TEMPLATE = """\
+# Puts this connector's src/ on the path for its tests. The connector is not
+# installed until it is added to the uv workspace (see README.md), and the
+# repository runs pytest with --import-mode=importlib, which does not add test
+# directories to sys.path.
+
+import sys
+from pathlib import Path
+
+_SRC = Path(__file__).resolve().parent.parent / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 """
 
 _TEST_TEMPLATE = """\
