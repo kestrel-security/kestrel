@@ -21,13 +21,13 @@ administrators, and platform engineers building internal integrations.
 
 ## Core workflows
 
-1. **Onboard** an application (Integrations: connector instance with encrypted secrets, or fixtures).
-2. **Inventory** apps, identities, groups, roles, resources, and settings.
-3. **Author or install** Python policies and packs (Policies hub and git).
-4. **Triage findings** with search-first UX, evidence, ownership, and playbooks.
-5. **Watch what changed** in the classified change feed.
-6. **Operate from home** via personalizable dashboards.
-7. **Remediate** with status, exceptions, playbooks, and tickets today; guided or automated remediation with approvals later.
+1. **Onboard** an application (Integrations: connector instance with encrypted secrets, or fixtures; see [connectors](connectors.md)).
+2. **Inventory** apps, identities, groups, roles, resources, and settings ([identity graph](identity-graph.md)).
+3. **Author or install** Python policies and packs (Policies hub and git; see [policies](policies.md)).
+4. **Triage findings** with search-first UX, evidence, ownership, and playbooks ([findings](findings.md)).
+5. **Watch what changed** in the classified change feed ([changes](changes.md)).
+6. **Operate from home** via personalizable [dashboards](dashboards.md).
+7. **Remediate** with status, exceptions, playbooks, and [tickets](ticketing.md) today; guided or automated remediation with approvals later.
 8. **Extend** via the Connector SDK and packs without forking core.
 
 **Product surface:** Dashboard · Integrations · Identities · Explore · Changes ·
@@ -103,7 +103,7 @@ Security teams should be able to answer, continuously and with evidence:
 | AI-assisted investigation and authoring | Optional assistants; never the sole authority for deterministic decisions |
 | Deployment options | Docker Compose self-hosting from the shipped Dockerfiles; hardening and HA over time |
 
-Principles that survive the long term: a complete self-hosted product;
+Principles that survive the long term: a self-hosted product;
 deterministic security decisions (AI may draft, evaluation stays reviewable);
 evidence over dashboards; extensibility without core forks; self-hostable by
 default so operators never have to send posture data to anyone else.

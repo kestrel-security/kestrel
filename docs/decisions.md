@@ -135,6 +135,7 @@ How to use this file:
 - **Decision:** Add **Explore** (`/explore`) between Integrations and Changes: an identity-graph canvas on `@xyflow/react` + dagre with typed nodes, access-path edge styling, path highlight, and an inspect rail, not a path-list-only page.
 - **Alternatives considered:** Path cards only; Findings-only deep links; restore the full report IA.
 - **Consequences:** Primary nav is Dashboard · Integrations · Explore · Changes · Policies · Findings (+ Settings).
+- **Status:** The nav list above is superseded by DEC-026, which added Identities.
 
 ### DEC-022: Custom connectors stay Python packages; generic HTTP is additive
 - **Date:** 2026-08-21
@@ -241,4 +242,5 @@ How to use this file:
 - **Consequences:** Sessions carry an MFA state (`verified`, `challenge`,
   `enroll`); every route except the sign-in and enrolment routes accepts only
   verified sessions and API tokens. Requiring MFA signs nobody out; it takes
-  effect at each operator's next sign-in.
+  effect at each operator's next sign-in. The session and token model it
+  extends is [ADR-0008](adr/0008-opaque-tokens-for-operator-auth.md).

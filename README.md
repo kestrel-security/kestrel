@@ -470,8 +470,12 @@ The documentation for the latest release is at **[docs.kestrelsecurity.io](https
 | [docs/connectors.md](docs/connectors.md) | SDK contract, connector lifecycle, first-party state, quality bar |
 | [docs/policies.md](docs/policies.md) | Policy contract, runtime, packs, workbench, AI drafts |
 | [docs/identity-graph.md](docs/identity-graph.md) · [docs/changes.md](docs/changes.md) · [docs/findings.md](docs/findings.md) | The graph, the change feed, and the finding lifecycle |
+| [docs/dashboards.md](docs/dashboards.md) · [docs/ticketing.md](docs/ticketing.md) | Boards and the metric DSL, export and schedules; GitHub Issues and Jira Cloud tickets |
+| [docs/posture-baselines/](docs/posture-baselines/README.md) | Per-application control matrices: what each baseline control needs, what is collected, which policy implements it |
+| [GitHub](docs/connectors/github-setup.md) · [Google Workspace](docs/connectors/google-workspace-setup.md) · [Okta](docs/connectors/okta-setup.md) · [Slack](docs/connectors/slack-setup.md) setup | Credentials and permissions for each first-party connector |
 | [docs/api.md](docs/api.md) | Authentication, errors, pagination, rate limits, webhooks, route tables |
 | [docs/deployment.md](docs/deployment.md) · [docs/observability.md](docs/observability.md) | Compose, building the images, upgrades, backups, metrics and tracing |
+| [Scheduled syncs](docs/operations/scheduled-syncs.md) · [rate limiting](docs/operations/rate-limiting.md) · [data retention](docs/operations/data-retention.md) | Running Kestrel day to day |
 | [docs/testing.md](docs/testing.md) | Test tiers, harness, commands |
 | [docs/threat-model.md](docs/threat-model.md) · [SECURITY.md](SECURITY.md) | Threat model and security policy |
 | [docs/product.md](docs/product.md) · [docs/roadmap.md](docs/roadmap.md) · [docs/decisions.md](docs/decisions.md) | Product definition, capability status, decision log |

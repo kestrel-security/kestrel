@@ -10,7 +10,7 @@ Kestrel is a self-hosted product; multi-team / multi-organization delegation may
 
 ## Decision
 
-**Default deployment is one organization** — one self-hosted instance, one PostgreSQL database, one set of connectors, matching how most self-hosted security tools are actually run. `kestrel init` bootstraps exactly one `Organization` row; v1 authentication is local operators with fixed RBAC (see ADR-0008).
+**Default deployment is one organization** — one self-hosted instance, one PostgreSQL database, one set of connectors, matching how most self-hosted security tools are actually run. `kestrel init` bootstraps exactly one `Organization` row; v1 authentication is local operators with fixed RBAC (see ADR-0008) and optional or org-required TOTP (DEC-028).
 
 **However, every table still carries `org_id` and every query is scoped by it** — there is no code path in the data model, the sync pipeline, the policy evaluator, or the API that treats "single org" as a structural assumption baked into the schema. `apps/api/src/kestrel_api/deps.py`'s `get_current_org` dependency resolves the single `Organization` row today; every router filters by `org.id` exactly as it would if there were ten organizations in the database.
 
@@ -25,4 +25,4 @@ Row-level scoping is enforced in **application code** (the `get_current_org` Fas
 ## Consequences
 
 - A bug in a router that forgets to filter by `org_id` wouldn't be caught by a database-level constraint today (no RLS backstop) — code review and the test suite are the safety net. This is an explicit, documented tradeoff, not an oversight; revisit if/when multi-org makes RLS's operational cost worth paying.
-- `kestrel init` is not idempotent-safe for creating a *second* organization — running it again against an already-initialized database returns the existing org rather than creating a new one, matching the "one org per deployment" model.
+- `kestrel init` is idempotent and never creates a *second* organization: running it again against an already-initialized database returns the existing org (`kestrel/src/kestrel/cli/init.py`), matching the "one org per deployment" model.
