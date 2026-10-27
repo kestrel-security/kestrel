@@ -813,7 +813,7 @@ wheels = [
 
 [[package]]
 name = "kestrel"
-version = "0.5.3"
+version = "0.5.4"
 source = { editable = "kestrel" }
 dependencies = [
     { name = "alembic" },
@@ -854,7 +854,7 @@ requires-dist = [
 
 [[package]]
 name = "kestrel-api"
-version = "0.5.3"
+version = "0.5.4"
 source = { editable = "apps/api" }
 dependencies = [
     { name = "celery", extra = ["redis"] },
@@ -933,7 +933,7 @@ requires-dist = [{ name = "kestrel", editable = "kestrel" }]
 
 [[package]]
 name = "kestrel-worker"
-version = "0.5.3"
+version = "0.5.4"
 source = { editable = "apps/worker" }
 dependencies = [
     { name = "celery", extra = ["redis"] },

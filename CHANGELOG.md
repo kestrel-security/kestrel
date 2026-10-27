@@ -13,6 +13,8 @@ started on them.
 
 ## Unreleased
 
+## v0.5.4 — 2026-10-26
+
 ### Changed
 
 - Policies are described as policies as code, not detections: each one states

@@ -1,6 +1,6 @@
 [project]
 name = "kestrel-worker"
-version = "0.5.3"
+version = "0.5.4"
 description = "Kestrel Celery worker: connector sync and policy evaluation tasks."
 readme = "README.md"
 license = "Apache-2.0"
