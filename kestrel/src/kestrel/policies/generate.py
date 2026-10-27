@@ -424,6 +424,33 @@ def _llm_draft(
     )
 
 
+def _fixture_failure_report(fixture_test: dict[str, Any], fixtures: dict[str, Any] | None) -> str:
+    """Row by row: what each fixture row should produce and what the draft did.
+
+    "expected [a, b], got [c]" alone does not tell a model *why*; small
+    models in particular read policy() as "return True to flag" and repair
+    an inverted draft into the same inverted draft.
+    """
+    expected = set(fixture_test.get("expected") or [])
+    actual = set(fixture_test.get("actual") or [])
+    lines = ["Fixture test failed. Each row, with what policy() must return:"]
+    for row in (fixtures or {}).get("rows") or []:
+        subject = str(row.get("_subject_id"))
+        want = "False (finding)" if subject in expected else "True (compliant)"
+        got = "False (finding)" if subject in actual else "True (compliant)"
+        mark = "ok" if (subject in expected) == (subject in actual) else "WRONG"
+        data = {k: v for k, v in row.items() if not k.startswith("_")}
+        lines.append(f"- {subject}: must return {want}, returned {got} [{mark}]  row={json.dumps(data, default=str)}")
+    if expected and actual and not expected & actual:
+        lines.append(
+            "Every row that should open a finding was judged compliant, and the draft flagged rows it should not: "
+            "the True/False logic looks inverted. policy() answers 'is this row compliant?': return True when "
+            "there is nothing to report and False for the rows the intent asks to flag."
+        )
+    lines.append('{"$days_ago": n} in a row is a timestamp n days before now.')
+    return "\n".join(lines)
+
+
 def _repair_draft(
     *,
     creds: LlmCredentials,
@@ -433,18 +460,13 @@ def _repair_draft(
     source_text: str,
     errors: list[str],
     fixture_test: dict[str, Any] | None = None,
+    fixtures: dict[str, Any] | None = None,
 ) -> str:
     """One optional repair chat turn after validation, probe, or fixture-test failure."""
     error_block = "\n".join(f"- {e}" for e in errors) or "- (unknown error)"
     user = f"Intent:\n{intent}\n\nErrors:\n{error_block}\n\nPrevious source:\n{source_text}"
     if fixture_test and not fixture_test.get("passed") and not fixture_test.get("advisory"):
-        user += (
-            f"\n\nFixture test failed:\n"
-            f"- expected matches: {fixture_test.get('expected')}\n"
-            f"- actual matches: {fixture_test.get('actual')}\n"
-            f"- missing: {fixture_test.get('missing')}\n"
-            f"- unexpected: {fixture_test.get('unexpected')}"
-        )
+        user += "\n\n" + _fixture_failure_report(fixture_test, fixtures)
     if resource_type:
         user += f"\n\nPreferred RESOURCE_TYPE: {resource_type}"
     system = _REPAIR_SYSTEM.replace("__SCHEMAS__", schema_docs_for_prompt(resource_type))
@@ -630,6 +652,7 @@ def generate_policy_draft(
                 source_text=source_text,
                 errors=repair_errors,
                 fixture_test=fixture_test,
+                fixtures=fixtures,
             )
             source_text = repaired
             validation = _validation_payload(source_text)
