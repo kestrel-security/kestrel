@@ -2,8 +2,10 @@
 
 ## Status
 
-Accepted. The `kestrel query` command named below was removed in 0.4.0; the
-rest of the decision stands.
+Accepted. The `kestrel query` command was removed in 0.4.0. TOTP as a second
+factor was added later (DEC-028 in [`decisions.md`](../decisions.md)): sessions
+now carry an MFA state, and only verified sessions and API tokens reach routes
+outside sign-in and enrolment. The rest of the decision stands.
 
 ## Context
 
@@ -17,7 +19,7 @@ This needed to ship as a real capability of the self-hosted product: local email
 
 - **Opaque, server-validated bearer tokens, not JWT.** `secrets.token_urlsafe(32)` generated, SHA-256-hashed before storage (a DB dump alone yields no usable credential), looked up via indexed equality against either `OperatorSession` (browser-driven) or `ApiToken` (CLI/automation) rows.
 - **One uniform mechanism for both credential types.** FastAPI's `get_current_operator` dependency (`apps/api/src/kestrel_api/deps.py`) checks `Authorization: Bearer <token>` against `OperatorSession` first, then `ApiToken` — same header, same dependency, regardless of whether the caller is a browser or a CLI/automation client.
-- **The browser/cookie concern lives entirely in Next.js, not FastAPI.** Kestrel's web app fetches data exclusively from Server Components/Server Actions (`apps/web/src/lib/api.ts`'s `API_URL` is server-only, never exposed to the browser bundle). On login, a Server Action calls `POST /auth/login`, gets an opaque token back in the JSON body, and sets it as an `httponly`/`secure`(prod)/`samesite=lax` cookie on the Next.js app's own domain. Every Server Component reads that cookie via `next/headers` and forwards it as a Bearer header. **FastAPI never sees or sets a cookie.**
+- **The browser/cookie concern lives entirely in Next.js, not FastAPI.** Kestrel's web app fetches data exclusively from Server Components/Server Actions (`apps/web/src/lib/api.ts`'s `API_BASE_URL`, read from the `API_URL` environment variable, is server-only, never exposed to the browser bundle). On login, a Server Action calls `POST /auth/login`, gets an opaque token back in the JSON body, and sets it as an `httponly`/`secure`(prod)/`samesite=lax` cookie on the Next.js app's own domain. Every Server Component reads that cookie via `next/headers` and forwards it as a Bearer header. **FastAPI never sees or sets a cookie.**
 - **Small fixed RBAC**: `OperatorRole` (`read_only`, `analyst`, `admin`) via an explicit rank dict (`kestrel/src/kestrel/auth/rbac.py`'s `_ROLE_RANK`), not enum declaration order — `role_satisfies(actual, minimum)` compares ranks.
 - **Argon2id** (via `argon2-cffi`) for password hashing — current OWASP-recommended default, actively maintained, no bcrypt's 72-byte truncation footgun.
 - **Login lockout**: 5 failed attempts locks an operator for 15 minutes (`kestrel/src/kestrel/auth/service.py`'s `LOCKOUT_THRESHOLD`/`LOCKOUT_DURATION`). `authenticate_operator` returns a uniform `None` for unknown-email, wrong-password, inactive, or locked — no user enumeration.
@@ -32,7 +34,7 @@ Revocation, "list active sessions," and lockout all require a DB hit anyway (an 
 ## Consequences
 
 - Every authenticated request costs one indexed DB lookup (hash equality on `token_hash`) — acceptable for Kestrel's expected request volume, and consistent with the rest of the API's per-request DB usage.
-- `sync`/`query`/`init` CLI commands deliberately stay unauthenticated (they talk directly to Postgres via `DATABASE_URL`, already a stronger trust boundary than the network-facing API); only the API surface gets RBAC. `kestrel operator`/`kestrel token` are the CLI escape hatch for managing that RBAC before any web UI login even exists.
+- `sync`/`init` CLI commands deliberately stay unauthenticated (they talk directly to Postgres via `DATABASE_URL`, already a stronger trust boundary than the network-facing API); only the API surface gets RBAC. `kestrel operator`/`kestrel token` are the CLI escape hatch for managing that RBAC before any web UI login even exists.
 - Eventual SSO/SCIM/custom-RBAC/multi-org features are intended to stay additive on this same schema and dependency, not a redesign (see "Future extension points" below) — this was a hard design constraint for this ADR, not an afterthought.
 
 ## Future extension points (not built now — documented seams only)
