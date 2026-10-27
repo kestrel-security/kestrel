@@ -30,6 +30,9 @@ CONTRACT_VERSION = 2
 RULES: tuple[str, ...] = (
     "Define POLICY_ID, TITLE, SEVERITY, RESOURCE_TYPE, DESCRIPTION, REMEDIATION, policy(resource) "
     "and evidence(resource). policy() returns True when compliant and False to open a finding.",
+    "policy() answers 'is this row compliant?', not 'should this row be flagged?'. Every row the intent "
+    'asks to flag must reach `return False`; e.g. for "flag users who never signed in", a missing '
+    "last_active_at returns False, never True.",
     "There are no imports. datetime, timedelta, re, json and every other module are unavailable; "
     "only the names listed here exist.",
     "The module body may only define constants (literals) and functions. Put all logic inside policy().",

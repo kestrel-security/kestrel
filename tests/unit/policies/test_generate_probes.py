@@ -65,6 +65,39 @@ def policy(resource):
 """
 )
 
+# What gpt-4o-mini produced for the demo intent: it reads policy() as "return
+# True to flag", so never-signed-in users pass and the recent contractor is
+# flagged. Probes cannot see that; only the fixtures can.
+INVERTED_DRAFT = """POLICY_ID = "okta-active-contractors-never-signed-in"
+TITLE = "Active Okta contractors or external users without recent sign-in"
+SEVERITY = "high"
+RESOURCE_TYPE = "identity"
+DESCRIPTION = "Flags Okta external users who are still active but have not signed in for 30 days, or ever."
+REMEDIATION = "Encourage contractors or external users to sign in or deactivate their accounts if they are no longer needed."
+COMPLIANCE = {"custom": ["OKTA-05"], "soc2": ["CC6.1"], "cis": ["6.3"], "nist_csf": ["PR.AC-7"]}
+
+def policy(resource):
+    application = resource.get("application") or {}
+    identity = resource.get("identity") or {}
+    if application.get("type") != "okta":
+        return True
+    if identity.get("is_external") is not True:
+        return True
+    if identity.get("last_active_at") is None:
+        return True  # Never signed in
+    return not within_last_days(identity.get("last_active_at"), 30)
+
+def evidence(resource):
+    identity = resource.get("identity") or {}
+    application = resource.get("application") or {}
+    return {
+        "identity.email": identity.get("email"),
+        "identity.display_name": identity.get("display_name"),
+        "identity.last_active_at": identity.get("last_active_at"),
+        "application.name": application.get("name"),
+    }
+"""
+
 _CREDS = LlmCredentials(api_key="k", provider="openai", model="m", base_url="http://llm.invalid", source="env")
 
 
@@ -199,3 +232,23 @@ def test_templates_are_not_probed(monkeypatch: pytest.MonkeyPatch) -> None:
     draft = generate.generate_policy_draft(intent="okta admins without mfa", connector_hint="okta")
     assert draft["provider"] == "template"
     assert draft["probe_test"] is None
+
+
+def test_an_inverted_draft_gets_a_row_by_row_repair_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = _fake_chat(monkeypatch, [INVERTED_DRAFT, CORRECTED_DRAFT])
+    draft = generate.generate_policy_draft(intent=DEMO_INTENT, connector_hint="okta", credentials=_CREDS)
+
+    assert len(calls) == 2
+    repair_user = calls[1][-1]["content"]
+    assert "the True/False logic looks inverted" in repair_user
+    assert "- never-signed-in-id: must return False (finding), returned True (compliant) [WRONG]" in repair_user
+    assert "- recent-contractor-id: must return True (compliant), returned False (finding) [WRONG]" in repair_user
+    assert "- stale-employee-id: must return True (compliant), returned True (compliant) [ok]" in repair_user
+    assert '"$days_ago": 400' in repair_user
+    assert draft["fixture_test"]["passed"] is True
+
+
+def test_the_prompt_says_flagged_rows_return_false() -> None:
+    prompt = generate._system_prompt(resource_type="identity", connector_hint="okta")
+    assert "not 'should this row be flagged?'" in prompt
+    assert "a missing last_active_at returns False, never True" in generate._REPAIR_SYSTEM

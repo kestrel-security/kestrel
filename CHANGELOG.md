@@ -45,6 +45,11 @@ started on them.
 
 ### Fixed
 
+- An AI draft that inverts `policy()` (returning `True` for the rows the
+  intent asks to flag) is now repaired: the repair turn gets each fixture row
+  with what `policy()` must return and what it did, plus an explicit note when
+  the logic looks inverted, and the prompt states the return convention with
+  an example.
 - AI-drafted policies no longer reach for `datetime`, which the sandbox does
   not provide: the generate prompt now lists every policy global (built from
   the helper table), and Validate reports any name the policy reads but
