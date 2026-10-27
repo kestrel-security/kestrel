@@ -41,4 +41,3 @@ Revocation, "list active sessions," and lockout all require a DB hit anyway (an 
 - **SCIM**: a `/scim/v2/Users` endpoint writing to the same `operators` table — another writer, not a parallel identity model.
 - **Custom/fine-grained roles**: `OperatorRole` stays the fixed 3-value enum; a later nullable `custom_role_id` + `CustomRole`/`CustomPermission` tables could be consulted first by a `require_permission` check that falls back to `role_satisfies` for operators created under the fixed roles.
 - **Multi-org**: email is unique per-org today (`UniqueConstraint("org_id", "email")`); multi-org gets its own migration later (same deferral precedent as ADR-0006), not solved here.
-- **Feature gating / license keys** are explicitly not built. Every capability in this repository ships enabled (DEC-009).

@@ -9,7 +9,7 @@
 
 **Kestrel connects to the SaaS applications you already run, normalizes their users, groups, roles, permissions, resources, settings, and OAuth grants into one identity/access graph, and tells you who can reach what — across applications, not one admin console at a time.**
 
-It snapshots that graph on every sync, diffs the snapshots into a classified change feed, evaluates Python policies against the inventory, and produces findings with the evidence that created them and guidance to fix them. Self-hosted, Apache-2.0, no gated features.
+It snapshots that graph on every sync, diffs the snapshots into a classified change feed, evaluates Python policies against the inventory, and produces findings with the evidence that created them and guidance to fix them. Self-hosted and Apache-2.0.
 
 [![CI](https://github.com/kestrel-security/kestrel/actions/workflows/ci.yaml/badge.svg)](https://github.com/kestrel-security/kestrel/actions/workflows/ci.yaml) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.12%2B-3776ab.svg)](pyproject.toml) [![Status](https://img.shields.io/badge/status-pre--1.0-orange.svg)](#project-status) [![Docs](https://img.shields.io/badge/docs-docs.kestrelsecurity.io-4f46e5.svg)](https://docs.kestrelsecurity.io/)
 
@@ -487,6 +487,6 @@ Kestrel is an open-source project maintained by its contributors; see [`MAINTAIN
 
 [Apache License 2.0](LICENSE). See [`NOTICE`](NOTICE) for attribution and third-party marks.
 
-Everything in this repository ships enabled. There is no gated build, license key, edition, or feature tier.
+Every connector and policy in this repository is open source under the same license.
 
 <div align="center"><sub>Product names and logos shown in Explore and finding investigation identify third-party products and remain the trademarks of their respective owners.</sub></div>
