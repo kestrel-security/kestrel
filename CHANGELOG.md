@@ -38,6 +38,14 @@ started on them.
   and `collector.py` examples had lost their indentation and did not parse
   when copied. A unit test now parses every YAML and Python block in the docs.
 
+### Security
+
+- A dashboard export no longer writes the raw text of an internal error into
+  the exported file when a widget's query fails. Such text can include SQL and
+  driver detail, and an export is a file that leaves the system. A spec the
+  query DSL rejects still shows its message ("filter field not allowed: …");
+  any other failure is logged and exported as "query failed".
+
 ## v0.5.3 — 2026-10-24
 
 ### Added
