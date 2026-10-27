@@ -26,6 +26,18 @@ started on them.
   "Policy coverage clear". The `/reports/detection-coverage` endpoint and the
   `detection_gaps` key are unchanged.
 
+### Fixed
+
+- A connector scaffolded by `kestrel connector create` passes its own tests
+  before it is wired into the workspace: the scaffold now generates a
+  `conftest.py` in its tests directory that puts the connector's `src/` on the
+  path.
+  Previously `uv run pytest connectors/<name>/tests` failed with
+  `ModuleNotFoundError`.
+- The connector authoring tutorial's manifest, setup-walkthrough, `client.py`
+  and `collector.py` examples had lost their indentation and did not parse
+  when copied. A unit test now parses every YAML and Python block in the docs.
+
 ## v0.5.3 — 2026-10-24
 
 ### Added
