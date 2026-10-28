@@ -13,6 +13,18 @@ Thanks for your interest in Kestrel. This guide covers setup, conventions, and h
 
 Issues labelled [`good first issue`](https://github.com/kestrel-security/kestrel/labels/good%20first%20issue) (when there are any) are scoped to be finishable without knowing the whole codebase, and say where to start. Connectors, policies, and documentation fixes are good places to begin otherwise; [`docs/roadmap.md`](docs/roadmap.md) lists open work. Comment on an issue to claim it, ask questions on the issue, and open a draft pull request early: a half-finished change with a question is easier to help with than a finished one that went the wrong way.
 
+### How a change gets in
+
+Anyone can contribute; you do not need write access to the repository. The process is the standard GitHub fork-and-pull-request flow:
+
+1. **Fork** `kestrel-security/kestrel` on GitHub and clone your fork ([Setting up](#setting-up)).
+2. **Branch** from the current `main`, make the change, and sign off every commit ([Making a change](#making-a-change)).
+3. **Push** the branch to your fork and **open a pull request** against `main` in the upstream repository ([Pull requests](#pull-requests)).
+4. **CI runs** once a maintainer approves it (required for every push from outside the project) and a **maintainer reviews**. Address feedback by pushing more commits to the same branch.
+5. A maintainer **squash-merges** the pull request once a code-owner approval and every required check are in place. Contributors cannot merge their own pull requests.
+
+Maintainers listed in [`MAINTAINERS.md`](MAINTAINERS.md) work on branches in the main repository, and their pull requests pass the same required checks. While the project has a single maintainer, that maintainer merges their own pull requests without a second review. Nobody else can push to the repository, so a fork is the only route in.
+
 ## Required tooling
 
 | Tool | Version | Notes |
@@ -26,8 +38,12 @@ Issues labelled [`good first issue`](https://github.com/kestrel-security/kestrel
 
 ## Setting up
 
+Fork the repository on GitHub first (the **Fork** button on [kestrel-security/kestrel](https://github.com/kestrel-security/kestrel)), then clone your fork and add the upstream repository as a second remote so you can keep `main` current:
+
 ```bash
-git clone https://github.com/kestrel-security/kestrel.git && cd kestrel
+git clone git@github.com:YOUR-USERNAME/kestrel.git && cd kestrel
+git remote add upstream https://github.com/kestrel-security/kestrel.git
+git fetch upstream
 make sync                        # uv sync && pnpm install
 docker compose up -d postgres redis
 uv run kestrel demo up           # migrations, .env, admin operator, fixture tenants
@@ -64,11 +80,18 @@ Orientation: [`docs/architecture.md`](docs/architecture.md).
 
 ## Making a change
 
-1. Branch from `main` (`git checkout -b my-change`).
+1. Start from the current upstream `main` and branch from it:
+
+   ```bash
+   git fetch upstream
+   git checkout -b my-change upstream/main
+   ```
+
 2. Keep the change focused. One coherent task per pull request.
 3. Add or update tests at the right tier (see below).
 4. Run the checks for what you touched, then `make validate` before opening the PR.
 5. Update docs that describe the behavior you changed, and add a line under **Unreleased** in `CHANGELOG.md` when the change is user-facing.
+6. Push the branch to your fork (`git push -u origin my-change`) and open the pull request from there. A pull request must be up to date with `main` before it can merge. If `main` moves while yours is open, rebase onto `upstream/main` and force-push (`git push --force-with-lease`), or use the **Update branch** button on the pull request.
 
 ### Checks
 
@@ -122,7 +145,8 @@ Signed-off-by: Your Name <your.email@example.com>
 The **DCO check** (`.github/workflows/commits.yaml`) runs on every pull request and fails when a commit (merge commits aside) lacks a `Signed-off-by:` trailer whose email matches that commit's author email. To sign off commits you already made:
 
 ```bash
-git rebase --signoff main
+git fetch upstream
+git rebase --signoff upstream/main
 git push --force-with-lease
 ```
 
@@ -130,10 +154,13 @@ Write commit messages as a short imperative summary line, optionally followed by
 
 ## Pull requests
 
-- Open the PR against `main` using the template. Fill in the test plan with what you actually ran.
+- Open the PR from your fork against `main` in `kestrel-security/kestrel`, using the template. Fill in the test plan with what you actually ran. Mark it as a draft if it is not ready for review.
 - Keep PRs reviewable: if a refactor is needed to make a change, land the refactor first.
+- **CI on pull requests from forks waits for a maintainer to approve each run.** This is a GitHub Actions safeguard for public repositories, not a judgement on the change; checks show as pending after every push until a maintainer clicks *Approve and run*. CI secrets are never available to fork pull requests, and nothing in the required checks needs them.
 - CI must be green. Do not skip or weaken a check to get there; ask in the PR if a check looks wrong.
-- Be responsive to review. Maintainers aim to respond within a few days.
+- Pull requests that only change Markdown (or images under `docs/images/`) run a shorter CI gate that skips the database tiers, web build, and dependency audits; those checks show as skipped, which counts as passing. Keep documentation fixes in their own pull request to get the faster gate. Details: [`docs/testing.md`](docs/testing.md#tiers).
+- Merging requires one approving review from a code owner ([`.github/CODEOWNERS`](.github/CODEOWNERS)) and every required check passing. Pull requests are squash-merged, so a tidy PR title and description become the commit on `main`; the individual commits do not need to be polished, but each must be signed off.
+- Be responsive to review. Maintainers aim to respond within a few days. Significant changes stay open for at least three working days so other maintainers can object ([`GOVERNANCE.md`](GOVERNANCE.md)).
 
 ## Adding a connector
 
