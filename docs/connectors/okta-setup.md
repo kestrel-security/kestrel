@@ -90,6 +90,14 @@ they degrade visibly on SSWS tokens without sufficient access.
   policy changes, zone changes, IAM role changes, device events, impersonation, and
   more. Routine `user.session.start` logins are not stored.
 - Pagination `Link` targets must stay on the same `org_url` host (cross-host next URLs are refused).
+- User profiles feed `worker_type` (`userType`: contractor, vendor, employee
+  and their common spellings; `isExternal` alone reads as contractor; a blank
+  `userType` stays `unknown` until a classification rule says otherwise),
+  `department`, `title`, `manager_email` (from `managerId` when it is an
+  address), `disabled_at` (`statusChanged` while suspended or deprovisioned),
+  and the raw `userType`, `status`, `employeeNumber`, and `organization` in
+  `attributes`. API tokens are service accounts owned by the user they were
+  issued to.
 - HTTP **429** responses retry a few times using `Retry-After` when present (shared live transport).
 - **Test connection** probes `GET /api/v1/org`, `users|groups|apps?limit=1`,
   classic roles for the first returned user, and `logs?limit=1`. Missing System

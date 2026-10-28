@@ -514,6 +514,13 @@ class GitHubNormalizer:
                 "is_external": False,
                 "mfa_enabled": mfa_enabled,
                 "created_at_source": payload.get("created_at"),
+                # GitHub says nothing about employment; a member is `unknown`
+                # until an identity provider or a classification rule says
+                # otherwise. Suspension (GHES) is the only lifecycle timestamp.
+                "worker_type": "service" if str(payload.get("type") or "").lower() == "bot" else "unknown",
+                "disabled_at": payload.get("suspended_at") or None,
+                "saml_name_id": payload.get("saml_name_id") or None,
+                "scim_username": payload.get("scim_username") or None,
             },
             raw_source=payload,
         )
@@ -683,6 +690,7 @@ class GitHubNormalizer:
                     "is_disabled": False,
                     "is_external": True,
                     "mfa_enabled": None,
+                    "worker_type": "guest",
                 },
                 raw_source=payload,
             )
@@ -692,18 +700,28 @@ class GitHubNormalizer:
         payload = raw.payload
         raw_data = payload.get("data")
         data: dict[str, Any] = raw_data if isinstance(raw_data, dict) else {}
-        action = data.get("kestrel_action") or _infer_kestrel_action(payload)
-        if action is None:
-            return []
-
         user = payload.get("user")
         user_id = payload.get("user_id")
         actor = payload.get("actor")
         actor_id = payload.get("actor_id")
         occurred_at = payload.get("created_at") or payload.get("@timestamp")
+
+        # The org audit log is the only place GitHub records that a member did
+        # anything, so every entry with an actor is a sign of life for that
+        # account -- including the many actions the curated taxonomy below
+        # drops. The observation rides along as `identity_activity`; the
+        # sync folds the latest one per actor onto `identities.last_active_at`.
+        objects: list[NormalizedObject] = []
+        if actor_id is not None and occurred_at:
+            objects.append(_identity_activity(str(actor_id), occurred_at, provider_id=f"activity:{raw.provider_id}"))
+
+        action = data.get("kestrel_action") or _infer_kestrel_action(payload)
+        if action is None:
+            return objects
+
         summary = f"GitHub audit: {payload.get('action', action)} ({action})"
 
-        return [
+        objects.append(
             NormalizedObject(
                 kind="event",
                 provider_id=raw.provider_id,
@@ -744,7 +762,18 @@ class GitHubNormalizer:
                 },
                 raw_source=payload,
             )
-        ]
+        )
+        return objects
+
+
+def _identity_activity(identity_ref: str, observed_at: Any, *, provider_id: str, source: str = "audit") -> NormalizedObject:
+    """An observation that ``identity_ref`` did something at ``observed_at``."""
+    return NormalizedObject(
+        kind="identity_activity",
+        provider_id=provider_id,
+        attributes={"identity_ref": identity_ref, "observed_at": observed_at, "source": source},
+        raw_source={},
+    )
 
 
 _PRIVILEGED_PERMISSIONS = frozenset({"admin", "maintain", "owner"})
@@ -1155,11 +1184,28 @@ def _normalize_copilot_policy(raw: RawObject) -> list[NormalizedObject]:
 
 
 def _normalize_copilot_seat(raw: RawObject) -> list[NormalizedObject]:
-    """One Copilot seat, with last-activity timestamp for staleness detection."""
+    """One Copilot seat, with last-activity timestamp for staleness detection.
+
+    The seat's ``last_activity_at`` is also the only usage signal GitHub
+    exposes per account outside the audit log, so it is emitted as
+    ``identity_activity`` (source ``analytics``) for the assignee as well.
+    """
     payload = raw.payload
     assignee = payload.get("assignee") or {}
     login = assignee.get("login") if isinstance(assignee, dict) else raw.provider_id
+    assignee_id = assignee.get("id") if isinstance(assignee, dict) else None
+    activity: list[NormalizedObject] = []
+    if assignee_id is not None and payload.get("last_activity_at"):
+        activity.append(
+            _identity_activity(
+                str(assignee_id),
+                payload["last_activity_at"],
+                provider_id=f"activity:copilot-seat:{login}",
+                source="analytics",
+            )
+        )
     return [
+        *activity,
         setting_object(
             key=f"copilot_seat:{login}",
             category="access",
@@ -1175,7 +1221,7 @@ def _normalize_copilot_seat(raw: RawObject) -> list[NormalizedObject]:
             description="Copilot seat assignment. `last_activity_at` null means the seat has never been used.",
             raw_source=payload,
             provider_id_prefix="copilot-seat",
-        )
+        ),
     ]
 
 

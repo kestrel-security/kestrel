@@ -20,6 +20,11 @@ field is missing or the wrong type, and a return type that chains safely.
 
 `reduce_url_to_host` is for the other direction: removing a sensitive URL from
 a payload before it is persisted.
+
+`classify_worker_type` turns a provider's free-text user type into the
+`worker_type` vocabulary every connector shares, so a policy can ask for
+"contractors" without knowing which tenant spells it `Contractor`,
+`contingent`, or `CW`.
 """
 
 from __future__ import annotations
@@ -28,7 +33,7 @@ from collections.abc import Mapping
 from typing import Any
 from urllib.parse import urlsplit
 
-__all__ = ["reduce_url_to_host", "sub_dict", "sub_list"]
+__all__ = ["classify_worker_type", "looks_like_email", "reduce_url_to_host", "sub_dict", "sub_list"]
 
 
 def sub_dict(payload: Mapping[str, Any] | None, key: str) -> dict[str, Any]:
@@ -66,3 +71,57 @@ def reduce_url_to_host(payload: Mapping[str, Any], key: str) -> dict[str, Any]:
         redacted[f"{key}_scheme"] = parsed.scheme or None
         redacted.pop(key, None)
     return redacted
+
+
+# Substrings of a provider's user-type field, lowercased, that decide a
+# ``worker_type``. Order matters: the first family with a hit wins, so
+# "contract employee" reads as a contractor rather than staff.
+_WORKER_TYPE_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("contractor", ("contractor", "contingent", "temp", "intern", "cw")),
+    ("vendor_or_partner", ("vendor", "partner", "supplier", "consultant", "agency", "external")),
+    ("guest", ("guest", "visitor")),
+    ("service", ("service", "bot", "system", "integration", "api")),
+    ("employee", ("employee", "staff", "fte", "full-time", "full time", "regular", "permanent")),
+)
+
+
+def classify_worker_type(user_type_raw: object, *, is_guest: bool = False, is_bot: bool = False) -> str:
+    """The shared ``worker_type`` for a provider user-type field.
+
+    ``is_bot`` and ``is_guest`` are the provider's own structural facts (a Slack
+    bot, a GitHub outside collaborator) and win over any label. A blank or
+    unrecognized label is ``unknown``: most tenants never fill the field in,
+    and guessing ``employee`` would hide every contractor the operator has not
+    yet mapped through a classification rule.
+    """
+    if is_bot:
+        return "service"
+    if is_guest:
+        return "guest"
+    if not isinstance(user_type_raw, str):
+        return "unknown"
+    label = user_type_raw.strip().lower()
+    if not label:
+        return "unknown"
+    for worker_type, hints in _WORKER_TYPE_HINTS:
+        if any(hint in label for hint in hints):
+            return worker_type
+    return "unknown"
+
+
+def looks_like_email(value: object) -> str | None:
+    """``value`` lowercased when it is address-shaped, else ``None``.
+
+    Provider "manager" fields are free text on some tenants (a display name or
+    an employee number); only a real address is useful for correlating the
+    manager to an account.
+    """
+    if not isinstance(value, str):
+        return None
+    candidate = value.strip()
+    if "@" not in candidate or candidate.startswith("@") or candidate.endswith("@") or " " in candidate:
+        return None
+    local, _, domain = candidate.rpartition("@")
+    if not local or "." not in domain:
+        return None
+    return candidate.lower()

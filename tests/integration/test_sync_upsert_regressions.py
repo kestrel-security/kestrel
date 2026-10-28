@@ -16,6 +16,7 @@ from kestrel.connectors.sdk.base import NormalizedObject
 from kestrel.db.models.access import Grant, GroupMembership
 from kestrel.db.models.connector import ConnectorRun, ConnectorRunStatus, ConnectorRunTrigger
 from kestrel.db.models.event import ChangeType, Event
+from kestrel.db.models.identity import Identity, ServiceAccount
 from kestrel.db.models.oauth import OAuthScope
 from kestrel.sync.upsert import (
     EntityChange,
@@ -222,3 +223,154 @@ def test_query_count_does_not_grow_with_the_number_of_objects(runs: _Runs):
     _statements(small)
     _statements(large)  # first sight of most rows: inserts
     assert _statements(large) == _statements(small)
+
+
+# -- identity extras, worker type, and activity merging ----------------------
+
+
+def _identity_with(provider_id: str, **attributes) -> NormalizedObject:
+    return _obj("identity", provider_id, identity_type="user", email=f"{provider_id}@example.test", **attributes)
+
+
+def _stored_identity(runs: _Runs, provider_id: str) -> Identity:
+    row = runs.session.scalar(
+        select(Identity).where(Identity.org_id == runs.org_id, Identity.provider_object_id == provider_id)
+    )
+    assert row is not None
+    return row
+
+
+def test_identity_extras_land_in_columns_and_attributes(runs: _Runs):
+    runs.sync(
+        [
+            _identity_with(
+                "pat",
+                worker_type="contractor",
+                department="Platform",
+                title="SRE",
+                manager_email="lead@example.test",
+                disabled_at="2026-01-02T03:04:05Z",
+                expires_at="2026-12-31T00:00:00Z",
+                org_unit_path="/Contractors",
+                guest_type=None,
+                is_admin=False,
+            )
+        ]
+    )
+
+    row = _stored_identity(runs, "pat")
+    assert row.worker_type == "contractor"
+    assert row.worker_type_source == "connector"
+    assert (row.department, row.title, row.manager_email) == ("Platform", "SRE", "lead@example.test")
+    assert row.disabled_at == datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
+    assert row.expires_at == datetime(2026, 12, 31, tzinfo=UTC)
+    # Columns stay out of the extras; nulls are dropped; keys are sorted.
+    assert row.attributes == {"is_admin": False, "org_unit_path": "/Contractors"}
+
+
+def test_an_unrecognized_worker_type_is_stored_as_unknown_without_a_source(runs: _Runs):
+    runs.sync([_identity_with("a", worker_type="Wizard")])
+    row = _stored_identity(runs, "a")
+    assert (row.worker_type, row.worker_type_source) == ("unknown", None)
+
+
+def test_attribute_changes_are_reported_per_key(runs: _Runs):
+    runs.sync([_identity_with("a", org_unit_path="/Staff", is_admin=False)])
+
+    changes = runs.sync([_identity_with("a", org_unit_path="/Contractors", is_admin=False)])
+
+    updates = [c for c in changes if c.entity_type == "identity" and c.change_type is ChangeType.UPDATED]
+    assert [c.field_changes for c in updates] == [
+        [{"field": "attributes.org_unit_path", "old": "/Staff", "new": "/Contractors"}]
+    ]
+
+
+def test_a_rule_assigned_worker_type_survives_a_resync(runs: _Runs):
+    runs.sync([_identity_with("a", worker_type="employee")])
+    row = _stored_identity(runs, "a")
+    row.worker_type = "contractor"
+    row.worker_type_source = "rule:ou-contractors"
+    runs.session.flush()
+
+    changes = runs.sync([_identity_with("a", worker_type="employee")])
+
+    row = _stored_identity(runs, "a")
+    assert (row.worker_type, row.worker_type_source) == ("contractor", "rule:ou-contractors")
+    assert not [c for c in changes if c.entity_type == "identity" and c.change_type is ChangeType.UPDATED]
+
+
+def test_a_resync_without_activity_keeps_the_stored_last_active(runs: _Runs):
+    """A GitHub member re-sync carries no sign-in field; it must not erase what
+    an audit-log poll learned."""
+    runs.sync([_identity_with("a", last_active_at="2026-05-01T00:00:00Z", last_active_source="audit")])
+
+    runs.sync([_identity_with("a")])
+
+    row = _stored_identity(runs, "a")
+    assert (row.last_active_at, row.last_active_source) == (datetime(2026, 5, 1, tzinfo=UTC), "audit")
+
+
+def test_an_untrusted_source_never_replaces_a_trusted_one(runs: _Runs):
+    runs.sync([_identity_with("a", last_active_at="2026-05-01T00:00:00Z", last_active_source="login")])
+
+    runs.sync([_identity_with("a", last_active_at="2026-06-01T00:00:00Z", last_active_source="profile")])
+
+    row = _stored_identity(runs, "a")
+    assert (row.last_active_at, row.last_active_source) == (datetime(2026, 5, 1, tzinfo=UTC), "login")
+
+
+def test_a_trusted_source_replaces_an_untrusted_one_even_when_older(runs: _Runs):
+    runs.sync([_identity_with("a", last_active_at="2026-06-01T00:00:00Z", last_active_source="profile")])
+
+    runs.sync([_identity_with("a", last_active_at="2026-05-01T00:00:00Z", last_active_source="audit")])
+
+    row = _stored_identity(runs, "a")
+    assert (row.last_active_at, row.last_active_source) == (datetime(2026, 5, 1, tzinfo=UTC), "audit")
+
+
+def test_identity_activity_advances_last_active_on_an_events_only_run(runs: _Runs):
+    runs.sync([_identity_with("a", last_active_at="2026-05-01T00:00:00Z", last_active_source="login")])
+
+    # The audit-log poll: no identities in the run, two observations for one
+    # account, the later one wins, and an unknown actor is ignored.
+    runs.sync(
+        [
+            _obj("identity_activity", "e1", identity_ref="a", observed_at="2026-05-03T00:00:00Z", source="audit"),
+            _obj("identity_activity", "e2", identity_ref="a", observed_at="2026-05-09T12:00:00Z", source="audit"),
+            _obj("identity_activity", "e3", identity_ref="ghost", observed_at="2026-05-09T12:00:00Z", source="audit"),
+        ]
+    )
+
+    row = _stored_identity(runs, "a")
+    assert (row.last_active_at, row.last_active_source) == (datetime(2026, 5, 9, 12, tzinfo=UTC), "audit")
+
+    # Re-reading the overlap window, or an older window, changes nothing.
+    runs.sync([_obj("identity_activity", "e1", identity_ref="a", observed_at="2026-05-03T00:00:00Z", source="audit")])
+    row = _stored_identity(runs, "a")
+    assert row.last_active_at == datetime(2026, 5, 9, 12, tzinfo=UTC)
+
+
+def test_identity_activity_is_not_a_change_feed_row(runs: _Runs):
+    runs.sync([_identity_with("a")])
+    changes = runs.sync([_obj("identity_activity", "e1", identity_ref="a", observed_at="2026-05-03T00:00:00Z")])
+    assert changes == []
+
+
+def test_service_account_owner_is_written_from_the_owner_ref(runs: _Runs):
+    runs.sync(
+        [
+            _identity_with("owner"),
+            _obj(
+                "identity", "token-1", identity_type="service_account", display_name="CI token", owner_identity_ref="owner"
+            ),
+            _obj("identity", "token-2", identity_type="service_account", display_name="Orphan token"),
+        ]
+    )
+
+    owner = _stored_identity(runs, "owner")
+    accounts = {
+        row.identity_id: row.owner_identity_id
+        for row in runs.session.scalars(select(ServiceAccount)).all()
+        if row.identity_id in {_stored_identity(runs, "token-1").id, _stored_identity(runs, "token-2").id}
+    }
+    assert accounts == {_stored_identity(runs, "token-1").id: owner.id}

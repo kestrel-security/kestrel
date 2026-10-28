@@ -14,7 +14,8 @@
     "has_2fa": true,
     "profile": {
       "real_name": "Ada Lovelace",
-      "email": "ada@acme.example.com"
+      "email": "ada@acme.example.com",
+      "title": "Staff Engineer"
     },
     "updated": 1722470400
   },
@@ -71,7 +72,8 @@
     "has_2fa": false,
     "profile": {
       "real_name": "External Contractor",
-      "email": "contractor@vendor.example.com"
+      "email": "contractor@vendor.example.com",
+      "title": "Contract Developer"
     },
     "updated": 1722470400,
     "expiration_ts": 1893456000

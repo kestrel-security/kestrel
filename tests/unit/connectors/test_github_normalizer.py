@@ -222,6 +222,26 @@ def test_audit_log_entry_with_no_inferable_action_emits_nothing():
     assert objects == []
 
 
+def test_audit_log_entry_with_an_actor_is_a_sign_of_life_even_when_the_action_is_dropped():
+    """Unmapped actions produce no event row, but the actor still did something."""
+    raw = _raw(
+        "audit_log",
+        "evt-1",
+        {"action": "org.some_unmapped_event", "actor": "bob", "actor_id": 1002, "created_at": "2026-07-01T00:00:00Z"},
+    )
+
+    objects = GitHubNormalizer().normalize("audit_log", raw)
+
+    assert [o.kind for o in objects] == ["identity_activity"]
+    assert objects[0].attributes == {"identity_ref": "1002", "observed_at": "2026-07-01T00:00:00Z", "source": "audit"}
+    assert objects[0].provider_id == "activity:evt-1"
+
+
+def test_audit_log_entry_without_a_timestamp_records_no_activity():
+    raw = _raw("audit_log", "evt-1", {"action": "org.some_unmapped_event", "actor": "bob", "actor_id": 1002})
+    assert GitHubNormalizer().normalize("audit_log", raw) == []
+
+
 def test_audit_log_disable_two_factor_requirement_maps_to_mfa_disable():
     raw = _raw(
         "audit_log",
@@ -235,7 +255,9 @@ def test_audit_log_disable_two_factor_requirement_maps_to_mfa_disable():
         },
     )
 
-    event = GitHubNormalizer().normalize("audit_log", raw)[0]
+    objects = GitHubNormalizer().normalize("audit_log", raw)
+    assert [o.kind for o in objects] == ["identity_activity", "event"]
+    event = objects[1]
 
     assert event.attributes["action"] == "mfa.disable"
     assert event.attributes["action_category"] == "mfa"
@@ -337,7 +359,7 @@ def test_audit_events_do_not_invent_noreply_email_addresses() -> None:
         },
         collected_at=_NOW,
     )
-    event = GitHubNormalizer().normalize("audit_log", raw)[0]
+    event = next(o for o in GitHubNormalizer().normalize("audit_log", raw) if o.kind == "event")
     assert event.attributes["actor_email"] is None
     assert event.attributes["target_email"] is None
     assert event.attributes["actor_provider_id"] == "1001"
@@ -774,6 +796,41 @@ def test_copilot_seat_with_no_activity_is_normalized():
     value = objects[0].attributes["value"]
     assert value["login"] == "bob"
     assert value["last_activity_at"] is None
+
+
+def test_copilot_seat_activity_is_emitted_for_the_assignee():
+    raw = _raw(
+        "copilot_seat",
+        "alice",
+        {"assignee": {"login": "alice", "id": 1001}, "last_activity_at": "2026-09-25T14:30:00Z"},
+    )
+
+    objects = GitHubNormalizer().normalize("copilot_seat", raw)
+
+    assert [o.kind for o in objects] == ["identity_activity", "setting"]
+    assert objects[0].attributes == {
+        "identity_ref": "1001",
+        "observed_at": "2026-09-25T14:30:00Z",
+        "source": "analytics",
+    }
+
+
+def test_member_worker_type_is_unknown_and_an_outside_collaborator_is_a_guest():
+    member = GitHubNormalizer().normalize("member", _raw("member", "1", {"id": 1, "login": "alice"}))[0]
+    bot = GitHubNormalizer().normalize("member", _raw("member", "2", {"id": 2, "login": "ci[bot]", "type": "Bot"}))[0]
+    guest_raw = _raw("outside_collaborator", "3", {"id": 3, "login": "pat"})
+    guest = GitHubNormalizer().normalize("outside_collaborator", guest_raw)[0]
+
+    assert member.attributes["worker_type"] == "unknown"
+    assert bot.attributes["worker_type"] == "service"
+    assert guest.attributes["worker_type"] == "guest"
+
+
+def test_a_suspended_ghes_member_carries_disabled_at():
+    raw = _raw("member", "1", {"id": 1, "login": "alice", "suspended_at": "2026-06-01T00:00:00Z"})
+    identity = GitHubNormalizer().normalize("member", raw)[0]
+    assert identity.attributes["is_disabled"] is True
+    assert identity.attributes["disabled_at"] == "2026-06-01T00:00:00Z"
 
 
 def test_approved_pat_emits_flattened_permissions():

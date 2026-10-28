@@ -44,6 +44,29 @@ from typing import Any
 
 SECONDS_PER_DAY = 86400.0
 
+#: ``last_active_source`` values that record something the account actually
+#: did: the provider's own last sign-in field (``login``), an audit-log entry
+#: the account produced (``audit``), or a provider usage report
+#: (``analytics``). ``profile`` is a profile-modification time and says nothing
+#: about activity; dormancy checks must not read it (``trusted_last_active``).
+TRUSTED_ACTIVITY_SOURCES: frozenset[str] = frozenset({"login", "audit", "analytics"})
+
+#: Application types that are an identity provider: the account there is the
+#: one an offboarding process disables first, so its state is what "this
+#: person has left" means. Shared by the row loader and the cluster helpers.
+IDP_APPLICATION_TYPES: frozenset[str] = frozenset({"okta", "google_workspace"})
+
+#: Substrings that mark a role name as privileged, across every connector.
+#: ``has_privileged_role`` and the loader's cluster context both read this.
+PRIVILEGED_ROLE_HINTS: tuple[str, ...] = (
+    "admin",
+    "owner",
+    "super_admin",
+    "organization_admin",
+    "help_desk_admin",
+    "groups_admin",
+)
+
 
 class PolicyDataError(ValueError):
     """A row holds a value a policy helper cannot interpret."""

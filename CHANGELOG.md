@@ -15,6 +15,19 @@ started on them.
 
 ### Added
 
+- Identities carry `worker_type` (employee, contractor, vendor_or_partner,
+  guest, service, unknown) with its source, `department`, `title`,
+  `manager_email`, `disabled_at`, `expires_at`, and an `attributes` JSON of
+  provider extras that used to survive only in `raw_source` (org unit path,
+  guest tier, admin flags). Okta profiles, Slack guest tiers, and GitHub
+  outside collaborators classify the worker type; Google Workspace leaves it
+  unknown for classification rules.
+- GitHub members get `last_active_at` from the org audit log (source
+  `audit`) and Copilot seat usage (`analytics`), through a new
+  `identity_activity` normalized kind an audit-log normalizer can emit.
+- Okta API tokens record the user they were issued to as the service
+  account's owner.
+
 - Policy helpers `now`, `duration_seconds`, `get_path`, `email_domain`,
   `domain_matches`, `ip_in_networks`, and `matches_any`. The two Google
   Workspace duration policies use `duration_seconds` and now read every ISO
@@ -35,6 +48,11 @@ started on them.
   checks. The database tiers, web build, and dependency audits are skipped.
   Pushes to `main` and releases still run everything. See
   [`docs/testing.md`](docs/testing.md#tiers).
+- `last_active_at` only moves forward: a trusted source (`login`, `audit`,
+  `analytics`) is never replaced by a profile timestamp, and a sync that
+  carries no activity keeps the stored value.
+- Identity attribute changes appear in the Changes feed per key
+  (`attributes.org_unit_path`), not as one JSON blob.
 - One evaluation pass reads one clock: `now()`, `days_since`,
   `within_last_days`, and `time.time()` in the sandbox are pinned when the
   pass starts, in both runtimes.

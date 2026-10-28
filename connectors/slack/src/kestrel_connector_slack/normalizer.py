@@ -17,6 +17,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from kestrel.connectors.sdk.base import NormalizedObject, NormalizedRelationship, RawObject
+from kestrel.connectors.sdk.payload import classify_worker_type
 from kestrel.connectors.settings_emit import setting_object, settings_from_mapping
 
 # Conservative sensitivity ruleset for Slack OAuth scopes. Backs
@@ -415,6 +416,10 @@ class SlackNormalizer:
             "guest_type": guest_type,
             "is_admin": bool(payload.get("is_admin")),
             "is_owner": bool(payload.get("is_owner") or payload.get("is_primary_owner")),
+            # A full member is not provably an employee: Slack has no user
+            # type, so only guests and bots classify here.
+            "worker_type": classify_worker_type(None, is_guest=guest_type is not None, is_bot=is_bot),
+            "title": profile.get("title") or None,
         }
         if last_active is not None:
             attrs["last_active_at"] = last_active

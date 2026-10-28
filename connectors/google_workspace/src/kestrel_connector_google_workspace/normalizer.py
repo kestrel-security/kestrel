@@ -36,7 +36,7 @@ from typing import Any
 
 from kestrel.connectors.activity_actions import category_for
 from kestrel.connectors.sdk.base import NormalizedObject, NormalizedRelationship, RawObject
-from kestrel.connectors.sdk.payload import sub_dict
+from kestrel.connectors.sdk.payload import looks_like_email, sub_dict, sub_list
 from kestrel.connectors.settings_emit import alert_count_setting, setting_object, settings_from_mapping
 
 # Drive roles, most to least privileged. `organizer` and `fileOrganizer` can
@@ -498,6 +498,23 @@ def _user_setting(
     return obj
 
 
+def _primary_organization(user: dict[str, Any]) -> dict[str, Any]:
+    """The ``organizations[]`` entry that carries department and title: the
+    one marked primary, else the first."""
+    entries = [entry for entry in sub_list(user, "organizations") if isinstance(entry, dict)]
+    for entry in entries:
+        if entry.get("primary"):
+            return entry
+    return entries[0] if entries else {}
+
+
+def _manager_email(user: dict[str, Any]) -> str | None:
+    for relation in sub_list(user, "relations"):
+        if isinstance(relation, dict) and str(relation.get("type") or "").lower() == "manager":
+            return looks_like_email(relation.get("value"))
+    return None
+
+
 def _display_name(user: dict[str, Any]) -> str:
     name = user.get("name") or {}
     return name.get("fullName") or user.get("primaryEmail") or str(user["id"])
@@ -581,6 +598,7 @@ class GoogleWorkspaceNormalizer:
 
     def _normalize_user(self, raw: RawObject) -> list[NormalizedObject]:
         payload = raw.payload
+        organization = _primary_organization(payload)
         return [
             NormalizedObject(
                 kind="identity",
@@ -598,6 +616,13 @@ class GoogleWorkspaceNormalizer:
                     "last_active_at": _last_login(payload.get("lastLoginTime")),
                     "last_active_source": "login" if _last_login(payload.get("lastLoginTime")) else None,
                     "created_at_source": _parse_dt(payload.get("creationTime")),
+                    # The directory has no employment field: a user stays
+                    # `unknown` until an operator classification rule (an org
+                    # unit path, a group) or another connector says otherwise.
+                    "worker_type": "unknown",
+                    "department": organization.get("department") or None,
+                    "title": organization.get("title") or None,
+                    "manager_email": _manager_email(payload),
                     # Extra context for the graph node and identity detail. The
                     # flags are what the directory says about admin standing even
                     # when the role-management API is gated for this credential.

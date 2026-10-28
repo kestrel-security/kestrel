@@ -305,3 +305,16 @@ def test_an_account_with_no_session_setting_gets_no_row():
     which is not the same as a known duration, so it must not become a row."""
     raw = _raw("user_session_setting", "U2", {"user_id": "U2"})
     assert SlackNormalizer().normalize("user_session_setting", raw) == []
+
+
+def test_user_worker_type_is_guest_for_restricted_tiers_service_for_bots_else_unknown():
+    normalizer = SlackNormalizer()
+    guest = normalizer.normalize("user", _raw("user", "U1", {"id": "U1", "is_restricted": True}))[0]
+    bot = normalizer.normalize("user", _raw("user", "B1", {"id": "B1", "is_bot": True}))[0]
+    member = normalizer.normalize("user", _raw("user", "U2", {"id": "U2", "profile": {"title": "Engineer"}}))[0]
+
+    assert guest.attributes["worker_type"] == "guest"
+    assert bot.attributes["worker_type"] == "service"
+    assert member.attributes["worker_type"] == "unknown"
+    assert member.attributes["title"] == "Engineer"
+    assert guest.attributes["title"] is None

@@ -31,10 +31,11 @@ from kestrel.db.models.access import Grant, GrantedVia, Group, GroupMembership, 
 from kestrel.db.models.activity_event import ActivityEvent
 from kestrel.db.models.connector import ConnectorRun
 from kestrel.db.models.event import ChangeType, Event
-from kestrel.db.models.identity import Identity, IdentityType
+from kestrel.db.models.identity import Identity, IdentityType, ServiceAccount, coerce_worker_type
 from kestrel.db.models.oauth import OAuthApplication, OAuthGrant, OAuthScope
 from kestrel.db.models.resource import Resource, ResourceType, ResourceVisibility
 from kestrel.db.models.setting import TenantSetting
+from kestrel.policies.runtime.helpers import TRUSTED_ACTIVITY_SOURCES
 
 PROVENANCE_KINDS = (
     "identity",
@@ -53,14 +54,23 @@ PROVENANCE_KINDS = (
 # moving -- so they land in the same ``events`` feed as entity drift.
 RELATIONSHIP_KINDS = ("group_membership", "grant", "oauth_grant")
 
+# An observation that an account did something at a point in time, emitted by
+# audit-log and usage-report normalizers (``{identity_ref, observed_at,
+# source}``). It has no table: the run's latest observation per account is
+# max-merged onto ``identities.last_active_at`` so an events-only incremental
+# sync keeps "last sign-in" current for providers whose directory carries no
+# such field (GitHub), and activity-event retention can never erase it.
+IDENTITY_ACTIVITY_KIND = "identity_activity"
+
 # Every normalized kind the pipeline persists, across both write paths: the
-# provenance pass and the relationship pass. `oauth_scope` belongs to neither
-# tuple above -- it is reconciled against its owning application inside
-# `upsert_relationship_objects` rather than upserted row by row -- so neither
-# tuple alone is the vocabulary.
+# provenance pass and the relationship pass. `oauth_scope` and
+# `identity_activity` belong to neither tuple above -- scopes are reconciled
+# against their owning application and activity is folded onto the identity
+# inside `upsert_relationship_objects` rather than upserted row by row -- so
+# neither tuple alone is the vocabulary.
 #
 # This is the set a manifest's `maps_to_entity` must draw from.
-NORMALIZED_KINDS = frozenset({*PROVENANCE_KINDS, *RELATIONSHIP_KINDS, "oauth_scope"})
+NORMALIZED_KINDS = frozenset({*PROVENANCE_KINDS, *RELATIONSHIP_KINDS, "oauth_scope", IDENTITY_ACTIVITY_KIND})
 
 # Audit-log rows are append-only historical facts — never treat absence from
 # a later collection window as a deletion.
@@ -82,6 +92,30 @@ NON_FEED_KINDS = frozenset({"event"})
 # onto the entity so policies can use them; they must not emit Events or they
 # drown the Changes feed in ``other`` / ``low`` rows (DEC-024).
 VOLATILE_FIELDS = frozenset({"last_active_at", "last_active_source", "created_at_source"})
+
+# Identity attributes that map to a column of their own; everything else a
+# normalizer emits lands in ``identities.attributes``.
+_IDENTITY_COLUMN_KEYS = frozenset(
+    {
+        "identity_type",
+        "email",
+        "display_name",
+        "is_disabled",
+        "mfa_enabled",
+        "is_external",
+        "created_at_source",
+        "last_active_at",
+        "last_active_source",
+        "worker_type",
+        "department",
+        "title",
+        "manager_email",
+        "disabled_at",
+        "expires_at",
+    }
+)
+# Reference attributes the relationship pass consumes; not data about the account.
+_IDENTITY_REF_KEYS = frozenset({"owner_identity_ref"})
 
 # Unions, not bare `type`/instances, so mypy can resolve the ProvenanceMixin
 # attributes (application_instance_id, provider_object_id, last_seen_at)
@@ -186,10 +220,54 @@ def _parse_optional_datetime(value: Any) -> datetime | None:
     raise TypeError(f"Expected datetime or ISO string, got {type(value)!r}")
 
 
+def _identity_attributes(attributes: dict[str, Any]) -> dict[str, Any]:
+    """Provider extras with no column of their own, JSON-safe, sorted, nulls dropped.
+
+    Dropping ``None`` means a key the provider stops reporting disappears
+    rather than lingering as ``null``, and sorted keys keep JSONB equality (and
+    so the change diff) stable from run to run.
+    """
+    return {
+        key: _json_safe(value)
+        for key in sorted(attributes)
+        if key not in _IDENTITY_COLUMN_KEYS and key not in _IDENTITY_REF_KEYS and (value := attributes[key]) is not None
+    }
+
+
+def merge_last_active(
+    existing_at: datetime | None,
+    existing_source: str | None,
+    incoming_at: datetime | None,
+    incoming_source: str | None,
+) -> tuple[datetime | None, str | None]:
+    """The ``(last_active_at, last_active_source)`` to store after a new observation.
+
+    Activity only ever moves forward: an observation the provider no longer
+    repeats (a GitHub member re-sync carries no sign-in field; an audit-log
+    window that has rolled past the last action) must not erase what an earlier
+    run learned. A trusted source (``TRUSTED_ACTIVITY_SOURCES``) always beats an
+    untrusted one, and between two of the same trust the later timestamp wins.
+    """
+    if incoming_at is None:
+        return existing_at, existing_source
+    if existing_at is None:
+        return incoming_at, incoming_source
+    existing_trusted = existing_source in TRUSTED_ACTIVITY_SOURCES
+    incoming_trusted = incoming_source in TRUSTED_ACTIVITY_SOURCES
+    if existing_trusted and not incoming_trusted:
+        return existing_at, existing_source
+    if incoming_trusted and not existing_trusted:
+        return incoming_at, incoming_source
+    if incoming_at > existing_at:
+        return incoming_at, incoming_source
+    return existing_at, existing_source
+
+
 def _entity_kwargs(
     kind: str, attributes: dict[str, Any], *, id_maps: dict[str, dict[str, uuid.UUID]] | None = None
 ) -> dict[str, Any]:
     if kind == "identity":
+        worker_type = coerce_worker_type(attributes.get("worker_type"))
         return {
             "identity_type": IdentityType(attributes["identity_type"]),
             "email": attributes.get("email"),
@@ -200,6 +278,14 @@ def _entity_kwargs(
             "created_at_source": _parse_optional_datetime(attributes.get("created_at_source")),
             "last_active_at": _parse_optional_datetime(attributes.get("last_active_at")),
             "last_active_source": attributes.get("last_active_source"),
+            "worker_type": worker_type,
+            "worker_type_source": "connector" if worker_type != "unknown" else None,
+            "department": attributes.get("department") or None,
+            "title": attributes.get("title") or None,
+            "manager_email": attributes.get("manager_email") or None,
+            "disabled_at": _parse_optional_datetime(attributes.get("disabled_at")),
+            "expires_at": _parse_optional_datetime(attributes.get("expires_at")),
+            "attributes": _identity_attributes(attributes),
         }
     if kind == "group":
         return {"name": attributes["name"], "description": attributes.get("description")}
@@ -291,6 +377,35 @@ def _preserve_sensitivity_override(existing: Any, new_kwargs: dict[str, Any]) ->
     if config.get("sensitivity_override_at"):
         merged["sensitivity_override_at"] = config["sensitivity_override_at"]
     new_kwargs["config"] = merged
+
+
+def _reconcile_identity_update(existing: Identity, new_kwargs: dict[str, Any]) -> None:
+    """Fields on an identity that a later sync must merge rather than overwrite.
+
+    ``last_active_at`` only moves forward (``merge_last_active``), and a worker
+    type an operator classification rule assigned (``worker_type_source``
+    starting with ``rule:``) outranks the provider's profile field: the
+    reclassification pass owns that column until the rule stops matching.
+    """
+    new_kwargs["last_active_at"], new_kwargs["last_active_source"] = merge_last_active(
+        existing.last_active_at,
+        existing.last_active_source,
+        new_kwargs.get("last_active_at"),
+        new_kwargs.get("last_active_source"),
+    )
+    if (existing.worker_type_source or "").startswith("rule:"):
+        new_kwargs["worker_type"] = existing.worker_type
+        new_kwargs["worker_type_source"] = existing.worker_type_source
+
+
+def _attribute_changes(old: dict[str, Any], new: dict[str, Any]) -> list[dict[str, Any]]:
+    """Per-key diff of ``identities.attributes`` so the Changes feed names the
+    attribute that moved rather than dumping two JSON blobs."""
+    return [
+        {"field": f"attributes.{key}", "old": _json_safe(old.get(key)), "new": _json_safe(new.get(key))}
+        for key in sorted(set(old) | set(new))
+        if old.get(key) != new.get(key)
+    ]
 
 
 def _provenance_sort_key(obj: NormalizedObject) -> int:
@@ -390,10 +505,14 @@ def upsert_provenance_objects(session: Session, objects: list[NormalizedObject],
             revived = existing.deleted_at is not None
             if obj.kind == "resource":
                 _preserve_sensitivity_override(existing, new_kwargs)
+            if obj.kind == "identity":
+                _reconcile_identity_update(cast("Identity", existing), new_kwargs)
             field_changes = []
             for key, new_value in new_kwargs.items():
                 old_value = getattr(existing, key)
-                if old_value != new_value and key not in VOLATILE_FIELDS:
+                if key == "attributes":
+                    field_changes.extend(_attribute_changes(old_value or {}, new_value or {}))
+                elif old_value != new_value and key not in VOLATILE_FIELDS:
                     field_changes.append(
                         {
                             "field": key,
@@ -594,6 +713,8 @@ def upsert_relationship_objects(session: Session, objects: list[NormalizedObject
     """
     now = datetime.now(UTC)
     changes: list[EntityChange] = []
+    apply_identity_activity(session, objects, ctx)
+    _apply_service_account_owners(session, objects, ctx)
     previous_scopes = _existing_scope_sets(session, objects, ctx)
     collected_scopes: dict[uuid.UUID, set[str]] = {app_id: set() for app_id in previous_scopes}
     # Existing rows, loaded once per kind and keyed by natural key. Rows this
@@ -787,6 +908,105 @@ def upsert_relationship_objects(session: Session, objects: list[NormalizedObject
 
     changes.extend(_reconcile_oauth_scopes(session, previous_scopes, collected_scopes))
     return changes
+
+
+def _resolve_identity_ids(session: Session, refs: set[str], ctx: UpsertContext) -> dict[str, uuid.UUID]:
+    """Provider id -> identity id, from this run's id map first and the table second.
+
+    An events-only incremental run (the audit-log poll) never collects the
+    directory, so its id map has no identities; the accounts it names already
+    exist from the last full sync and are looked up by provider id.
+    """
+    resolved = {ref: found for ref in refs if (found := ctx.id_maps["identity"].get(ref)) is not None}
+    missing = refs - set(resolved)
+    if missing:
+        rows = session.execute(
+            select(Identity.provider_object_id, Identity.id).where(
+                Identity.application_instance_id == ctx.application_instance_id,
+                _any_str(Identity.provider_object_id, missing),
+            )
+        ).all()
+        resolved.update({str(provider_id): identity_id for provider_id, identity_id in rows})
+    return resolved
+
+
+def apply_identity_activity(session: Session, objects: list[NormalizedObject], ctx: UpsertContext) -> int:
+    """Fold this run's ``identity_activity`` observations onto ``identities``.
+
+    One observation per account survives: the latest ``observed_at`` in the
+    run, which is then merged with the stored value by ``merge_last_active``,
+    so a cursor window that re-reads its 15-minute overlap is idempotent and a
+    short window can only move the value forward. Returns the number of
+    identities whose activity advanced.
+    """
+    latest: dict[str, tuple[datetime, str]] = {}
+    for obj in objects:
+        if obj.kind != IDENTITY_ACTIVITY_KIND:
+            continue
+        ref = obj.attributes.get("identity_ref")
+        observed_at = _parse_optional_datetime(obj.attributes.get("observed_at"))
+        if not ref or observed_at is None:
+            continue
+        source = str(obj.attributes.get("source") or "audit")
+        current = latest.get(str(ref))
+        if current is None or observed_at > current[0]:
+            latest[str(ref)] = (observed_at, source)
+    if not latest:
+        return 0
+
+    identity_ids = _resolve_identity_ids(session, set(latest), ctx)
+    if not identity_ids:
+        return 0
+    by_id = {
+        row.id: row for row in session.scalars(select(Identity).where(_any_uuid(Identity.id, identity_ids.values()))).all()
+    }
+    advanced = 0
+    for ref, (observed_at, source) in latest.items():
+        identity = by_id.get(identity_ids.get(ref))  # type: ignore[arg-type]
+        if identity is None:
+            continue
+        merged_at, merged_source = merge_last_active(
+            identity.last_active_at, identity.last_active_source, observed_at, source
+        )
+        if merged_at != identity.last_active_at or merged_source != identity.last_active_source:
+            identity.last_active_at = merged_at
+            identity.last_active_source = merged_source
+            advanced += 1
+    return advanced
+
+
+def _apply_service_account_owners(session: Session, objects: list[NormalizedObject], ctx: UpsertContext) -> None:
+    """Write ``service_accounts.owner_identity_id`` for identities that name an owner.
+
+    A non-human account's owner is the person to ask about it; a row with no
+    known owner is the signal "service account without an owner" policies read.
+    """
+    owners: dict[str, str] = {
+        obj.provider_id: str(ref)
+        for obj in objects
+        if obj.kind == "identity" and obj.attributes.get("identity_type") == "service_account"
+        if (ref := obj.attributes.get("owner_identity_ref"))
+    }
+    if not owners:
+        return
+    resolved = _resolve_identity_ids(session, set(owners) | set(owners.values()), ctx)
+    account_ids = {resolved[provider_id] for provider_id in owners if provider_id in resolved}
+    if not account_ids:
+        return
+    existing = {
+        row.identity_id: row
+        for row in session.scalars(select(ServiceAccount).where(_any_uuid(ServiceAccount.identity_id, account_ids))).all()
+    }
+    for provider_id, owner_ref in owners.items():
+        account_id = resolved.get(provider_id)
+        if account_id is None:
+            continue
+        owner_id = resolved.get(owner_ref)
+        row = existing.get(account_id)
+        if row is None:
+            session.add(ServiceAccount(identity_id=account_id, owner_identity_id=owner_id))
+        else:
+            row.owner_identity_id = owner_id
 
 
 def _reconcile_oauth_scopes(

@@ -88,7 +88,7 @@ and shipping a `manifest.yaml`:
 - `auth_methods[]` with `id`, `secret_fields`, `config_fields` (plus `optional_config_fields`, the subset the create form may leave blank; every other config field is required), and the in-product setup guide (`setup_overview`, ordered `setup_steps`, `field_help`, `scopes_note`) that Integrations renders while an operator mints credentials
 - `setup_docs`: the path of the setup guide under `docs/connectors/`, linked from the UI
 - `required_scopes`: validated at load and by `kestrel connector validate`; known write, `ReadWrite`, and `.manage` scopes are rejected. GitHub classic `repo` is allowlisted for private-repository metadata with the tradeoff stated in its setup guide. This constrains *declared* scopes; connector Python itself is trusted code
-- `object_types[]` with `maps_to_entity` and optional `supports_incremental`
+- `object_types[]` with `maps_to_entity` and optional `supports_incremental`. Identity attributes beyond the shared columns (`worker_type`, `department`, `title`, `manager_email`, `disabled_at`, `expires_at`) land in `identities.attributes`; `kestrel.connectors.sdk.payload.classify_worker_type` maps a provider's user-type label onto the shared `worker_type` vocabulary. An audit-log or usage-report normalizer may also emit `identity_activity` (`{identity_ref, observed_at, source}`) to keep `last_active_at` current for accounts the directory carries no sign-in field for
 - `supports_events` and `change_classes[]`: the change-coverage contract (below)
 - `example_config`, `fixtures_path`
 

@@ -8,10 +8,20 @@
       "firstName": "Ada",
       "lastName": "Lovelace",
       "email": "ada@acme.example.com",
-      "login": "ada@acme.example.com"
+      "login": "ada@acme.example.com",
+      "userType": "Employee",
+      "department": "Engineering",
+      "title": "Staff Engineer",
+      "managerId": "grace@acme.example.com",
+      "employeeNumber": "E-0001"
     },
     "factors": [
-      {"id": "mfa1", "factorType": "token:software:totp", "provider": "OKTA", "status": "ACTIVE"}
+      {
+        "id": "mfa1",
+        "factorType": "token:software:totp",
+        "provider": "OKTA",
+        "status": "ACTIVE"
+      }
     ]
   },
   {
@@ -23,7 +33,11 @@
       "firstName": "Grace",
       "lastName": "Hopper",
       "email": "grace@acme.example.com",
-      "login": "grace@acme.example.com"
+      "login": "grace@acme.example.com",
+      "userType": "Employee",
+      "department": "Engineering",
+      "title": "VP Engineering",
+      "employeeNumber": "E-0002"
     },
     "factors": []
   },
@@ -35,10 +49,20 @@
       "firstName": "Alan",
       "lastName": "Turing",
       "email": "alan@acme.example.com",
-      "login": "alan@acme.example.com"
+      "login": "alan@acme.example.com",
+      "userType": "Employee",
+      "department": "Security",
+      "title": "Security Engineer",
+      "managerId": "grace@acme.example.com",
+      "employeeNumber": "E-0003"
     },
     "factors": [
-      {"id": "mfa2", "factorType": "sms", "provider": "OKTA", "status": "ACTIVE"}
+      {
+        "id": "mfa2",
+        "factorType": "sms",
+        "provider": "OKTA",
+        "status": "ACTIVE"
+      }
     ]
   },
   {
@@ -51,9 +75,13 @@
       "email": "contractor@vendor.example.com",
       "login": "contractor@vendor.example.com",
       "userType": "Contractor",
-      "isExternal": true
+      "isExternal": true,
+      "department": "Engineering",
+      "title": "Contract Developer",
+      "managerId": "ada@acme.example.com"
     },
-    "factors": []
+    "factors": [],
+    "lastLogin": "2026-02-01T09:00:00.000Z"
   },
   {
     "id": "00uformer00000000005",
@@ -63,8 +91,11 @@
       "firstName": "Former",
       "lastName": "Employee",
       "email": "former@acme.example.com",
-      "login": "former@acme.example.com"
+      "login": "former@acme.example.com",
+      "userType": "Employee",
+      "department": "Sales"
     },
-    "factors": []
+    "factors": [],
+    "statusChanged": "2026-03-15T17:00:00.000Z"
   }
 ]

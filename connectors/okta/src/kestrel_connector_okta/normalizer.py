@@ -9,7 +9,7 @@ from typing import Any
 
 from kestrel.connectors.activity_actions import category_for
 from kestrel.connectors.sdk.base import NormalizedObject, NormalizedRelationship, RawObject
-from kestrel.connectors.sdk.payload import sub_dict
+from kestrel.connectors.sdk.payload import classify_worker_type, looks_like_email, sub_dict
 from kestrel.connectors.settings_emit import setting_object, settings_from_mapping
 
 _SENSITIVE_SCOPES = frozenset(
@@ -323,6 +323,14 @@ class OktaNormalizer:
         identity_type = "user"
         if profile.get("login") and str(profile.get("login")).endswith("@clients.okta.com"):
             identity_type = "service_account"
+        # `userType` is a free-text profile attribute; `isExternal` is the
+        # Okta-managed flag. Either marks a contingent worker, and a tenant
+        # that fills in neither gets `unknown`, never `employee`.
+        user_type = profile.get("userType")
+        worker_type = classify_worker_type(user_type, is_bot=identity_type == "service_account")
+        if worker_type == "unknown" and profile.get("isExternal"):
+            worker_type = "contractor"
+        manager_email = looks_like_email(profile.get("managerId")) or looks_like_email(profile.get("manager"))
         return [
             NormalizedObject(
                 kind="identity",
@@ -342,6 +350,18 @@ class OktaNormalizer:
                     "last_active_at": _parse_dt(payload.get("lastLogin")),
                     "last_active_source": "login" if payload.get("lastLogin") else None,
                     "created_at_source": _parse_dt(payload.get("created")),
+                    "worker_type": worker_type,
+                    "department": profile.get("department") or None,
+                    "title": profile.get("title") or None,
+                    "manager_email": manager_email,
+                    # `statusChanged` moves on every lifecycle transition; it is
+                    # "when disabled" only while the account is disabled.
+                    "disabled_at": _parse_dt(payload.get("statusChanged")) if is_disabled else None,
+                    "user_type": user_type or None,
+                    "status": status or None,
+                    "employee_number": profile.get("employeeNumber") or None,
+                    "organization": profile.get("organization") or None,
+                    "manager_ref": None if manager_email else (profile.get("managerId") or profile.get("manager") or None),
                 },
                 raw_source=payload,
             )
@@ -571,6 +591,9 @@ class OktaNormalizer:
                     "is_external": False,
                     "last_active_at": _parse_dt(payload.get("lastUpdated")),
                     "created_at_source": _parse_dt(payload.get("created")),
+                    "worker_type": "service",
+                    # The user the token was issued to is its owner.
+                    "owner_identity_ref": str(user_id) if user_id else None,
                 },
                 raw_source=payload,
             )
