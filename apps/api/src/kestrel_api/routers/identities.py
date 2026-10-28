@@ -12,7 +12,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from kestrel.db.base import is_active
-from kestrel.db.models.identity import Identity, IdentityType
+from kestrel.db.models.identity import WORKER_TYPES, Identity, IdentityType
 from kestrel.db.models.org import Organization
 from kestrel.graph.queries import privileged_identity_ids_subquery
 from kestrel.identities.detail import identity_reachable_access
@@ -45,6 +45,13 @@ def _serialize_identity(
         "created_at": identity.created_at.isoformat() if identity.created_at else None,
         "last_active_at": identity.last_active_at.isoformat() if identity.last_active_at else None,
         "last_active_source": identity.last_active_source,
+        "worker_type": identity.worker_type,
+        "worker_type_source": identity.worker_type_source,
+        "department": identity.department,
+        "title": identity.title,
+        "manager_email": identity.manager_email,
+        "disabled_at": identity.disabled_at.isoformat() if identity.disabled_at else None,
+        "expires_at": identity.expires_at.isoformat() if identity.expires_at else None,
         "explore_path": (f"/explore?focus={identity.id}&focus_type=identity&direction=out"),
     }
     if application_types is not None:
@@ -61,6 +68,9 @@ def list_identities(
     privileged: bool | None = Query(default=None),
     is_external: bool | None = Query(default=None),
     mfa_enabled: bool | None = Query(default=None),
+    worker_type: str | None = Query(
+        default=None, description="employee, contractor, vendor_or_partner, guest, service, unknown"
+    ),
     application_instance_id: uuid.UUID | None = Query(default=None),
     collapse: bool = Query(
         default=False,
@@ -94,6 +104,10 @@ def list_identities(
         stmt = stmt.where(Identity.is_external.is_(is_external))
     if mfa_enabled is not None:
         stmt = stmt.where(Identity.mfa_enabled.is_(mfa_enabled))
+    if worker_type is not None:
+        if worker_type not in WORKER_TYPES:
+            raise HTTPException(status_code=422, detail=f"Unknown worker_type '{worker_type}'")
+        stmt = stmt.where(Identity.worker_type == worker_type)
     if application_instance_id is not None:
         stmt = stmt.where(Identity.application_instance_id == application_instance_id)
 

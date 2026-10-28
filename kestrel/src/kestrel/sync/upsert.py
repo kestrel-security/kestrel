@@ -285,7 +285,9 @@ def _entity_kwargs(
             "manager_email": attributes.get("manager_email") or None,
             "disabled_at": _parse_optional_datetime(attributes.get("disabled_at")),
             "expires_at": _parse_optional_datetime(attributes.get("expires_at")),
-            "attributes": _identity_attributes(attributes),
+            # The provider's own answer is kept beside the extras so a
+            # classification rule that stops matching can fall back to it.
+            "attributes": {**_identity_attributes(attributes), "connector_worker_type": worker_type},
         }
     if kind == "group":
         return {"name": attributes["name"], "description": attributes.get("description")}

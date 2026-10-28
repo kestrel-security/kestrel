@@ -8,6 +8,7 @@ import { IdentityAccountsPanel } from "@/components/identities/identity-accounts
 import { IdentityAccessPanel } from "@/components/identities/identity-access-panel";
 import { apiStatePage } from "@/components/api-state";
 import { Badge, SeverityBadge } from "@/components/ui/badge";
+import { WORKER_TYPE_LABELS, describeWorkerTypeSource, workerTypeBadge } from "@/lib/worker-type";
 import { AppPage } from "@/components/ui/app-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -45,6 +46,11 @@ export default async function IdentityDetailPage({ params }: { params: Promise<{
         status={
           <span className="flex flex-wrap items-center gap-1.5">
             {identity.privileged && <Badge variant="destructive">Privileged</Badge>}
+            {workerTypeBadge(identity.worker_type) && (
+              <Badge variant={workerTypeBadge(identity.worker_type)!}>
+                {WORKER_TYPE_LABELS[identity.worker_type as keyof typeof WORKER_TYPE_LABELS]}
+              </Badge>
+            )}
             {identity.is_external && <Badge variant="outline">External</Badge>}
             {identity.is_disabled && <Badge variant="outline">Disabled</Badge>}
             {identity.mfa_enabled === false && <Badge variant="outline">No MFA</Badge>}
@@ -93,6 +99,28 @@ export default async function IdentityDetailPage({ params }: { params: Promise<{
                       : "User"}
                 </span>
               </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground">Worker type</span>
+                <span title={describeWorkerTypeSource(identity.worker_type_source)}>
+                  {WORKER_TYPE_LABELS[(identity.worker_type ?? "unknown") as keyof typeof WORKER_TYPE_LABELS] ??
+                    "Unknown"}
+                  {identity.worker_type_source ? (
+                    <span className="text-muted-foreground"> · {describeWorkerTypeSource(identity.worker_type_source)}</span>
+                  ) : null}
+                </span>
+              </div>
+              {(identity.department || identity.title) && (
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">Role</span>
+                  <span>{[identity.title, identity.department].filter(Boolean).join(" · ")}</span>
+                </div>
+              )}
+              {identity.manager_email && (
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">Manager</span>
+                  <span>{identity.manager_email}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between gap-2">
                 <span className="text-muted-foreground">MFA</span>
                 <span>

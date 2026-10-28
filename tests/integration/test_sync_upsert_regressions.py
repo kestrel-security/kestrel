@@ -265,7 +265,7 @@ def test_identity_extras_land_in_columns_and_attributes(runs: _Runs):
     assert row.disabled_at == datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
     assert row.expires_at == datetime(2026, 12, 31, tzinfo=UTC)
     # Columns stay out of the extras; nulls are dropped; keys are sorted.
-    assert row.attributes == {"is_admin": False, "org_unit_path": "/Contractors"}
+    assert row.attributes == {"connector_worker_type": "contractor", "is_admin": False, "org_unit_path": "/Contractors"}
 
 
 def test_an_unrecognized_worker_type_is_stored_as_unknown_without_a_source(runs: _Runs):

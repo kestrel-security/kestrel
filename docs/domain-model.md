@@ -15,6 +15,7 @@ domain group, and how they relate. Every tenant-owned table carries `org_id`
 | `OperatorNotificationPreferences` | `notification_prefs.py` | Per-operator channel mutes and severity thresholds |
 | `OperatorInAppNotification` | `in_app_notification.py` | Per-operator inbox rows written by `notifications/dispatch.py`; `GET /notifications` |
 | `OrgLlmSettings` | `llm_settings.py` | Org-scoped LLM provider, model, and envelope-encrypted key for policy drafts |
+| `OrgIdentityClassificationRule` | `identity_classification.py` | Ordered operator rules (`email_domain`, `org_unit_path_prefix`, `group_name`, `user_type`, `application_type` → `worker_type`) that outrank the connector's own classification; applied by `kestrel.identities.classification.reclassify_identities` after every directory sync and on save (`GET`/`PUT /settings/identity-classification`, `POST .../preview`). A rule never relabels a `service` account |
 
 ## Applications and connectors
 

@@ -49,6 +49,7 @@ from kestrel.findings.investigation.status import create_finding_exception
 from kestrel.findings.notes import add_note
 from kestrel.findings.presets import FindingPresetError, create_or_update_preset
 from kestrel.findings.watchers import watch_finding
+from kestrel.identities.classification import RuleSpec, reclassify_identities, replace_rules
 from kestrel.policies.llm_settings import upsert_org_llm_settings
 
 TREND_DAYS = 90
@@ -535,6 +536,34 @@ def _finding_presets(
     result.add("finding_filter_presets", created)
 
 
+def _classification_rules(session: Session, org: Organization, result: ProductSeedResult) -> None:
+    """Settings -> Identity classification shows the two rules a real tenant
+    starts with: the company domain is staff, the contractors org unit is not.
+
+    Google Workspace carries no employment field, so without the org-unit rule
+    its contractor accounts would stay ``unknown`` and the cross-app contractor
+    policies would never see them.
+    """
+    rules = [
+        RuleSpec(
+            worker_type="contractor",
+            match_kind="org_unit_path_prefix",
+            match_value="/Contractors",
+            application_type="google_workspace",
+            label="Google Workspace /Contractors org unit",
+        ),
+        RuleSpec(
+            worker_type="employee",
+            match_kind="email_domain",
+            match_value="acme.example.com",
+            label="Company address",
+        ),
+    ]
+    replace_rules(session, org.id, rules)
+    reclassify_identities(session, org.id)
+    result.add("identity_classification_rules", len(rules))
+
+
 def _llm_settings(session: Session, org: Organization, result: ProductSeedResult) -> None:
     """Settings -> AI reads "configured" rather than "not configured".
 
@@ -699,6 +728,7 @@ def seed_product_data(
     result = ProductSeedResult()
 
     operators = _operators(session, org, result, password=operator_password)
+    _classification_rules(session, org, result)
     _triage_findings(session, org, operators, result, rng=rng, now=clock)
     _dashboards(session, org, operators, result)
     _finding_presets(session, org, operators, result)

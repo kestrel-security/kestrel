@@ -138,7 +138,7 @@ behavior behind each group.
 
 <!-- BEGIN GENERATED ROUTES -->
 
-_174 operations, generated from the application's OpenAPI schema by `scripts/gen-api-docs.py`. Do not edit by hand._
+_177 operations, generated from the application's OpenAPI schema by `scripts/gen-api-docs.py`. Do not edit by hand._
 
 ### Auth
 
@@ -415,6 +415,14 @@ _174 operations, generated from the application's OpenAPI schema by `scripts/gen
 | `GET` | `/api/v1/resources` | List Resources |
 | `GET` | `/api/v1/resources/{resource_id}` | Get Resource |
 | `PATCH` | `/api/v1/resources/{resource_id}/sensitivity` | Set Resource Sensitivity |
+
+### Settings identity classification
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/api/v1/settings/identity-classification` | Get Classification Rules |
+| `PUT` | `/api/v1/settings/identity-classification` | Put Classification Rules |
+| `POST` | `/api/v1/settings/identity-classification/preview` | Preview Classification Rules |
 
 ### Operational endpoints (no auth, outside /api/v1)
 

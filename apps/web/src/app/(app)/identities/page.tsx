@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ListSearchForm } from "@/components/list-filters";
 import { api } from "@/lib/api";
 import { relativeTime } from "@/lib/utils";
+import { WORKER_TYPE_LABELS, isWorkerTypeFilter, workerTypeBadge } from "@/lib/worker-type";
 import type { Identity, Page } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,7 @@ type SearchParams = {
   is_external?: string;
   mfa_enabled?: string;
   identity_type?: string;
+  worker_type?: string;
 };
 
 /** One row per *person*: correlated accounts collapse into a single line. */
@@ -34,6 +36,7 @@ export default async function IdentitiesPage({ searchParams }: { searchParams: P
   if (params.is_external) query.set("is_external", params.is_external);
   if (params.mfa_enabled) query.set("mfa_enabled", params.mfa_enabled);
   if (params.identity_type) query.set("identity_type", params.identity_type);
+  if (isWorkerTypeFilter(params.worker_type)) query.set("worker_type", params.worker_type);
 
   let page: Page<Identity>;
   try {
@@ -45,7 +48,12 @@ export default async function IdentitiesPage({ searchParams }: { searchParams: P
   }
 
   const hasFilter = Boolean(
-    params.search || params.privileged || params.is_external || params.mfa_enabled || params.identity_type,
+    params.search ||
+      params.privileged ||
+      params.is_external ||
+      params.mfa_enabled ||
+      params.identity_type ||
+      params.worker_type,
   );
 
   function chipHref(next: Partial<SearchParams>): string {
@@ -74,6 +82,7 @@ export default async function IdentitiesPage({ searchParams }: { searchParams: P
               is_external: params.is_external,
               mfa_enabled: params.mfa_enabled,
               identity_type: params.identity_type,
+              worker_type: params.worker_type,
             }}
           />
           <div className="flex flex-wrap items-center gap-2">
@@ -91,6 +100,16 @@ export default async function IdentitiesPage({ searchParams }: { searchParams: P
               label="No MFA"
               active={params.mfa_enabled === "false"}
               href={chipHref({ mfa_enabled: params.mfa_enabled === "false" ? undefined : "false" })}
+            />
+            <FilterChip
+              label="Contractors"
+              active={params.worker_type === "contractor"}
+              href={chipHref({ worker_type: params.worker_type === "contractor" ? undefined : "contractor" })}
+            />
+            <FilterChip
+              label="Guests"
+              active={params.worker_type === "guest"}
+              href={chipHref({ worker_type: params.worker_type === "guest" ? undefined : "guest" })}
             />
             <FilterChip
               label="Service accounts"
@@ -169,6 +188,11 @@ export default async function IdentitiesPage({ searchParams }: { searchParams: P
                   <TableCell>
                     <span className="flex flex-wrap gap-1">
                       {identity.privileged && <Badge variant="destructive">Privileged</Badge>}
+                      {workerTypeBadge(identity.worker_type) && (
+                        <Badge variant={workerTypeBadge(identity.worker_type)!} title={identity.worker_type_source ?? undefined}>
+                          {WORKER_TYPE_LABELS[identity.worker_type as keyof typeof WORKER_TYPE_LABELS]}
+                        </Badge>
+                      )}
                       {identity.is_external && <Badge variant="outline">External</Badge>}
                       {identity.is_disabled && <Badge variant="outline">Disabled</Badge>}
                       {identity.mfa_enabled === false && <Badge variant="outline">No MFA</Badge>}

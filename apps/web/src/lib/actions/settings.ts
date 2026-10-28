@@ -9,6 +9,9 @@ import { formatActionError } from "@/lib/action-error";
 import type {
   AiSettings,
   AuditLogEntry,
+  ClassificationPreview,
+  ClassificationRuleInput,
+  ClassificationRules,
   EmailSecurity,
   EmailSettings,
   EmailTestResult,
@@ -126,6 +129,32 @@ export async function clearAiSettings(): Promise<
     const result = await api.delete<{ cleared: boolean }>("/settings/ai");
     revalidatePath("/settings/ai");
     return { ok: true, cleared: result.cleared };
+  } catch (err) {
+    return { ok: false, error: formatActionError(err) };
+  }
+}
+
+export async function saveClassificationRules(
+  rules: ClassificationRuleInput[],
+): Promise<{ ok: true; result: ClassificationRules } | { ok: false; error: string }> {
+  try {
+    const result = await api.put<ClassificationRules>("/settings/identity-classification", { rules });
+    revalidatePath("/settings/identity-classification");
+    revalidatePath("/identities");
+    return { ok: true, result };
+  } catch (err) {
+    return { ok: false, error: formatActionError(err) };
+  }
+}
+
+export async function previewClassificationRules(
+  rules: ClassificationRuleInput[],
+): Promise<{ ok: true; result: ClassificationPreview } | { ok: false; error: string }> {
+  try {
+    const result = await api.post<ClassificationPreview>("/settings/identity-classification/preview", {
+      rules,
+    });
+    return { ok: true, result };
   } catch (err) {
     return { ok: false, error: formatActionError(err) };
   }

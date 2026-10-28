@@ -71,6 +71,10 @@ ENDPOINTS: list[tuple[str, str, str]] = [
     ("GET", "/api/v1/settings/ai", "admin"),
     ("PUT", "/api/v1/settings/ai", "admin"),
     ("DELETE", "/api/v1/settings/ai", "admin"),
+    # -- settings/identity-classification --
+    ("GET", "/api/v1/settings/identity-classification", "admin"),
+    ("PUT", "/api/v1/settings/identity-classification", "admin"),
+    ("POST", "/api/v1/settings/identity-classification/preview", "admin"),
     # -- settings/email --
     ("GET", "/api/v1/settings/email", "admin"),
     ("PUT", "/api/v1/settings/email", "admin"),

@@ -27,6 +27,13 @@ started on them.
   `identity_activity` normalized kind an audit-log normalizer can emit.
 - Okta API tokens record the user they were issued to as the service
   account's owner.
+- Settings → Identity classification (Admin): ordered rules that classify
+  accounts by email domain, org unit path, group name, provider user type, or
+  application type into a worker type, with a preview of what would change.
+  Saving reclassifies every identity without a sync; rules outrank the
+  provider's own label and never relabel bots. The Identities list filters on
+  worker type and shows Contractor / Vendor / Guest badges; identity detail
+  shows the worker type with its source, department, title, and manager.
 
 - Policy helpers `now`, `duration_seconds`, `get_path`, `email_domain`,
   `domain_matches`, `ip_in_networks`, and `matches_any`. The two Google

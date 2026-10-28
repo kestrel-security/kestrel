@@ -1,6 +1,51 @@
 // Copyright 2026 The Kestrel Authors
 // SPDX-License-Identifier: Apache-2.0
 
+export type WorkerType = "employee" | "contractor" | "vendor_or_partner" | "guest" | "service" | "unknown";
+
+export type ClassificationMatchKind =
+  | "email_domain"
+  | "org_unit_path_prefix"
+  | "group_name"
+  | "user_type"
+  | "application_type";
+
+/** One operator rule that assigns a worker type; `priority` is its position. */
+export interface ClassificationRule {
+  id: string;
+  priority: number;
+  is_enabled: boolean;
+  worker_type: WorkerType;
+  match_kind: ClassificationMatchKind;
+  match_value: string;
+  application_type: string | null;
+  label: string | null;
+}
+
+/** A rule as submitted: a new row has no id yet. */
+export interface ClassificationRuleInput {
+  id?: string;
+  is_enabled: boolean;
+  worker_type: WorkerType;
+  match_kind: ClassificationMatchKind;
+  match_value: string;
+  application_type: string | null;
+  label: string | null;
+}
+
+export interface ClassificationRules {
+  rules: ClassificationRule[];
+  match_kinds: ClassificationMatchKind[];
+  worker_types: WorkerType[];
+  reclassified?: number | null;
+}
+
+export interface ClassificationPreview {
+  counts: Record<string, number>;
+  changed: number;
+  matched_by_rule: number[];
+}
+
 export interface Identity {
   id: string;
   identity_type: string;
@@ -13,9 +58,18 @@ export interface Identity {
    * definition the API's `?privileged=` filter and Python policy `roles` checks use. */
   privileged: boolean;
   last_active_at?: string | null;
-  /** Where `last_active_at` came from: `login`, `audit`, or `profile`
-   * (a profile-updated timestamp, which is not activity). */
+  /** Where `last_active_at` came from: `login`, `audit`, `analytics` (activity),
+   * or `profile` (a profile-updated timestamp, which is not activity). */
   last_active_source?: string | null;
+  /** employee, contractor, vendor_or_partner, guest, service, or unknown. */
+  worker_type?: WorkerType | string;
+  /** `connector` (the provider's profile) or `rule:<id>` (a classification rule). */
+  worker_type_source?: string | null;
+  department?: string | null;
+  title?: string | null;
+  manager_email?: string | null;
+  disabled_at?: string | null;
+  expires_at?: string | null;
   application_instance_id?: string | null;
   /** Present when the list was requested with `collapse=true`. */
   application_types?: string[];
