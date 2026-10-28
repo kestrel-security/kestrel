@@ -14,21 +14,26 @@ status, and the `POLICY_ID` that implements the check (when shipped).
 
 | App | Baseline doc | Pack | Against the baseline | Kestrel-only checks |
 |-----|--------------|------|----------------------|---------------------|
-| GitHub | [github.md](github.md) | `packs/github-posture` | 26/34 CIS controls | 20 |
-| Okta | [okta.md](okta.md) | `packs/okta-posture` | 12/15 STIG-derived controls | 8 |
-| Slack | [slack.md](slack.md) | `packs/slack-posture` | 11/14 (no official baseline) | 7 |
-| Google Workspace | [google-workspace.md](google-workspace.md) | `packs/gws-posture` | **4/24 SCuBA controls** | 10 |
+| GitHub | [github.md](github.md) | `packs/github-posture` | 31/34 CIS control rows | 29 |
+| Okta | [okta.md](okta.md) | `packs/okta-posture` | 15/15 STIG-derived rows | 18 |
+| Slack | [slack.md](slack.md) | `packs/slack-posture` | 20/22 (no official baseline) | 7 |
+| Google Workspace | [google-workspace.md](google-workspace.md) | `packs/gws-posture` | **16/27 SCuBA control rows** | 19 |
 
 Two numbers, because they mean different things. The first counts rows carrying a
-control id from a published baseline — the comparable figure. The second counts
-Kestrel checks with no baseline equivalent, which are `collected` by definition
-and would flatter the first if they were folded into it.
+control id from a published baseline, `collected` over all such rows. That is
+the comparable figure. A control that two policies implement has two rows. The
+second counts `collected` rows with no baseline equivalent, which would flatter
+the first if they were folded into it.
 
 Google Workspace is the honest one to look at: it is the only application here
-with an authoritative, enumerable, public baseline, and its 24-row denominator
-still omits nine SCuBA service baselines that have not been mapped at all. Most
-of that gap is a single uncollected surface, the Cloud Identity Policy API,
-rather than dozens of missing checks.
+with an authoritative, enumerable, public baseline, and its 27-row denominator
+still omits eight SCuBA service baselines that have not been mapped. The eleven
+`needs-collection` rows all name the Cloud Identity Policy API as their data
+source; the connector collects that API, but no shipped policy reads those
+settings yet.
+
+These numbers are read off the tables by hand. The test below checks the rows,
+not this summary, so recount when a matrix changes.
 
 Collection status values: `collected` · `needs-collection` · `not-collectable`
 
