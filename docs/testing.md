@@ -47,9 +47,10 @@ runs Tier 1, both documentation jobs, gitleaks, and the commit checks, and
 skips Tier 0, Tier 2, the order-independence and coverage runs, the web build,
 and the dependency audits. Tier 1 stays because several unit tests parse the
 Markdown under `docs/`. The skipped jobs report as skipped, which satisfies
-the required checks. `scripts/ci-changes.sh` makes the call and answers "not
-docs-only" for anything uncertain; pushes to `main` and the release gate
-always run everything. When a skipped job starts reading a Markdown file, add
+the required checks. `scripts/ci-changes.sh` makes the call, using the copy on
+the pull request's base commit so a pull request cannot change the rule for
+itself, and answers "not docs-only" for anything uncertain; pushes to `main`
+and the release gate always run everything. When a skipped job starts reading a Markdown file, add
 that file to the script's exceptions.
 
 ## Commands

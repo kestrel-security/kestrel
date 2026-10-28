@@ -38,11 +38,19 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      # The classifier comes from the base commit, not the pull request: a pull
+      # request that edits it cannot vote itself docs-only. A base without the
+      # script (or no pull request at all) answers false.
       - id: classify
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
-        run: bash scripts/ci-changes.sh "$BASE" "$HEAD"
+        run: |
+          if [[ -n "$BASE" ]] && git show "${BASE}:scripts/ci-changes.sh" >"$RUNNER_TEMP/ci-changes.sh"; then
+            bash "$RUNNER_TEMP/ci-changes.sh" "$BASE" "$HEAD"
+          else
+            echo "docs_only=false" | tee -a "$GITHUB_OUTPUT"
+          fi
 
   pip-audit:
     name: pip-audit

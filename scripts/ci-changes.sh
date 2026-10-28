@@ -21,6 +21,9 @@
 #
 # Anything uncertain answers false: no arguments, an unreadable range, or an
 # empty diff all run the full gate.
+#
+# CI runs this file as it exists on the pull request's base commit, so a
+# change to it takes effect for pull requests opened after it merges.
 set -uo pipefail
 
 EXCEPTIONS=(

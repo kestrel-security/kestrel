@@ -20,10 +20,10 @@ Anyone can contribute; you do not need write access to the repository. The proce
 1. **Fork** `kestrel-security/kestrel` on GitHub and clone your fork ([Setting up](#setting-up)).
 2. **Branch** from the current `main`, make the change, and sign off every commit ([Making a change](#making-a-change)).
 3. **Push** the branch to your fork and **open a pull request** against `main` in the upstream repository ([Pull requests](#pull-requests)).
-4. **CI runs** (a maintainer approves the first run on pull requests from outside the project) and a **maintainer reviews**. Address feedback by pushing more commits to the same branch.
-5. A maintainer **squash-merges** the pull request once a code-owner approval and every required check are in place. Only maintainers can merge; there is no self-merge.
+4. **CI runs** once a maintainer approves it (required for every push from outside the project) and a **maintainer reviews**. Address feedback by pushing more commits to the same branch.
+5. A maintainer **squash-merges** the pull request once a code-owner approval and every required check are in place. Contributors cannot merge their own pull requests.
 
-Maintainers listed in [`MAINTAINERS.md`](MAINTAINERS.md) work on branches in the main repository and follow the same review rules. Nobody else can push to it, so a fork is the only route in.
+Maintainers listed in [`MAINTAINERS.md`](MAINTAINERS.md) work on branches in the main repository, and their pull requests pass the same required checks. While the project has a single maintainer, that maintainer merges their own pull requests without a second review. Nobody else can push to the repository, so a fork is the only route in.
 
 ## Required tooling
 
@@ -91,7 +91,7 @@ Orientation: [`docs/architecture.md`](docs/architecture.md).
 3. Add or update tests at the right tier (see below).
 4. Run the checks for what you touched, then `make validate` before opening the PR.
 5. Update docs that describe the behavior you changed, and add a line under **Unreleased** in `CHANGELOG.md` when the change is user-facing.
-6. Push the branch to your fork (`git push -u origin my-change`) and open the pull request from there. If `main` moves while your PR is open, rebase onto `upstream/main` rather than merging it in; required checks run against the merged result, so an out-of-date branch is re-tested anyway.
+6. Push the branch to your fork (`git push -u origin my-change`) and open the pull request from there. A pull request must be up to date with `main` before it can merge. If `main` moves while yours is open, rebase onto `upstream/main` and force-push (`git push --force-with-lease`), or use the **Update branch** button on the pull request.
 
 ### Checks
 
@@ -156,7 +156,7 @@ Write commit messages as a short imperative summary line, optionally followed by
 
 - Open the PR from your fork against `main` in `kestrel-security/kestrel`, using the template. Fill in the test plan with what you actually ran. Mark it as a draft if it is not ready for review.
 - Keep PRs reviewable: if a refactor is needed to make a change, land the refactor first.
-- **CI on pull requests from forks waits for a maintainer to approve the run.** This is a GitHub Actions safeguard for public repositories, not a judgement on the change; checks will show as pending until a maintainer clicks *Approve and run*. CI secrets are never available to fork pull requests, and nothing in the required checks needs them.
+- **CI on pull requests from forks waits for a maintainer to approve each run.** This is a GitHub Actions safeguard for public repositories, not a judgement on the change; checks show as pending after every push until a maintainer clicks *Approve and run*. CI secrets are never available to fork pull requests, and nothing in the required checks needs them.
 - CI must be green. Do not skip or weaken a check to get there; ask in the PR if a check looks wrong.
 - Pull requests that only change Markdown (or images under `docs/images/`) run a shorter CI gate that skips the database tiers, web build, and dependency audits; those checks show as skipped, which counts as passing. Keep documentation fixes in their own pull request to get the faster gate. Details: [`docs/testing.md`](docs/testing.md#tiers).
 - Merging requires one approving review from a code owner ([`.github/CODEOWNERS`](.github/CODEOWNERS)) and every required check passing. Pull requests are squash-merged, so a tidy PR title and description become the commit on `main`; the individual commits do not need to be polished, but each must be signed off.
