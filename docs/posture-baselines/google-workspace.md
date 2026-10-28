@@ -12,9 +12,9 @@ checkable by anyone, which is the point of publishing it — including while it 
 unflattering.
 
 **Where this stands.** SCuBA enumerates 28 controls in Common Controls alone and
-17 more in Drive & Docs, plus nine further service baselines (Gmail, Calendar,
-Chat, Meet, Groups, Sites, Classroom, Gemini, Assured Controls) that are not yet
-mapped here at all. `packs/gws-posture` (pack version 0.2) ships 34 Workspace policies. The Cloud
+17 more in Drive & Docs, plus eight further service baselines (Gmail beyond two
+controls, Calendar, Chat, Meet, Sites, Classroom, Gemini, Assured Controls) that
+are not yet mapped here. `packs/gws-posture` (pack version 0.2) ships 34 Workspace policies. The Cloud
 Identity Policy API (`cloud-identity.policies.readonly`), collected since
 connector manifest 0.2, unlocked most of the previously `needs-collection` configuration rows.
 

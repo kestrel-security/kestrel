@@ -62,6 +62,10 @@ started on them.
   before the draft reaches the editor. Shipped and stored policies load as before.
 - Activating a stored policy version refreshes the policy title even when that
   version reads a name the new authoring check rejects.
+- The coverage table in `docs/posture-baselines/README.md` matches the four
+  matrices again: GitHub 31/34, Okta 15/15, Slack 20/22, Google Workspace
+  16/27 baseline rows, with the Kestrel-only counts recounted. The Google
+  Workspace note no longer calls the Cloud Identity Policy API uncollected.
 
 ## v0.5.4 — 2026-10-26
 
