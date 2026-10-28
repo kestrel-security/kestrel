@@ -11,6 +11,7 @@ versioned through this API. Enable/disable works for both.
 from __future__ import annotations
 
 import uuid
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from kestrel.audit.service import record_audit_event
@@ -174,6 +175,15 @@ class PolicyGenerateIn(BaseModel):
     connector_hint: str | None = None
     application_instance_id: uuid.UUID | None = None
     include_fixtures: bool = True
+    # ``single_app`` or ``cross_app``; unset, it is read from the hint and the intent's wording.
+    scope: Literal["single_app", "cross_app"] | None = None
+
+
+class PolicyGenerateAssessabilityOut(BaseModel):
+    application_type: str
+    name: str
+    assessable: bool
+    missing: list[str] = Field(default_factory=list)
 
 
 class PolicyGenerateOut(BaseModel):
@@ -186,6 +196,15 @@ class PolicyGenerateOut(BaseModel):
     fixtures: dict | None = None
     fixture_test: PolicyGenerateFixtureTestOut | None = None
     probe_test: PolicyGenerateProbeTestOut | None = None
+    scope: str | None = None
+    scope_source: str | None = None
+    # What the generator understood before drafting: subject, conditions, threshold, fields, REQUIRES.
+    intent_analysis: dict | None = None
+    requires: list[str] = Field(default_factory=list)
+    # Per connected application: whether its connector collects everything in ``requires``.
+    assessability: list[PolicyGenerateAssessabilityOut] | None = None
+    repair_turns: int = 0
+    scope_errors: list[str] | None = None
 
 
 @router.post("/generate")
@@ -214,6 +233,7 @@ def generate_policy(
             include_fixtures=body.include_fixtures,
             session=db,
             org_id=org.id,
+            scope=body.scope,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -224,6 +244,7 @@ def generate_policy(
 def get_policy_generate_catalog(
     connector_hint: str | None = Query(default=None),
     application_instance_id: uuid.UUID | None = Query(default=None),
+    scope: Literal["single_app", "cross_app"] | None = Query(default=None),
     db: Session = Depends(get_db),
     org: Organization = Depends(get_current_org),
     _actor: Operator = Depends(require_role(OperatorRole.ANALYST)),
@@ -234,6 +255,7 @@ def get_policy_generate_catalog(
         org.id,
         connector_hint=connector_hint,
         application_instance_id=application_instance_id,
+        scope=scope,
     )
 
 

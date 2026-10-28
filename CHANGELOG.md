@@ -27,6 +27,20 @@ started on them.
   `identity_activity` normalized kind an audit-log normalizer can emit.
 - Okta API tokens record the user they were issued to as the service
   account's owner.
+- AI policy drafts understand scope: `POST /policies/generate` takes
+  `scope` (`single_app` or `cross_app`), reads it from the hint and wording
+  otherwise, and analyzes the intent deterministically (subject, conditions,
+  threshold, per account or per person, fields, `REQUIRES`) before drafting.
+  Cross-app drafts are grounded in the full identity row shape, a
+  cross-application catalog, the cross-app pack's policies and fixture
+  scenarios, get `REQUIRES` inserted when the model forgets it, are sent back
+  when they early-return on `application.type`, and report per connected
+  application whether the draft is assessable. Connector catalogs for GitHub,
+  Google Workspace and Slack are derived from their shipped packs. Two offline
+  templates cover the headline cross-app intents. Up to two repair turns.
+  The workbench gains a scope control, cross-app intent chips, a field panel
+  for every connector, and the intent analysis; the resource-type list now
+  includes `resource` and `oauth_application`.
 - Policy helpers for cross-application checks: `cluster_accounts`,
   `idp_account`, `is_representative`, `worker_type_of`, `has_privileged_role`,
   `in_group`, `trusted_last_active`, and `activity_status` (`active`, `stale`,

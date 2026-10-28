@@ -29,8 +29,17 @@ from kestrel.policies.runtime import (
 from kestrel.policies.testing import expand_relative_timestamps
 
 #: Timestamp fields each resource type's rows carry (see resource_schemas).
+#: A ``[]`` segment applies the variant to every element of a list.
 TIMESTAMP_PATHS: dict[str, tuple[str, ...]] = {
-    "identity": ("identity.last_active_at", "identity.created_at_source"),
+    "identity": (
+        "identity.last_active_at",
+        "identity.created_at_source",
+        "identity.disabled_at",
+        "identity.expires_at",
+        "cluster.last_active_at",
+        "cluster.accounts[].last_active_at",
+        "cluster.accounts[].disabled_at",
+    ),
     "event": ("event.occurred_at",),
 }
 
@@ -43,32 +52,73 @@ _TIMESTAMP_VARIANTS: tuple[tuple[str, Any], ...] = (
 
 #: Fields a policy filters on; the sparse variant keeps them so the policy
 #: still reaches the code past its first ``return True``.
-_SELECTOR_FIELDS = frozenset({"key", "action", "resource_type", "type", "name", "is_external", "is_disabled"})
+_SELECTOR_FIELDS = frozenset(
+    {
+        "key",
+        "action",
+        "resource_type",
+        "type",
+        "name",
+        "is_external",
+        "is_disabled",
+        "identity_type",
+        "worker_type",
+        "privileged",
+        "application_type",
+        "idp_status",
+        "idp_application_types",
+        "idp_connected",
+        "representative_identity_id",
+        "is_representative",
+    }
+)
 _OTHER_APPLICATION = {"type": "kestrel_probe_other_app", "name": "Other app"}
 _PROBE_NAMESPACE = uuid.UUID("6f1d3c2e-4b5a-4e8f-9a7b-0c1d2e3f4a5b")
 _NO_ORG = uuid.UUID(int=0)
 
 
-def _set_path(row: dict[str, Any], path: str, value: Any) -> None:
+def _set_path(row: dict[str, Any], path: str, value: Any) -> bool:
+    """Set ``path`` on ``row``; ``a.b[].c`` sets ``c`` on every dict in the
+    list ``a.b``. Returns False when a list segment is absent or empty, so the
+    caller skips a variant that would be identical to the base row."""
     *parents, leaf = path.split(".")
-    current = row
-    for part in parents:
+    current: Any = row
+    for index, part in enumerate(parents):
+        if part.endswith("[]"):
+            items = current.get(part[:-2])
+            if not isinstance(items, list) or not items:
+                return False
+            rest = ".".join([*parents[index + 1 :], leaf])
+            applied = False
+            for item in items:
+                if isinstance(item, dict):
+                    applied = _set_path(item, rest, value) or applied
+            return applied
         child = current.get(part)
         if not isinstance(child, dict):
             child = {}
             current[part] = child
         current = child
     current[leaf] = value
+    return True
+
+
+def _sparse_dict(value: dict[str, Any]) -> dict[str, Any]:
+    return {k: (v if k in _SELECTOR_FIELDS else ([] if isinstance(v, list) else None)) for k, v in value.items()}
 
 
 def _sparse(row: dict[str, Any]) -> dict[str, Any]:
-    """Every optional field missing, as a connector that collects little would leave it."""
+    """Every optional field missing, as a connector that collects little would
+    leave it. ``cluster`` stays structurally valid (``accounts: []``) because
+    the loader always builds one; ``org`` is kept as is."""
     out: dict[str, Any] = {}
     for key, value in row.items():
-        if key.startswith("_") or key == "application":
+        if key.startswith("_") or key in ("application", "org"):
             out[key] = value
         elif isinstance(value, dict):
-            out[key] = {k: (v if k in _SELECTOR_FIELDS else None) for k, v in value.items()}
+            # cluster included: selector fields such as idp_status and
+            # representative_identity_id survive, accounts becomes [].
+            out[key] = _sparse_dict(value)
         elif isinstance(value, list):
             out[key] = []
         else:
@@ -90,12 +140,26 @@ def probe_rows(fixture_rows: list[dict[str, Any]], resource_type: str | None) ->
         for path in paths:
             for label, value in _TIMESTAMP_VARIANTS:
                 row = copy.deepcopy(base)
-                _set_path(row, path, value)
-                variants.append((f"{path}={label}", row))
+                if _set_path(row, path, value):
+                    variants.append((f"{path}={label}", row))
         other = copy.deepcopy(base)
         other["application"] = dict(_OTHER_APPLICATION)
         variants.append(("other-application", other))
         variants.append(("sparse", _sparse(copy.deepcopy(base))))
+        if isinstance(base.get("cluster"), dict):
+            # Rows loaded before correlation ran, and a person with no other
+            # accounts: a draft that indexes cluster["accounts"][0] crashes here.
+            missing = copy.deepcopy(base)
+            missing.pop("cluster", None)
+            variants.append(("cluster-missing", missing))
+            empty = copy.deepcopy(base)
+            empty["cluster"] = {**empty["cluster"], "accounts": []}
+            variants.append(("cluster-accounts-empty", empty))
+            unknown = copy.deepcopy(base)
+            unknown["cluster"] = {**unknown["cluster"], "worker_type": "unknown"}
+            if isinstance(unknown.get("identity"), dict):
+                unknown["identity"] = {**unknown["identity"], "worker_type": "unknown"}
+            variants.append(("worker-type-unknown", unknown))
         for label, row in variants:
             full_label = f"{base_id} with {label}"
             row["_subject_id"] = uuid.uuid5(_PROBE_NAMESPACE, full_label)

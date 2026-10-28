@@ -235,24 +235,58 @@ fork the policy (`POST /policies/{id}/fork`, disabled by default) to edit it.
 ## AI-assisted drafts
 
 `POST /policies/generate` (Analyst+) takes `{ intent, resource_type?,
-connector_hint?, include_fixtures? }` and returns `{ source_text, provider,
-model, validation, fixtures?, fixture_test?, probe_test? }`. Credentials resolve in order:
+connector_hint?, application_instance_id?, scope?, include_fixtures? }` and
+returns `{ source_text, provider, model, validation, fixtures?, fixture_test?,
+probe_test?, scope, intent_analysis, requires, assessability, repair_turns }`.
+Credentials resolve in order:
 
 1. Org **Settings → AI** (`org_llm_settings`): OpenAI or Anthropic; the key is envelope-encrypted and never returned after save (`GET`/`PUT`/`DELETE /settings/ai`).
 2. `KESTREL_LLM_API_KEY` with optional `KESTREL_LLM_PROVIDER`, `KESTREL_LLM_BASE_URL`, `KESTREL_LLM_MODEL`.
-3. Deterministic intent templates for high-confidence intents (Okta administrators without MFA, MFA enrollment not required, disabled or dormant admins, weak password policy, bookmark/SWA apps, unused API tokens, Threat Insight disabled). Novel intents without a provider return `provider=unconfigured` and empty source, never a silent `return True` stub.
+3. Deterministic intent templates for high-confidence intents: Okta administrators without MFA, MFA enrollment not required, disabled or dormant admins, weak password policy, bookmark/SWA apps, and the cross-app contractor-dormant-in-an-app and departed-account-outlived-offboarding checks (built from the shipped pack policies with the intent's day threshold substituted). Novel intents without a provider return `provider=unconfigured` and empty source, never a silent `return True` stub.
+
+### Scope and intent analysis
+
+Every request is first read deterministically
+([`kestrel/policies/generate_intent.py`](../kestrel/src/kestrel/policies/generate_intent.py)),
+with no provider involved:
+
+- **Scope**: `single_app` (the policy scopes itself to one application) or
+  `cross_app` (it runs over every application and reads the person's
+  `cluster`). An explicit `scope` wins; then the `cross_app` pseudo-connector
+  hint (`all`, `any`, `all apps` are aliases); then strong wording ("any app",
+  "that app", "across", "elsewhere", "identity provider", "separation of
+  duties"), which makes a selected application the *focus* (the catalog and
+  examples still include it) rather than the scope; weak wording
+  ("contractor", "departed") only when no application is selected or named.
+  "Flag Okta contractors who haven't signed in" therefore stays single-app;
+  "contractors active in any app but not signed into that app" is cross-app.
+- **Analysis**: the subject (worker type, privileged), the conditions
+  (stale activity, IdP disabled, MFA missing, sensitive OAuth, group member,
+  privilege event, ...), the threshold in days, whether the finding is per
+  account or per person, the row fields the policy will read, and the
+  `identity:*` capability keys those fields need. It is rendered as a plan in
+  the prompt, returned as `intent_analysis`, and shown in the workbench.
+- **REQUIRES and assessability**: a cross-app draft that omits `REQUIRES` gets
+  the analysis's keys inserted after `RESOURCE_TYPE`; `assessability` lists
+  each connected application and whether its connector provides them, so
+  "GitHub (acme) cannot assess this: identity:worker_type" is visible before
+  the policy is created.
 
 Prompts are built from the policy authoring contract
 ([`kestrel/policies/authoring_contract.py`](../kestrel/src/kestrel/policies/authoring_contract.py)):
 every helper with its signature and docstring, the sandbox builtins, the
-authoring rules, and idioms taken from shipped pack policies. They also
-include the dataload schema for the resource type, up to two reviewed pack
-policies for the selected connector, and, when a connector or connected
-application is selected, its field catalog and redacted live samples
-(`GET /policies/generate/catalog`).
+authoring rules (including the cross-application ones), and idioms taken from
+shipped pack policies. They also include the dataload row shape for the
+resource type (the full identity row with `cluster`, `groups`, `oauth_grants`
+and `org`), the cross-application catalog for a cross-app scope, the
+connector's catalog derived from its shipped pack (privileged role names,
+setting keys, event actions), and up to two reviewed pack policies for the
+scope (the cross-app pack, or the selected connector's). Live samples are
+shown in the workbench only; they are never sent to the model.
 
-Each model draft then goes through three checks, and one repair turn sees
-every failure:
+Each model draft then goes through these checks, and up to two repair turns
+see every failure (the second only when the first still fails and changed
+the source):
 
 - **Validate**: compile errors and names nothing defines.
 - **Edge-case rows** (`probe_test`): `policy()` and `evidence()` run over the
@@ -261,9 +295,18 @@ every failure:
   Only crashes count. This catches code a fixture never reaches.
 - **Fixture test**: fixtures are chosen for the intent when Kestrel has a set
   whose expected matches fit it (for example Okta external users who are stale
-  or never signed in). Otherwise the generic connector scaffold is used and
-  its result is marked `advisory`: it is shown, but it never steers the repair
-  turn, because its expected matches were written for another intent.
+  or never signed in, or the nine cross-app scenarios in
+  `kestrel.policies.cross_app_fixtures`, built with `fixture_builders` so every
+  account row of a person carries the same cluster). Otherwise the generic
+  connector scaffold is used and its result is marked `advisory`: it is shown,
+  but it never steers the repair turn, because its expected matches were
+  written for another intent.
+- **Scope**: a cross-app draft that early-returns on `application.type` is
+  sent back for repair with the line named; a single-app guard would evaluate
+  one application and silently pass the rest.
+- **Edge-case rows** for cross-app drafts also vary `disabled_at`,
+  `expires_at`, every account's `last_active_at`, drop the cluster, empty its
+  accounts, and set the worker type to `unknown`.
 
 Provider errors surface as operator-facing messages (a 429 says the provider
 is rate-limiting, not a raw URL).

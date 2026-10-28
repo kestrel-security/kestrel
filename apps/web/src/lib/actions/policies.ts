@@ -155,6 +155,7 @@ export async function generatePolicyDraft(input: {
   connector_hint?: string;
   application_instance_id?: string;
   include_fixtures?: boolean;
+  scope?: "single_app" | "cross_app";
 }): Promise<
   | { ok: true; result: PolicyGenerateResult }
   | { ok: false; error: string }
@@ -166,6 +167,7 @@ export async function generatePolicyDraft(input: {
       connector_hint: input.connector_hint,
       application_instance_id: input.application_instance_id,
       include_fixtures: input.include_fixtures ?? true,
+      scope: input.scope,
     });
     return { ok: true, result };
   } catch (err) {
@@ -176,6 +178,7 @@ export async function generatePolicyDraft(input: {
 export async function fetchPolicyGenerateCatalog(params: {
   connector_hint?: string;
   application_instance_id?: string;
+  scope?: "single_app" | "cross_app";
 }): Promise<
   | { ok: true; catalog: PolicyGenerateCatalog }
   | { ok: false; error: string }
@@ -184,6 +187,7 @@ export async function fetchPolicyGenerateCatalog(params: {
     const search = new URLSearchParams();
     if (params.connector_hint) search.set("connector_hint", params.connector_hint);
     if (params.application_instance_id) search.set("application_instance_id", params.application_instance_id);
+    if (params.scope) search.set("scope", params.scope);
     const qs = search.toString();
     const catalog = await api.get<PolicyGenerateCatalog>(
       `/policies/generate/catalog${qs ? `?${qs}` : ""}`,

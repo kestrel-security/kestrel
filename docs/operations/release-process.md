@@ -50,7 +50,14 @@ make release VERSION=0.4.0 PREPARED=1 PUSH=1
 changelog has a nonempty dated section for that version with no pending
 Unreleased entries. It tags the existing commit without bumping versions or
 creating a commit. The tag must not already exist. This is also the release
-path for a protected `main`: merge the preparation first, then tag it.
+path for anyone who cannot push to `main` directly: merge the preparation
+first, then tag it.
+
+Both pushes rely on the repository rulesets (see
+[Repository settings](#repository-settings)): only a repository administrator
+can push to `main` without a pull request, and only a repository administrator
+can create, move or delete a `v*` tag. GitHub reports each as a bypassed rule
+violation on push; that is expected.
 
 Before tagging, run CI, Security scan and Nightly on the exact candidate. All
 three workflows support manual dispatch. The release workflow reruns all three
@@ -171,22 +178,39 @@ malformed and short configured keys; a valid-length wrong key reports ready and 
 sync with `InvalidTag:`. After a key or database change, run **Test connection**
 on a live connector.
 
-## Public-launch settings
+## Repository settings
 
-GitHub's private vulnerability reporting is available on public repositories.
-This personal repository's current plan also gates branch protection while
-private. After changing visibility and before announcing the launch, run:
+`scripts/configure-github-security.py` records the repository's security
+settings and checks them against GitHub:
 
 ```bash
-python3 scripts/configure-github-security.py --apply
+python3 scripts/configure-github-security.py          # verify only
+python3 scripts/configure-github-security.py --apply  # enable, then verify
 ```
 
-The script enables GitHub Actions, private reporting, secret scanning and push protection,
-dependency alerts, and required CI/security/DCO checks on `main`; it blocks
-force pushes/deletion and includes administrators. It then reads the settings
-back and fails if a protection is missing. It never changes visibility.
-Run without `--apply` to verify settings later. Also check the reporting link
-in `SECURITY.md` from a non-maintainer account.
+It covers GitHub Actions, fork pull request approval (required for every
+outside contributor), private vulnerability reporting, secret scanning and push
+protection, dependency alerts, and three repository rulesets:
+
+| Ruleset | Applies to | Rules | Bypass |
+|---------|------------|-------|--------|
+| `main` | default branch | no deletion, no force push | nobody, administrators included |
+| `main-pr` | default branch | pull request with a code-owner approval, squash merges only, the required CI/security/DCO checks (pinned to GitHub Actions) | repository administrators |
+| `release-tags` | `refs/tags/v*` | no creation, update or deletion | repository administrators |
+
+The administrator bypass is what lets the maintainer push to `main` and merge
+without a second reviewer; nothing else (other users, bots, apps, tokens,
+Actions) can change `main` except through a pull request the maintainer
+approves. Keep the maintainer the only repository administrator. Merging a
+pull request as the maintainer means ticking **bypass rules** on the merge
+button, since there is no other code owner to approve it.
+
+`--apply` creates or updates each ruleset by name, writing `main-pr` before
+narrowing `main`. The script fails if `main` also has classic branch
+protection: with "include administrators" set, it would block the direct pushes
+the rulesets allow, so remove it rather than layering the two. It never
+changes visibility, and refuses to run while the repository is private. Also
+check the reporting link in `SECURITY.md` from a non-maintainer account.
 
 Around a release, merge necessary security fixes with green checks;
 defer unrelated dependency changes and major upgrades. Python updates use uv

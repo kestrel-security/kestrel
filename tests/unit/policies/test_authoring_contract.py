@@ -54,7 +54,7 @@ def test_idiom_snippets_only_use_names_the_sandbox_provides() -> None:
         body = "\n".join("    " + line for line in idiom.snippet.splitlines())
         source = (
             'POLICY_ID = "idiom"\nSEVERITY = "low"\nRESOURCE_TYPE = "identity"\n'
-            "DORMANT_DAYS = 90\nMAX_SESSION_HOURS = 12\n\n"
+            "DORMANT_DAYS = 90\nMAX_SESSION_HOURS = 12\nSTALE_DAYS = 30\n\n"
             "def policy(resource):\n"
             '    application = resource.get("application") or {}\n'
             '    identity = resource.get("identity") or {}\n'

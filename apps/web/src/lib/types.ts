@@ -1529,6 +1529,32 @@ export interface PolicyGenerateProbeTest {
   errors: string[];
 }
 
+export type PolicyGenerateScope = "single_app" | "cross_app";
+
+/** What the generator understood before drafting (deterministic, no model). */
+export interface PolicyGenerateIntentAnalysis {
+  scope: PolicyGenerateScope;
+  scope_source: string;
+  scope_reason: string;
+  focus_connector: string | null;
+  resource_type: string | null;
+  subject: Record<string, unknown>;
+  conditions: string[];
+  days: number | null;
+  per: "account" | "person";
+  fields_needed: string[];
+  requires: string[];
+  notes: string[];
+}
+
+/** Per connected application: can its connector assess the draft's REQUIRES? */
+export interface PolicyGenerateAssessability {
+  application_type: string;
+  name: string;
+  assessable: boolean;
+  missing: string[];
+}
+
 export interface PolicyGenerateResult {
   source_text: string;
   provider: string;
@@ -1543,6 +1569,13 @@ export interface PolicyGenerateResult {
   } | null;
   fixture_test?: PolicyGenerateFixtureTest | null;
   probe_test?: PolicyGenerateProbeTest | null;
+  scope?: PolicyGenerateScope | null;
+  scope_source?: string | null;
+  intent_analysis?: PolicyGenerateIntentAnalysis | null;
+  requires?: string[];
+  assessability?: PolicyGenerateAssessability[] | null;
+  repair_turns?: number;
+  scope_errors?: string[] | null;
 }
 
 export interface PolicyGenerateIntentChip {
@@ -1550,15 +1583,39 @@ export interface PolicyGenerateIntentChip {
   intent: string;
   connector_hint?: string;
   resource_type?: string;
+  scope?: PolicyGenerateScope;
+}
+
+export interface PolicyGenerateConnectorCatalog {
+  connector: string;
+  privileged_roles: string[];
+  tenant_setting_keys: string[];
+  event_actions: string[];
+  identity_fields: string[];
+  policy_count: number;
+}
+
+export interface PolicyGenerateCrossAppCatalog {
+  cluster_fields: string[];
+  worker_types: string[];
+  trusted_activity_sources: string[];
+  idp_application_types: string[];
+  helpers: string[];
+  capabilities: Record<string, string>;
+  prompt_catalog: string;
 }
 
 export interface PolicyGenerateCatalog {
   connector: string | null;
+  scope?: PolicyGenerateScope | null;
   intent_chips: PolicyGenerateIntentChip[];
   template_names: string[];
   fields: {
     resource_types: string[];
     schemas: Record<string, string>;
+    scopes?: PolicyGenerateScope[];
+    connectors?: Record<string, PolicyGenerateConnectorCatalog>;
+    cross_app?: PolicyGenerateCrossAppCatalog;
     okta?: {
       privileged_roles: string[];
       tenant_setting_keys: string[];
