@@ -155,10 +155,10 @@ def resolve_scope(intent: str, *, connector_hint: str | None = None, scope: str 
     if hint == CROSS_APP_CONNECTOR:
         return ScopeResolution(SCOPE_CROSS_APP, "connector_hint", focus, "connector hint is cross_app")
     for pattern in _STRONG_CROSS_APP:
-        for match in pattern.finditer(intent):
-            if _THIRD_PARTY_APP_VERB.search(intent[: match.start()]):
+        for strong in pattern.finditer(intent):
+            if _THIRD_PARTY_APP_VERB.search(intent[: strong.start()]):
                 continue  # "install any app": third-party apps, not connected ones
-            return ScopeResolution(SCOPE_CROSS_APP, "intent_wording", focus, f"intent says {match.group(0)!r}")
+            return ScopeResolution(SCOPE_CROSS_APP, "intent_wording", focus, f"intent says {strong.group(0)!r}")
     if not hint:
         for pattern in _CONTEXTUAL_CROSS_APP:
             match = pattern.search(intent)
