@@ -1,0 +1,2491 @@
+{
+  "rows": [
+    {
+      "_subject_id": "stale-contractor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "pat@vendor.example",
+        "display_name": "Stale Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-contractor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 3,
+        "active_account_count": 3,
+        "application_types": [
+          "github",
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-contractor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-contractor-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "pat@vendor.example",
+        "display_name": "Stale Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-contractor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 3,
+        "active_account_count": 3,
+        "application_types": [
+          "github",
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-contractor-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "pat@vendor.example",
+        "display_name": "Stale Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-contractor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 3,
+        "active_account_count": 3,
+        "application_types": [
+          "github",
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "recent-contractor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "sam@vendor.example",
+        "display_name": "Recent Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "recent-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Recent Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "recent-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Recent Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "recent-contractor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "recent-contractor-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "sam@vendor.example",
+        "display_name": "Recent Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "recent-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Recent Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "recent-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Recent Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "recent-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "disabled-stale-contractor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "kim@vendor.example",
+        "display_name": "Disabled Stale Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "disabled-stale-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "kim@vendor.example",
+            "display_name": "Disabled Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "disabled-stale-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "kim@vendor.example",
+            "display_name": "Disabled Stale Contractor",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "disabled-stale-contractor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "disabled-stale-contractor-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "kim@vendor.example",
+        "display_name": "Disabled Stale Contractor",
+        "is_disabled": true,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "disabled-stale-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "kim@vendor.example",
+            "display_name": "Disabled Stale Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "disabled-stale-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "kim@vendor.example",
+            "display_name": "Disabled Stale Contractor",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "disabled-stale-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-employee-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Stale Employee",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-employee-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ada@acme.example.com",
+            "display_name": "Stale Employee",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-employee-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ada@acme.example.com",
+            "display_name": "Stale Employee",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-employee-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-employee-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Stale Employee",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-employee-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ada@acme.example.com",
+            "display_name": "Stale Employee",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-employee-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ada@acme.example.com",
+            "display_name": "Stale Employee",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-employee-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "never-signed-in-contractor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "lee@vendor.example",
+        "display_name": "Never Signed In Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "never-signed-in-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "lee@vendor.example",
+            "display_name": "Never Signed In Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "never-signed-in-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "lee@vendor.example",
+            "display_name": "Never Signed In Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "never-signed-in-contractor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "never-signed-in-contractor-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "lee@vendor.example",
+        "display_name": "Never Signed In Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "never-signed-in-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "lee@vendor.example",
+            "display_name": "Never Signed In Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "never-signed-in-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "lee@vendor.example",
+            "display_name": "Never Signed In Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "never-signed-in-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "profile-only-contractor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "jo@vendor.example",
+        "display_name": "Profile Only Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "profile-only-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "jo@vendor.example",
+            "display_name": "Profile Only Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "profile-only-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "jo@vendor.example",
+            "display_name": "Profile Only Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "profile",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "profile-only-contractor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "profile-only-contractor-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "jo@vendor.example",
+        "display_name": "Profile Only Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "profile",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "profile-only-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "jo@vendor.example",
+            "display_name": "Profile Only Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "profile-only-contractor-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "jo@vendor.example",
+            "display_name": "Profile Only Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "profile",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "profile-only-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "github-unobserved-contractor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "max@vendor.example",
+        "display_name": "Github Unobserved Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "github-unobserved-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "max@vendor.example",
+            "display_name": "Github Unobserved Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "github-unobserved-contractor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "max@vendor.example",
+            "display_name": "Github Unobserved Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "github-unobserved-contractor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "github-unobserved-contractor-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "max@vendor.example",
+        "display_name": "Github Unobserved Contractor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "github-unobserved-contractor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "max@vendor.example",
+            "display_name": "Github Unobserved Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "github-unobserved-contractor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "max@vendor.example",
+            "display_name": "Github Unobserved Contractor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "github-unobserved-contractor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "unknown-worker-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "who@partner.example",
+        "display_name": "Unknown Worker",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "unknown",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "unknown-worker-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "who@partner.example",
+            "display_name": "Unknown Worker",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "unknown",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "slack"
+        ],
+        "idp_status": "absent",
+        "idp_application_types": [],
+        "privileged_application_types": [],
+        "worker_type": "unknown",
+        "worker_type_source": "none",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "unknown-worker-slack",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "slack"
+        ],
+        "idp_application_types": [],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-contractor-idp-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ray@vendor.example",
+        "display_name": "Stale Contractor Idp",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-contractor-idp-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ray@vendor.example",
+            "display_name": "Stale Contractor Idp",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "login",
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "stale-contractor-idp-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-vendor-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "vi@partner.example",
+        "display_name": "Stale Vendor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "vendor_or_partner",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-vendor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "vi@partner.example",
+            "display_name": "Stale Vendor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "vendor_or_partner",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-vendor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "vi@partner.example",
+            "display_name": "Stale Vendor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "vendor_or_partner",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "vendor_or_partner",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-vendor-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "stale-vendor-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "vi@partner.example",
+        "display_name": "Stale Vendor",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "vendor_or_partner",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "stale-vendor-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "vi@partner.example",
+            "display_name": "Stale Vendor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "vendor_or_partner",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "stale-vendor-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "vi@partner.example",
+            "display_name": "Stale Vendor",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "vendor_or_partner",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "vendor_or_partner",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "stale-vendor-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "bot-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "service_account",
+        "email": null,
+        "display_name": "Bot",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "service",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "bot-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "service_account",
+            "email": null,
+            "display_name": "Bot",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 400
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "service",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "slack"
+        ],
+        "idp_status": "absent",
+        "idp_application_types": [],
+        "privileged_application_types": [],
+        "worker_type": "service",
+        "worker_type_source": "other",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 400
+        },
+        "last_active_source": "audit",
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "bot-slack",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "slack"
+        ],
+        "idp_application_types": [],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "never-signed-in-contractor-slack",
+    "stale-contractor-github",
+    "stale-contractor-idp-okta",
+    "stale-contractor-slack",
+    "stale-vendor-github"
+  ]
+}

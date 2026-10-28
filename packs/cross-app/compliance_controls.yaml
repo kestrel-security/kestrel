@@ -27,6 +27,49 @@ controls:
       A person any connected application treats as a guest, outside
       collaborator, or partner does not hold an administrative role in
       another.
+  - framework: custom
+    control_id: XAPP-05
+    title: Contingent-worker access is in use
+    description: >
+      A contractor's or vendor's enabled account in any connected application
+      shows recent sign-in or activity; unused contingent access is removed.
+  - framework: custom
+    control_id: XAPP-06
+    title: Offboarding completes within the grace period
+    description: >
+      Within a week of the identity provider disabling a person, no enabled
+      account for them remains in any connected application.
+  - framework: custom
+    control_id: XAPP-07
+    title: Administrators are protected by identity-provider MFA
+    description: >
+      Anyone holding a privileged role in a connected application has
+      multi-factor authentication on the identity-provider account they sign
+      in through.
+  - framework: custom
+    control_id: XAPP-08
+    title: Standing accounts that nobody uses are removed
+    description: >
+      Accounts created but never used, and people with no activity in any
+      application for ninety days, are reviewed and disabled.
+  - framework: custom
+    control_id: XAPP-09
+    title: Contingent workers do not delegate data access to third parties
+    description: >
+      Contractor, vendor, and guest accounts hold no OAuth grants with
+      sensitive scopes.
+  - framework: custom
+    control_id: XAPP-10
+    title: Privilege is not granted to departed people
+    description: >
+      No privileged role or admin permission is granted in a connected
+      application to an account whose identity-provider account is disabled.
+  - framework: custom
+    control_id: XAPP-11
+    title: Identity administration and application administration are separated
+    description: >
+      No single person administers both the identity provider and a
+      connected application it governs.
   - framework: soc2
     control_id: CC6.1
     title: Logical access security

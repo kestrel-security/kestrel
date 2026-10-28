@@ -47,7 +47,16 @@ every row carries the catalog `type` and `name` plus the instance
 `github:branch_protection`). The coverage service joins the two against the
 org's connected instances, so a policy whose data is not collected reports as
 **not assessable** instead of silently passing; policies without `REQUIRES` are
-always assessable. `PROFILE` lets a pack be installed at a benchmark level.
+always assessable. Generic `identity:*` keys (`identity:last_sign_in`,
+`identity:worker_type`, `identity:groups`, `identity:department`,
+`identity:disabled_at`, `identity:expires_at`, `identity:owner`,
+`identity:oauth_grants`; see `kestrel.policies.coverage.GENERIC_CAPABILITIES`)
+describe identity data any connector may provide; a cross-app pack is
+assessable when any connected connector provides them, and
+`coverage.assess_requires` says per connected application which cannot.
+Coverage is static per manifest: a token that cannot read its audit log
+degrades the run, not the coverage, which is why dormancy policies also guard
+on `activity_status`. `PROFILE` lets a pack be installed at a benchmark level.
 
 At evaluation time `merge_baseline_evidence` fills missing evidence fields from
 the loaded row (identity roles, MFA, flags; setting key and value; grant
@@ -75,6 +84,14 @@ Use them instead of pasting a local copy.
 | `domain_matches(value, domains)` | `True` if the email or host is in one of `domains` or a subdomain of it; `False` if missing |
 | `ip_in_networks(value, networks)` | `True` if the IP address is inside one of the CIDR `networks`; `False` if missing |
 | `matches_any(value, patterns)` | `True` if the string matches one of the shell-style globs (case-insensitive); `False` if missing |
+| `trusted_last_active(value)` | The `last_active_at` of an identity or cluster account, or `None` when its `last_active_source` is not real activity (`profile`) |
+| `activity_status(value, days)` | `"active"`, `"stale"`, `"never"` (no activity recorded) or `"unknown"` (only an untrusted source) for an identity or cluster account |
+| `cluster_accounts(resource, application_types=None, include_self=True, active_only=False)` | The same person's account dicts across applications, filtered; `[]` without a cluster |
+| `is_representative(resource)` | `True` when this row should carry a one-per-person finding (the cluster's representative, or no cluster) |
+| `worker_type_of(resource)` | `employee`, `contractor`, `vendor_or_partner`, `guest`, `service` or `unknown`, the identity provider's account first |
+| `has_privileged_role(value)` | `True` when an identity row or cluster account holds a privileged role (the shared admin/owner hints) |
+| `in_group(resource, patterns)` | `True` when one of the row's `groups` matches a shell-style glob |
+| `idp_account(resource)` | The person's identity-provider account from the cluster (an enabled one first), or `None` |
 | `PolicyDataError` | The exception the helpers raise on malformed data; raise it yourself for the same reason |
 
 Every helper that takes row data raises `PolicyDataError` on a value it cannot
@@ -119,6 +136,11 @@ the error fails the fixture test.
 
 - `identity` rows carry `oauth_grants`: the OAuth authorizations that account consented to, each with the application name, publisher, verification state, sensitive scopes, and `last_used_at`. Always a list, empty when there are none. A consented token does not go through the sign-in path, so disabling an account does not revoke it — this is what lets a policy compare the two.
 - `identity` rows carry `privileged_application_types`: for a privileged identity, the distinct application types where identities sharing the same email (or provider id when email is missing) also hold privileged roles. The cross-app concentration policy uses it.
+- `identity` rows carry `cluster`: the same person's accounts across every connected application (`cluster.accounts[]`, each with `application_type`, `is_disabled`, `mfa_enabled`, `worker_type`, `roles`, `privileged`, `groups`, `last_active_at` / `last_active_source`, `disabled_at`, `expires_at`), plus `idp_status` (`active`, `disabled`, or `absent`), `idp_application_types`, `privileged_application_types`, `worker_type` (the identity provider's account first), `last_active_at` (the latest trusted activity on any account), `representative_identity_id` and `is_representative` (the one row a per-person finding lands on). Read it through `cluster_accounts`, `idp_account`, `worker_type_of` and `is_representative` rather than by hand. Every account is one row, so a cross-application policy runs once per account and must not early-return on `application.type`.
+- `identity` rows carry `groups` (the group names this account is a member of; Google Workspace org units appear too), and `identity.worker_type`, `department`, `title`, `manager_email`, `disabled_at`, `expires_at` and `attributes` (provider extras such as `org_unit_path`, `guest_type`, `is_admin`).
+- `identity.last_active_source` says whether `last_active_at` is activity: `login`, `audit` and `analytics` are; `profile` is a profile-modified time and is not. `activity_status(resource, days)` returns `active`, `stale`, `never`, or `unknown` (an untrusted source, or an application such as GitHub whose audit log only sees administrative actions), and dormancy policies treat `unknown` as not assessable.
+- Every row carries `org`: `connected_application_types`, `idp_application_types`, `idp_connected`, and `company_email_domains` (the domains of the identity provider's enabled human accounts).
+- `event` rows carry `event.actor` and `event.target`: a summary of the identity the event names (`email`, `is_disabled`, `worker_type`, `privileged`, `cluster_idp_status`, `cluster_worker_type`), resolved by provider id within the event's application and then by email, or `None`. A cross-application event policy can ask whether the account that was just granted admin belongs to someone the identity provider disabled.
 - `application` evaluates over connected **ApplicationInstance** rows (one per tenant), not catalog entries; matches open findings with `subject_type=application`.
 - `resource` evaluates over `Resource` rows (repositories, shared channels, drives, and other provider objects) via `load_resource_rows`. Each row carries the **subject-scoped settings that govern that one resource**, both as a `settings` list and as `settings_by_key` for direct lookup, so a GitHub policy reads `resource["settings_by_key"]["repo_default_branch_protected"]["value"]` rather than provider-shaped `raw_source`. Both are empty when the connector collects no per-resource settings, so index defensively. Matches open findings with `subject_type=resource`.
 - Subject-scoped settings are `tenant_settings` rows with `subject_type` / `subject_id` set: a branch protection rule belongs to a repository, not to the org with the repo name buried in its key. Connectors declare `subject_type` (a normalized kind) plus `subject_ref` (the subject's provider id) on the normalized setting and emit an `applies_to` relationship alongside it; the upsert resolves the ref through the run's id map regardless of emission order, and a setting whose subject is absent stays tenant-wide. `RESOURCE_TYPE = "tenant_setting"` still loads every setting, scoped or not.
@@ -269,7 +291,7 @@ fixtures for its own policies; fixtures are never resolved from another pack.
 | `okta-posture` | Okta | 32 | MFA enrollment and phishing-resistant authenticators, authentication-policy rules without MFA, session lifetime (excessive or unlimited), self-service registration, network zones matching everything, plaintext hook endpoints and trusted origins, IdPs that auto-provision users, admins (disabled, dormant), password policy, app sign-on (bookmark/SWA), unused API tokens, Threat Insight, System Log activity; mapped to the DISA Okta IDaaS STIG |
 | `gws-posture` | Google Workspace | 34 | Super Admin MFA and per-account 2-Step Verification enforcement, external sharing, shared drives, privileged role hygiene, group exposure (external members, membership open to anyone with a Google account, mail accepted from outside the organization), third-party OAuth scopes, admin-audit and login activity (2-Step Verification turned off, suspicious sign-ins); mapped to CISA SCuBA where collection supports it |
 | `slack-posture` | Slack | 27 | Workspace 2FA and SSO enforcement, session duration, privileged roles without MFA, dormant admins, guests, app approval, over-scoped and unused apps, Slack Connect, Audit Logs activity (privilege grants, app installs and scope expansions, guest creation, external sharing); mapped to NIST CSF 1.1 / CIS Controls v8.1 (there is no CIS Slack benchmark) |
-| `cross-app` | Cross-application | 5 | Privileged access concentrated on one identity across multiple applications; an account the identity provider disabled that is still live elsewhere; a company account no identity provider knows about; OAuth grants that outlived the account that authorized them; a guest in one application who administers another. No published baseline enumerates these — they are the checks a per-application scanner cannot compute |
+| `cross-app` | Cross-application | 14 | Privileged access concentrated on one identity across multiple applications; an account the identity provider disabled that is still live elsewhere (and still enabled a week later); a company account no identity provider knows about; OAuth grants that outlived the account that authorized them; a guest in one application who administers another; contractors with an enabled account they have not used in 30 days; people dormant in every application; accounts never used after creation; administrators whose identity-provider account has no MFA; contractors and guests who consented to sensitive OAuth scopes; privilege granted to someone the identity provider disabled; separation of duties between the identity provider and what it governs; contingent-group members who administer elsewhere. No published baseline enumerates these — they are the checks a per-application scanner cannot compute |
 
 Control-by-control matrices (baseline control, profile level, required data,
 collection status, implementing `POLICY_ID`) live under
@@ -277,7 +299,7 @@ collection status, implementing `POLICY_ID`) live under
 claimed where they exist: CISA SCuBA covers Google Workspace,
 not GitHub, Okta, or Slack, and internal control ids use the `custom` framework.
 
-The five packs ship 157 policies, and `kestrel demo up` installs all of them.
+The five packs ship 166 policies, and `kestrel demo up` installs all of them.
 Every pack policy is covered by one parametrized test that compiles it and runs its
 fixtures ([`testing.md`](testing.md)), so adding a policy adds coverage.
 

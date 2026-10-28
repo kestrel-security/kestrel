@@ -1,0 +1,1280 @@
+{
+  "rows": [
+    {
+      "_subject_id": "idp-and-github-admin-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ann@acme.example.com",
+        "display_name": "Idp And Github Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [
+        "Super Administrator"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github",
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "idp-and-github-admin-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Idp And Github Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "idp-and-github-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Idp And Github Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github",
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "idp-and-github-admin-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "idp-and-github-admin-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ann@acme.example.com",
+        "display_name": "Idp And Github Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github",
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "idp-and-github-admin-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Idp And Github Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "idp-and-github-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Idp And Github Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github",
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "idp-and-github-admin-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "github-and-slack-admin-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ben@acme.example.com",
+        "display_name": "Github And Slack Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github",
+        "slack"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "github-and-slack-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Github And Slack Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "github-and-slack-admin-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Github And Slack Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Owner"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "slack"
+        ],
+        "idp_status": "absent",
+        "idp_application_types": [],
+        "privileged_application_types": [
+          "github",
+          "slack"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "other",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "github-and-slack-admin-github",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "slack"
+        ],
+        "idp_application_types": [],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "github-and-slack-admin-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ben@acme.example.com",
+        "display_name": "Github And Slack Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [
+        "Owner"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github",
+        "slack"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "github-and-slack-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Github And Slack Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "github-and-slack-admin-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Github And Slack Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Owner"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "slack"
+        ],
+        "idp_status": "absent",
+        "idp_application_types": [],
+        "privileged_application_types": [
+          "github",
+          "slack"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "other",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "github-and-slack-admin-github",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "slack"
+        ],
+        "idp_application_types": [],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "idp-admin-only-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "cat@acme.example.com",
+        "display_name": "Idp Admin Only",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [
+        "Super Administrator"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "idp-admin-only-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Idp Admin Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "idp-admin-only-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Idp Admin Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "idp-admin-only-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "idp-admin-only-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "cat@acme.example.com",
+        "display_name": "Idp Admin Only",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "idp-admin-only-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Idp Admin Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "idp-admin-only-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Idp Admin Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "idp-admin-only-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "disabled-github-admin-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "dan@acme.example.com",
+        "display_name": "Disabled Github Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [
+        "Super Administrator"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github",
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "disabled-github-admin-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "Disabled Github Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "disabled-github-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "Disabled Github Admin",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github",
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "disabled-github-admin-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "disabled-github-admin-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "dan@acme.example.com",
+        "display_name": "Disabled Github Admin",
+        "is_disabled": true,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github",
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "disabled-github-admin-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "Disabled Github Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "disabled-github-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "Disabled Github Admin",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github",
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "disabled-github-admin-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "gws-and-slack-google_workspace",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "eve@acme.example.com",
+        "display_name": "Gws And Slack",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      },
+      "roles": [
+        "super_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "google_workspace",
+        "slack"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "gws-and-slack-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "Gws And Slack",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "super_admin"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "gws-and-slack-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "Gws And Slack",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "google_workspace",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "privileged_application_types": [
+          "google_workspace",
+          "slack"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "gws-and-slack-google_workspace",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace",
+          "slack"
+        ],
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "gws-and-slack-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "eve@acme.example.com",
+        "display_name": "Gws And Slack",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [
+        "Admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "google_workspace",
+        "slack"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "gws-and-slack-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "Gws And Slack",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "super_admin"
+            ],
+            "privileged": true
+          },
+          {
+            "identity_id": "gws-and-slack-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "Gws And Slack",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "google_workspace",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "privileged_application_types": [
+          "google_workspace",
+          "slack"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "gws-and-slack-google_workspace",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace",
+          "slack"
+        ],
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "gws-and-slack-google_workspace",
+    "idp-and-github-admin-okta"
+  ]
+}

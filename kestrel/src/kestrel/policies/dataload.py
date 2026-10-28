@@ -31,7 +31,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, aliased
 
 from kestrel.db.base import is_active
-from kestrel.db.models.access import Grant, Role
+from kestrel.db.models.access import Grant, Group, Role
 from kestrel.db.models.activity_event import ActivityEvent
 from kestrel.db.models.application import Application, ApplicationInstance
 from kestrel.db.models.graph_edge import GraphEdge, GraphEdgeType, GraphNode, GraphNodeType
@@ -40,20 +40,14 @@ from kestrel.db.models.oauth import OAuthApplication, OAuthGrant, OAuthScope
 from kestrel.db.models.resource import Resource
 from kestrel.db.models.setting import TenantSetting
 from kestrel.env import getenv_str
+from kestrel.policies.vocabulary import IDP_APPLICATION_TYPES, PRIVILEGED_ROLE_HINTS, TRUSTED_ACTIVITY_SOURCES
 
 DEFAULT_EVENT_LOOKBACK_DAYS = 90
 _ENV_EVENT_LOOKBACK_DAYS = "KESTREL_POLICY_EVENT_LOOKBACK_DAYS"
 
-# Keep in sync with packs/cross-app/.../cross_app_privileged_concentration.py
-# (pack modules cannot import kestrel under RestrictedPython).
-_PRIVILEGED_ROLE_HINTS = (
-    "admin",
-    "owner",
-    "super_admin",
-    "organization_admin",
-    "help_desk_admin",
-    "groups_admin",
-)
+# The hints live in the runtime helpers so pack policies read the same list
+# through ``has_privileged_role`` (pack modules cannot import kestrel).
+_PRIVILEGED_ROLE_HINTS = PRIVILEGED_ROLE_HINTS
 
 
 def event_lookback_days() -> int:
@@ -204,6 +198,81 @@ def assigned_role_names_by_identity(session: Session, org_id: uuid.UUID) -> dict
     return out
 
 
+def group_names_by_identity(session: Session, org_id: uuid.UUID) -> dict[uuid.UUID, list[str]]:
+    """Every identity's group names via the graph: identity -[member_of]-> group
+    node -> Group.name. Google Workspace org units are Group rows too, so they
+    appear here as well."""
+    identity_node = aliased(GraphNode)
+    group_node = aliased(GraphNode)
+    rows = session.execute(
+        select(identity_node.object_id, Group.name)
+        .join(GraphEdge, GraphEdge.source_node_id == identity_node.id)
+        .join(group_node, group_node.id == GraphEdge.target_node_id)
+        .join(Group, Group.id == group_node.object_id)
+        .where(
+            identity_node.org_id == org_id,
+            identity_node.node_type == GraphNodeType.IDENTITY,
+            group_node.node_type == GraphNodeType.GROUP,
+            GraphEdge.edge_type == GraphEdgeType.MEMBER_OF,
+            is_active(Group),
+        )
+    ).all()
+    out: dict[uuid.UUID, list[str]] = defaultdict(list)
+    for identity_id, name in rows:
+        if name is not None:
+            out[identity_id].append(str(name))
+    for names in out.values():
+        names.sort()
+    return out
+
+
+def org_context(session: Session, org_id: uuid.UUID) -> dict[str, Any]:
+    """The ``org`` block every row carries: what is connected and which email
+    domains are the company's.
+
+    Domains come from the identity provider's enabled human accounts; with no
+    identity provider connected, any domain with at least three accounts
+    counts. Policies use it to tell a company address from a guest's.
+    """
+    rows = session.execute(
+        select(Application.application_type)
+        .join(ApplicationInstance, ApplicationInstance.application_id == Application.id)
+        .where(ApplicationInstance.org_id == org_id)
+    ).all()
+    connected = sorted({str(getattr(value, "value", value)) for (value,) in rows})
+    idp_types = [app_type for app_type in connected if app_type in IDP_APPLICATION_TYPES]
+
+    domain_counts: dict[str, int] = defaultdict(int)
+    idp_domains: set[str] = set()
+    identities = session.execute(
+        select(Identity.email, Identity.is_external, Identity.identity_type, Application.application_type)
+        .join(ApplicationInstance, ApplicationInstance.id == Identity.application_instance_id)
+        .join(Application, Application.id == ApplicationInstance.application_id)
+        .where(Identity.org_id == org_id, is_active(Identity), Identity.is_disabled.is_(False))
+    ).all()
+    for email, is_external, identity_type, app_type in identities:
+        if not email or "@" not in str(email) or is_external:
+            continue
+        if getattr(identity_type, "value", identity_type) != "user":
+            continue
+        domain = str(email).rsplit("@", 1)[1].strip().lower()
+        if not domain:
+            continue
+        domain_counts[domain] += 1
+        if str(getattr(app_type, "value", app_type)) in IDP_APPLICATION_TYPES:
+            idp_domains.add(domain)
+    if idp_domains:
+        company_domains = sorted(idp_domains)
+    else:
+        company_domains = sorted(domain for domain, count in domain_counts.items() if count >= 3)
+    return {
+        "connected_application_types": connected,
+        "idp_application_types": idp_types,
+        "idp_connected": bool(idp_types),
+        "company_email_domains": company_domains,
+    }
+
+
 def _is_privileged_role_name(name: Any) -> bool:
     if not name:
         return False
@@ -262,10 +331,26 @@ def enrich_privileged_application_types(rows: list[dict[str, Any]]) -> None:
             row["privileged_application_types"] = []
 
 
-# Application types that are an identity provider: the account there is the
-# one an offboarding process disables first, so its state is what "this person
-# has left" means.
-IDP_APPLICATION_TYPES = frozenset({"okta", "google_workspace"})
+def _trusted_timestamp(account: dict[str, Any]) -> datetime | None:
+    # Imported here: the runtime package imports this module.
+    from kestrel.policies.runtime.helpers import parse_timestamp
+
+    source = account.get("last_active_source")
+    if source is not None and source not in TRUSTED_ACTIVITY_SOURCES:
+        return None
+    return parse_timestamp(account.get("last_active_at"))
+
+
+def _cluster_worker_type(accounts: list[dict[str, Any]]) -> tuple[str, str]:
+    """The person's worker type and where it came from: the identity
+    provider's account first, then any account that says something."""
+    for account in accounts:
+        if account.get("application_type") in IDP_APPLICATION_TYPES and account.get("worker_type") not in (None, "unknown"):
+            return str(account["worker_type"]), "idp"
+    for account in accounts:
+        if account.get("worker_type") not in (None, "unknown"):
+            return str(account["worker_type"]), "other"
+    return "unknown", "none"
 
 
 def attach_cluster_context(session: Session, org_id: uuid.UUID, rows: list[dict[str, Any]]) -> None:
@@ -283,6 +368,12 @@ def attach_cluster_context(session: Session, org_id: uuid.UUID, rows: list[dict[
         "left the company" and "never went through the IdP at all".
     ``cluster.privileged_application_types``
         application types where this person holds a privileged role.
+    ``cluster.worker_type``
+        the person's classification, the identity provider's account first.
+    ``cluster.last_active_at``
+        the most recent trusted activity across every account.
+    ``cluster.is_representative``
+        whether this row is the one a per-person finding should land on.
 
     Rows for orgs whose links have not been built yet get a single-account
     cluster describing themselves, which is true, just less useful.
@@ -311,6 +402,8 @@ def attach_cluster_context(session: Session, org_id: uuid.UUID, rows: list[dict[
             "identity_id": str(identity_id),
             "application_type": application.get("type"),
             "application_name": application.get("name"),
+            "application_display_name": application.get("display_name"),
+            "identity_type": identity.get("identity_type"),
             "email": identity.get("email"),
             "display_name": identity.get("display_name"),
             "is_disabled": bool(identity.get("is_disabled")),
@@ -318,6 +411,13 @@ def attach_cluster_context(session: Session, org_id: uuid.UUID, rows: list[dict[
             "mfa_enabled": identity.get("mfa_enabled"),
             "last_active_at": identity.get("last_active_at"),
             "last_active_source": identity.get("last_active_source"),
+            "created_at_source": identity.get("created_at_source"),
+            "disabled_at": identity.get("disabled_at"),
+            "expires_at": identity.get("expires_at"),
+            "worker_type": identity.get("worker_type") or "unknown",
+            "department": identity.get("department"),
+            "title": identity.get("title"),
+            "groups": list(row.get("groups") or []),
             "roles": list(role_names),
             "privileged": any(_is_privileged_role_name(name) for name in role_names),
         }
@@ -339,18 +439,33 @@ def attach_cluster_context(session: Session, org_id: uuid.UUID, rows: list[dict[
             idp_status = "disabled"
         else:
             idp_status = "active"
+        worker_type, worker_type_source = _cluster_worker_type(accounts)
+        latest: tuple[datetime, str | None] | None = None
+        for account in accounts:
+            stamp = _trusted_timestamp(account)
+            if stamp is not None and (latest is None or stamp > latest[0]):
+                latest = (stamp, account.get("last_active_source"))
+        representative = str(link.representative_identity_id) if link else str(identity_id)
         row["cluster"] = {
             "accounts": accounts,
             "member_count": len(accounts),
+            "active_account_count": sum(1 for a in accounts if not a["is_disabled"]),
             "application_types": sorted({a["application_type"] for a in accounts if a["application_type"]}),
             "idp_status": idp_status,
             "idp_application_types": sorted({a["application_type"] for a in idp_accounts if a["application_type"]}),
             "privileged_application_types": sorted(
                 {a["application_type"] for a in accounts if a["privileged"] and a["application_type"]}
             ),
+            "worker_type": worker_type,
+            "worker_type_source": worker_type_source,
+            "department": next((a["department"] for a in idp_accounts if a.get("department")), None)
+            or next((a["department"] for a in accounts if a.get("department")), None),
+            "last_active_at": latest[0] if latest else None,
+            "last_active_source": latest[1] if latest else None,
             "match_kind": link.match_kind if link else "self",
             "idp_connected": idp_connected,
-            "representative_identity_id": str(link.representative_identity_id) if link else str(identity_id),
+            "representative_identity_id": representative,
+            "is_representative": str(identity_id) == representative,
         }
 
 
@@ -401,6 +516,7 @@ def load_identity_rows(session: Session, org_id: uuid.UUID) -> list[dict[str, An
     # is the only level Google exposes it at.
     settings_by_identity = _settings_by_subject(session, org_id, "identity")
     grants_by_identity = _oauth_grants_by_identity(session, org_id)
+    groups_by_identity = group_names_by_identity(session, org_id)
     rows = []
     for identity in identities:
         settings = settings_by_identity.get(identity.id, [])
@@ -412,6 +528,7 @@ def load_identity_rows(session: Session, org_id: uuid.UUID) -> list[dict[str, An
                 "identity": _model_to_dict(identity),
                 "application": _application_context(session, identity.application_instance_id),
                 "roles": roles_by_identity.get(identity.id, []),
+                "groups": groups_by_identity.get(identity.id, []),
                 "settings": settings,
                 "settings_by_key": {setting["key"]: setting for setting in settings},
                 "oauth_grants": oauth_grants,
@@ -545,17 +662,78 @@ def load_resource_rows(session: Session, org_id: uuid.UUID) -> list[dict[str, An
     return rows
 
 
+def _event_identity_summary(row: dict[str, Any]) -> dict[str, Any]:
+    """The slice of an identity row an event policy needs about an actor or
+    target. A summary, not the row: tens of thousands of events each carrying
+    a full cluster would swamp the subprocess snapshot."""
+    identity = row.get("identity") or {}
+    cluster = row.get("cluster") or {}
+    return {
+        "identity_id": str(row.get("_subject_id")),
+        "email": identity.get("email"),
+        "display_name": identity.get("display_name"),
+        "identity_type": identity.get("identity_type"),
+        "is_disabled": bool(identity.get("is_disabled")),
+        "is_external": bool(identity.get("is_external")),
+        "worker_type": identity.get("worker_type") or "unknown",
+        "privileged": any(_is_privileged_role_name(name) for name in row.get("roles") or []),
+        "cluster_worker_type": cluster.get("worker_type"),
+        "cluster_idp_status": cluster.get("idp_status"),
+        "representative_identity_id": cluster.get("representative_identity_id"),
+    }
+
+
+class _EventIdentityIndex:
+    """Resolve an event's actor or target to an identity summary: by the
+    provider id within the event's application instance first, then by
+    lowercase email anywhere in the org."""
+
+    def __init__(self, identity_rows: list[dict[str, Any]]) -> None:
+        self._by_provider: dict[tuple[str, str], dict[str, Any]] = {}
+        self._by_email: dict[str, dict[str, Any]] = {}
+        for row in identity_rows:
+            identity = row.get("identity") or {}
+            summary = _event_identity_summary(row)
+            instance_id = identity.get("application_instance_id")
+            provider_id = identity.get("provider_object_id")
+            if instance_id is not None and provider_id:
+                self._by_provider[(str(instance_id), str(provider_id))] = summary
+            email = identity.get("email")
+            if email:
+                # The identity provider's account describes the person best.
+                key = str(email).strip().lower()
+                current = self._by_email.get(key)
+                is_idp = (row.get("application") or {}).get("type") in IDP_APPLICATION_TYPES
+                if current is None or is_idp:
+                    self._by_email[key] = summary
+
+    def resolve(self, instance_id: Any, provider_id: Any, email: Any) -> dict[str, Any] | None:
+        if provider_id and instance_id is not None:
+            found = self._by_provider.get((str(instance_id), str(provider_id)))
+            if found is not None:
+                return found
+        if email:
+            return self._by_email.get(str(email).strip().lower())
+        return None
+
+
 def load_event_rows(
     session: Session,
     org_id: uuid.UUID,
     *,
     lookback_days: int | None = None,
     now: datetime | None = None,
+    identity_rows: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Load ActivityEvent rows within the configured lookback window.
 
     Defaults to ``KESTREL_POLICY_EVENT_LOOKBACK_DAYS`` (90). Older events are
-    excluded so event-policy evaluation stays bounded.
+    excluded so event-policy evaluation stays bounded. Each event carries
+    ``actor`` and ``target``: a summary of the identity the event names (or
+    ``None``), resolved by provider id in the event's application and then by
+    email, so a cross-application event policy can ask whether the target's
+    identity-provider account is disabled. ``identity_rows`` lets the row cache
+    hand in the family it already loaded.
     """
     cutoff = event_lookback_cutoff(now=now, lookback_days=lookback_days)
     events = session.scalars(
@@ -564,13 +742,19 @@ def load_event_rows(
             ActivityEvent.occurred_at >= cutoff,
         )
     ).all()
+    if not events:
+        return []
+    index = _EventIdentityIndex(identity_rows if identity_rows is not None else load_identity_rows(session, org_id))
     rows = []
     for event in events:
+        event_dict = _event_dict(event)
+        event_dict["actor"] = index.resolve(event.application_instance_id, event.actor_provider_id, event.actor_email)
+        event_dict["target"] = index.resolve(event.application_instance_id, event.target_provider_id, event.target_email)
         rows.append(
             {
                 "_subject_type": "event",
                 "_subject_id": event.id,
-                "event": _event_dict(event),
+                "event": event_dict,
                 "application": _application_context(session, event.application_instance_id),
             }
         )
@@ -689,11 +873,22 @@ RESOURCE_TYPE_TO_FROM_TYPE: dict[str, str] = {
 }
 
 
-def load_rows(session: Session, org_id: uuid.UUID, from_type: str) -> list[dict[str, Any]]:
+def attach_org_context(rows: list[dict[str, Any]], org: dict[str, Any]) -> None:
+    """Share one ``org`` block across every row (by reference; rows are
+    serialized for the subprocess and never mutated in-process)."""
+    for row in rows:
+        row["org"] = org
+
+
+def load_rows(
+    session: Session, org_id: uuid.UUID, from_type: str, *, org: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
     loader = LOADERS.get(from_type)
     if loader is None:
         raise ValueError(f"No row loader for from_type '{from_type}' (known: {sorted(LOADERS)})")
-    return loader(session, org_id)
+    rows = loader(session, org_id)
+    attach_org_context(rows, org if org is not None else org_context(session, org_id))
+    return rows
 
 
 class RowCache:
@@ -710,10 +905,21 @@ class RowCache:
         self._session = session
         self._org_id = org_id
         self._rows: dict[str, list[dict[str, Any]]] = {}
+        self._org: dict[str, Any] | None = None
+
+    @property
+    def org(self) -> dict[str, Any]:
+        if self._org is None:
+            self._org = org_context(self._session, self._org_id)
+        return self._org
 
     def rows(self, from_type: str) -> list[dict[str, Any]]:
         if from_type not in self._rows:
-            loaded = load_rows(self._session, self._org_id, from_type)
+            if from_type == "events":
+                loaded = load_event_rows(self._session, self._org_id, identity_rows=self.rows("identities"))
+                attach_org_context(loaded, self.org)
+            else:
+                loaded = load_rows(self._session, self._org_id, from_type, org=self.org)
             if from_type == "identities":
                 from kestrel.policies.runtime.restricted import attach_related_grants
 

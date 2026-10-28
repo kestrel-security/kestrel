@@ -479,3 +479,215 @@ def test_identity_rows_carry_the_oauth_grants_the_account_authorized(db_session)
     # own copy and an account with no grants gets an empty list, never None.
     assert len(rows[staying.id]["oauth_grants"]) == 1
     assert rows[ungranted.id]["oauth_grants"] == []
+
+
+def _world_with_two_accounts(db_session):
+    """One person with an Okta account (contractor, in a group, active) and a
+    GitHub account (no sign-in field), plus a GitHub audit event they caused."""
+    import uuid as _uuid
+    from datetime import UTC, datetime, timedelta
+
+    from kestrel.db.models.access import Group, GroupMembership
+    from kestrel.db.models.activity_event import ActivityEvent
+    from kestrel.db.models.application import ApplicationType
+    from kestrel.db.models.connector import ConnectorRun, ConnectorRunStatus, ConnectorRunTrigger
+    from kestrel.db.models.identity import Identity, IdentityType
+    from kestrel.graph.writer import write_identity_link_edges
+    from kestrel.identities.correlate import rebuild_identity_links
+    from kestrel.testing import make_application, make_application_instance, make_connector_instance, make_organization
+
+    org = make_organization(db_session)
+    now = datetime.now(UTC)
+
+    def tenant(app_type: ApplicationType):
+        application = make_application(db_session, org, application_type=app_type, name=app_type.value)
+        app_instance = make_application_instance(db_session, org, application=application)
+        connector_instance = make_connector_instance(db_session, org, application_instance=app_instance)
+        db_session.flush()
+        run = ConnectorRun(
+            id=_uuid.uuid4(),
+            org_id=org.id,
+            connector_instance_id=connector_instance.id,
+            status=ConnectorRunStatus.SUCCESS,
+            started_at=now,
+            triggered_by=ConnectorRunTrigger.MANUAL,
+        )
+        db_session.add(run)
+        db_session.flush()
+        return app_instance, run
+
+    okta_instance, okta_run = tenant(ApplicationType.OKTA)
+    github_instance, github_run = tenant(ApplicationType.GITHUB)
+
+    def identity(instance, run, provider_id: str, **fields) -> Identity:
+        row = Identity(
+            id=_uuid.uuid4(),
+            org_id=org.id,
+            application_instance_id=instance.id,
+            provider_object_id=provider_id,
+            source_connector_run_id=run.id,
+            raw_source={},
+            **{"identity_type": IdentityType.USER, "display_name": "Pat Contractor", **fields},
+        )
+        db_session.add(row)
+        db_session.flush()
+        return row
+
+    okta = identity(
+        okta_instance,
+        okta_run,
+        "00u-pat",
+        email="pat@vendor.example",
+        worker_type="contractor",
+        worker_type_source="connector",
+        last_active_at=now - timedelta(days=2),
+        last_active_source="login",
+        department="Platform",
+    )
+    github = identity(
+        github_instance,
+        github_run,
+        "1002",
+        email="pat@vendor.example",
+        last_active_at=now - timedelta(days=200),
+        last_active_source="profile",
+    )
+    staff = identity(
+        okta_instance, okta_run, "00u-staff", email="ada@acme.example.com", display_name="Ada", worker_type="employee"
+    )
+    group = Group(
+        id=_uuid.uuid4(),
+        org_id=org.id,
+        application_instance_id=okta_instance.id,
+        provider_object_id="00g-contractors",
+        source_connector_run_id=okta_run.id,
+        raw_source={},
+        name="contractors-emea",
+    )
+    db_session.add(group)
+    db_session.flush()
+    db_session.add(
+        GroupMembership(
+            id=_uuid.uuid4(), org_id=org.id, group_id=group.id, identity_id=okta.id, source_connector_run_id=okta_run.id
+        )
+    )
+    db_session.add(
+        ActivityEvent(
+            id=_uuid.uuid4(),
+            org_id=org.id,
+            application_instance_id=github_instance.id,
+            provider_object_id="evt-1",
+            source_connector_run_id=github_run.id,
+            raw_source={},
+            action="privilege.grant",
+            action_category="privilege",
+            actor_provider_id="9999",
+            actor_email=None,
+            target_provider_id="1002",
+            target_email=None,
+            occurred_at=now - timedelta(days=1),
+            summary="made admin",
+            attributes={},
+        )
+    )
+    db_session.flush()
+
+    # Graph nodes and member_of edges come from the sync's graph writer; build
+    # the one edge this test needs the same way the writer does.
+    from kestrel.db.models.graph_edge import AccessPath, GraphEdge, GraphEdgeType, GraphNode, GraphNodeType
+
+    identity_node = GraphNode(
+        id=_uuid.uuid4(), org_id=org.id, node_type=GraphNodeType.IDENTITY, object_id=okta.id, label="Pat", properties={}
+    )
+    group_node = GraphNode(
+        id=_uuid.uuid4(),
+        org_id=org.id,
+        node_type=GraphNodeType.GROUP,
+        object_id=group.id,
+        label="contractors",
+        properties={},
+    )
+    db_session.add_all([identity_node, group_node])
+    db_session.flush()
+    db_session.add(
+        GraphEdge(
+            id=_uuid.uuid4(),
+            org_id=org.id,
+            source_node_id=identity_node.id,
+            target_node_id=group_node.id,
+            edge_type=GraphEdgeType.MEMBER_OF,
+            access_path=AccessPath.DIRECT,
+            properties={},
+            source_connector_run_id=okta_run.id,
+        )
+    )
+    db_session.flush()
+    rebuild_identity_links(db_session, org_id=org.id)
+    write_identity_link_edges(db_session, org_id=org.id)
+    return org, okta, github, staff
+
+
+def test_identity_rows_carry_groups_worker_type_and_cluster_activity(db_session):
+    from kestrel.policies.dataload import load_identity_rows
+
+    org, okta, github, _staff = _world_with_two_accounts(db_session)
+    rows = {row["_subject_id"]: row for row in load_identity_rows(db_session, org.id)}
+
+    okta_row, github_row = rows[okta.id], rows[github.id]
+    assert okta_row["groups"] == ["contractors-emea"]
+    assert github_row["groups"] == []
+    assert okta_row["identity"]["worker_type"] == "contractor"
+    assert okta_row["identity"]["department"] == "Platform"
+
+    # The GitHub account says nothing about employment, but the person is a
+    # contractor according to their identity-provider account.
+    cluster = github_row["cluster"]
+    assert (cluster["worker_type"], cluster["worker_type_source"]) == ("contractor", "idp")
+    assert cluster["department"] == "Platform"
+    assert cluster["active_account_count"] == 2
+    # The GitHub profile timestamp is not activity; the Okta sign-in is the
+    # person's latest trusted activity.
+    assert cluster["last_active_source"] == "login"
+    assert cluster["last_active_at"] == okta_row["identity"]["last_active_at"]
+    github_account = next(a for a in cluster["accounts"] if a["identity_id"] == str(github.id))
+    assert github_account["worker_type"] == "unknown"
+    assert github_account["last_active_source"] == "profile"
+    okta_account = next(a for a in cluster["accounts"] if a["identity_id"] == str(okta.id))
+    assert okta_account["groups"] == ["contractors-emea"]
+    assert okta_account["identity_type"] == "user"
+    assert sum(1 for row in (okta_row, github_row) if row["cluster"]["is_representative"]) == 1
+
+
+def test_every_row_carries_the_org_block(db_session):
+    from kestrel.policies.dataload import RowCache, load_rows
+
+    org, _okta, _github, _staff = _world_with_two_accounts(db_session)
+    cache = RowCache(db_session, org.id)
+
+    for family in ("identities", "events", "grants"):
+        for row in cache.rows(family):
+            assert row["org"] is cache.org
+    assert cache.org["connected_application_types"] == ["github", "okta"]
+    assert cache.org["idp_application_types"] == ["okta"]
+    assert cache.org["idp_connected"] is True
+    # Vendor and company addresses both exist in Okta; the IdP's enabled
+    # human accounts define the company's domains.
+    assert cache.org["company_email_domains"] == ["acme.example.com", "vendor.example"]
+    assert load_rows(db_session, org.id, "identities")[0]["org"]["idp_connected"] is True
+
+
+def test_event_rows_resolve_actor_and_target_to_identities(db_session):
+    from kestrel.policies.dataload import RowCache
+
+    org, _okta, github, _staff = _world_with_two_accounts(db_session)
+    rows = RowCache(db_session, org.id).rows("events")
+
+    assert len(rows) == 1
+    event = rows[0]["event"]
+    assert event["actor"] is None  # nobody with provider id 9999
+    target = event["target"]
+    assert target["identity_id"] == str(github.id)
+    assert target["worker_type"] == "unknown"
+    assert target["cluster_worker_type"] == "contractor"
+    assert target["cluster_idp_status"] == "active"
+    assert target["is_disabled"] is False

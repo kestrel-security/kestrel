@@ -74,7 +74,11 @@ account and rewrite sibling identity nodes onto the focused node, so one
 person shows their access across all synced tenants from a single focus. The
 inspector lists the underlying `accounts[]` (application, email, MFA,
 disabled). Identity rows for policy evaluation carry
-`privileged_application_types` derived by the same email rule.
+`privileged_application_types` derived by the same email rule, and a
+`cluster` block built from `identity_links`: every account with its state,
+worker type, roles and trusted activity, the identity-provider status, the
+person's resolved `worker_type` and latest activity, and the representative
+account ([`policies.md`](policies.md#resource-types-worth-knowing)).
 
 ## Explore canvas
 

@@ -26,8 +26,11 @@ It contains:
 
 - **Helpers**: `now`, `within_last_days`, `days_since`, `parse_timestamp`,
   `duration_seconds`, `get_path`, `has_admin_grant`, `application_matches`,
-  `email_domain`, `domain_matches`, `ip_in_networks`, `matches_any`,
-  `PolicyDataError`, with signatures and docstrings.
+  `email_domain`, `domain_matches`, `ip_in_networks`, `matches_any`, the
+  cross-application set `cluster_accounts`, `idp_account`,
+  `is_representative`, `worker_type_of`, `has_privileged_role`, `in_group`,
+  `trusted_last_active`, `activity_status`, and `PolicyDataError`, with
+  signatures and docstrings.
 - **Builtins and `time`**: the only other names that exist.
 - **Rules**: what to return, how to handle missing and malformed data, and
   which shortcuts hide findings.
@@ -47,6 +50,9 @@ These are the mistakes the contract's rules exist to prevent:
 | `import datetime`, `datetime.now() - timedelta(days=30)` | `within_last_days(value, 30)` or `days_since(value)`; `now()` if you need the time |
 | Comparing a row timestamp to a datetime | Timestamps arrive as ISO strings, naive, or aware datetimes. Use the helpers |
 | Not scoping to one application | Start with `if application.get("type") != "okta": return True` |
+| Scoping a cross-application policy to one application | A cluster policy runs once per account in every application; skip non-human rows and the identity provider's own account instead, and gate per-person checks with `is_representative(resource)` |
+| `is_external` as "contractor" | `is_external` is the application's guest flag. Use `worker_type_of(resource)`; `unknown` is a real answer, decide what it means and say so |
+| `within_last_days(identity["last_active_at"], 30)` as dormancy | A `profile` timestamp is not activity and GitHub's audit log only sees admin actions. Use `activity_status(resource, 30)` and treat `unknown` as not assessable |
 | `if not identity.get("mfa_enabled")` | `None` means the connector could not read it. Only `is False` is a violation |
 | `try: ... except Exception: return True` | Raise `PolicyDataError`; a guessed `True` hides findings |
 | Logic at module level | The module body may only hold constants and functions |

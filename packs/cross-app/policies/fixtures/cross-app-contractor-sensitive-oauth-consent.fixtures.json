@@ -1,0 +1,823 @@
+{
+  "rows": [
+    {
+      "_subject_id": "contractor-consented-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "pat@vendor.example",
+        "display_name": "Contractor Consented",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "contractor-consented-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Contractor Consented",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "contractor-consented-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Contractor Consented",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "contractor-consented-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "contractor-consented-google_workspace",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "pat@vendor.example",
+        "display_name": "Contractor Consented",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Mail Merge Pro",
+          "publisher": "Unknown Vendor",
+          "is_verified": false,
+          "sensitive_scope_names": [
+            "https://www.googleapis.com/auth/gmail.readonly"
+          ],
+          "granted_at": {
+            "$days_ago": 40
+          },
+          "last_used_at": {
+            "$days_ago": 2
+          }
+        }
+      ],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "contractor-consented-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Contractor Consented",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "contractor-consented-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "pat@vendor.example",
+            "display_name": "Contractor Consented",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "contractor-consented-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "contractor-benign-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "sam@vendor.example",
+        "display_name": "Contractor Benign",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "contractor-benign-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Contractor Benign",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "contractor-benign-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Contractor Benign",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "contractor-benign-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "contractor-benign-google_workspace",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "sam@vendor.example",
+        "display_name": "Contractor Benign",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "contractor",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Calendar Widget",
+          "publisher": "Example Co",
+          "is_verified": true,
+          "sensitive_scope_names": [],
+          "granted_at": {
+            "$days_ago": 40
+          },
+          "last_used_at": {
+            "$days_ago": 2
+          }
+        }
+      ],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "contractor-benign-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Contractor Benign",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "contractor-benign-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "sam@vendor.example",
+            "display_name": "Contractor Benign",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "contractor",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "contractor",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "contractor-benign-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_application_types": [
+          "google_workspace",
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "employee-consented-google_workspace",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ada@acme.example.com",
+        "display_name": "Employee Consented",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Mail Merge Pro",
+          "publisher": "Unknown Vendor",
+          "is_verified": false,
+          "sensitive_scope_names": [
+            "https://www.googleapis.com/auth/gmail.readonly"
+          ],
+          "granted_at": {
+            "$days_ago": 40
+          },
+          "last_used_at": {
+            "$days_ago": 2
+          }
+        }
+      ],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "employee-consented-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "ada@acme.example.com",
+            "display_name": "Employee Consented",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "google_workspace"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "employee-consented-google_workspace",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace"
+        ],
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "guest-consented-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "guest@partner.example",
+        "display_name": "Guest Consented",
+        "is_disabled": false,
+        "is_external": true,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "guest",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Mail Merge Pro",
+          "publisher": "Unknown Vendor",
+          "is_verified": false,
+          "sensitive_scope_names": [
+            "https://www.googleapis.com/auth/gmail.readonly"
+          ],
+          "granted_at": {
+            "$days_ago": 40
+          },
+          "last_used_at": {
+            "$days_ago": 2
+          }
+        }
+      ],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "guest-consented-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "guest@partner.example",
+            "display_name": "Guest Consented",
+            "is_disabled": false,
+            "is_external": true,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "guest",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "slack"
+        ],
+        "idp_status": "absent",
+        "idp_application_types": [],
+        "privileged_application_types": [],
+        "worker_type": "guest",
+        "worker_type_source": "other",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "guest-consented-slack",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "slack"
+        ],
+        "idp_application_types": [],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "unknown-consented-google_workspace",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "who@partner.example",
+        "display_name": "Unknown Consented",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "unknown",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "google_workspace",
+        "name": "Google Workspace"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [
+        {
+          "oauth_application_name": "Mail Merge Pro",
+          "publisher": "Unknown Vendor",
+          "is_verified": false,
+          "sensitive_scope_names": [
+            "https://www.googleapis.com/auth/gmail.readonly"
+          ],
+          "granted_at": {
+            "$days_ago": 40
+          },
+          "last_used_at": {
+            "$days_ago": 2
+          }
+        }
+      ],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "unknown-consented-google_workspace",
+            "application_type": "google_workspace",
+            "application_name": "Google Workspace",
+            "application_display_name": "Google Workspace",
+            "identity_type": "user",
+            "email": "who@partner.example",
+            "display_name": "Unknown Consented",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "unknown",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "google_workspace"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "unknown",
+        "worker_type_source": "none",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "unknown-consented-google_workspace",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "google_workspace"
+        ],
+        "idp_application_types": [
+          "google_workspace"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "contractor-consented-google_workspace",
+    "guest-consented-slack"
+  ]
+}

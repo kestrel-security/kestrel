@@ -675,6 +675,23 @@ def _github_audit_log(
             entry["repo"] = rng.choice(repos)["name"]
         entries.append(entry)
 
+    # People who have gone quiet everywhere did act once, long ago: without an
+    # observation GitHub could only report them as unknown, not dormant.
+    for offset, persona in enumerate(p for p in cast if p.archetype is Archetype.DORMANT):
+        entries.append(
+            {
+                "_document_id": f"audit-dormant-{offset:02d}",
+                "action": "org.update_member",
+                "actor": persona.github_login(),
+                "actor_id": ids.get(persona.key),
+                "org": GITHUB_ORG_LOGIN,
+                "user": persona.github_login(),
+                "user_id": ids.get(persona.key),
+                "created_at": _iso(now - timedelta(days=200 + offset)),
+                "data": {"permission": "read"},
+            }
+        )
+
     entries.sort(key=lambda e: e["created_at"])
     return entries
 
@@ -1043,6 +1060,26 @@ def _slack_audit_log(
                         "domain": "acme",
                     }
                 },
+            }
+        )
+    # One old sign-in per dormant person, so Slack reports them stale rather
+    # than falling back to the profile timestamp (which is not activity).
+    for offset, persona in enumerate(p for p in cast if p.archetype is Archetype.DORMANT):
+        occurred = now - timedelta(days=200 + offset)
+        entries.append(
+            {
+                "id": f"slack-audit-dormant-{offset:02d}",
+                "date_create": int(occurred.timestamp()),
+                "action": "user_login",
+                "actor": {
+                    "type": "user",
+                    "user": {"id": ids[persona.key], "name": persona.display_name, "email": persona.email},
+                },
+                "entity": {
+                    "type": "user",
+                    "user": {"id": ids[persona.key], "name": persona.display_name, "email": persona.email},
+                },
+                "context": {"location": {"type": "workspace", "id": SLACK_TEAM_ID, "name": "Acme Corp", "domain": "acme"}},
             }
         )
     entries.sort(key=lambda e: e["date_create"])
@@ -1495,6 +1532,10 @@ def generate_okta(
             last_login = now - timedelta(days=rng.randint(120, 400))
         elif persona.is_disabled:
             last_login = now - timedelta(days=rng.randint(200, 500))
+        elif persona.is_external:
+            # A contractor whose engagement ended without anyone disabling the
+            # account: the cross-app dormant-contractor beat.
+            last_login = now - timedelta(days=rng.randint(60, 120))
         else:
             last_login = now - timedelta(days=rng.randint(0, 20))
 
@@ -1514,12 +1555,16 @@ def generate_okta(
                 "status": "DEPROVISIONED" if persona.is_disabled else "ACTIVE",
                 "created": _iso(now - timedelta(days=rng.randint(60, 1500))).replace("Z", ".000Z"),
                 "lastLogin": _iso(last_login).replace("Z", ".000Z"),
+                # Offboarding ran six weeks ago; the surviving local accounts
+                # elsewhere are what the departed-account policies report.
+                **({"statusChanged": _iso(now - timedelta(days=45)).replace("Z", ".000Z")} if persona.is_disabled else {}),
                 "profile": {
                     "firstName": persona.first_name,
                     "lastName": persona.last_name,
                     "email": persona.email,
                     "login": persona.email,
                     "department": persona.department,
+                    "title": persona.title,
                     **({"userType": "Contractor", "isExternal": True} if persona.is_external else {}),
                 },
                 "factors": factors,
@@ -1912,9 +1957,12 @@ def generate_google_workspace(
 
     users: list[dict[str, Any]] = []
     for persona in cast:
-        last_login = now - timedelta(
-            days=rng.randint(200, 400) if persona.archetype is Archetype.DORMANT else rng.randint(0, 20)
-        )
+        if persona.archetype is Archetype.DORMANT:
+            last_login = now - timedelta(days=rng.randint(200, 400))
+        elif persona.is_external:
+            last_login = now - timedelta(days=rng.randint(60, 120))
+        else:
+            last_login = now - timedelta(days=rng.randint(0, 20))
         users.append(
             {
                 "kind": "admin#directory#user",

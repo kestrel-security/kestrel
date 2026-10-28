@@ -256,6 +256,16 @@ provides_capabilities:
   - okta:auth_servers          # auth_server
   - okta:devices               # device
   - okta:risk_policies         # entity_risk_policy, post_auth_session_policy
+  # Generic identity capabilities (kestrel.policies.coverage.GENERIC_CAPABILITIES):
+  # cross-application policies REQUIRE these and are assessable wherever a
+  # connected connector provides them.
+  - identity:last_sign_in
+  - identity:worker_type
+  - identity:groups
+  - identity:department
+  - identity:disabled_at
+  - identity:owner
+  - identity:oauth_grants
 change_classes:
   - admin_granted
   - admin_revoked

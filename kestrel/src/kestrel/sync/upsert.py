@@ -35,7 +35,7 @@ from kestrel.db.models.identity import Identity, IdentityType, ServiceAccount, c
 from kestrel.db.models.oauth import OAuthApplication, OAuthGrant, OAuthScope
 from kestrel.db.models.resource import Resource, ResourceType, ResourceVisibility
 from kestrel.db.models.setting import TenantSetting
-from kestrel.policies.runtime.helpers import TRUSTED_ACTIVITY_SOURCES
+from kestrel.policies.vocabulary import TRUSTED_ACTIVITY_SOURCES
 
 PROVENANCE_KINDS = (
     "identity",

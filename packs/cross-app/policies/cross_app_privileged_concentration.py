@@ -10,22 +10,6 @@ REMEDIATION = (
 )
 COMPLIANCE = {"soc2": ["CC6.3"], "cis": ["5.2"], "nist_csf": ["PR.AC-4"], "custom": ["GH-01"]}
 
-PRIVILEGED_ROLE_HINTS = (
-    "admin",
-    "owner",
-    "super_admin",
-    "organization_admin",
-    "help_desk_admin",
-    "groups_admin",
-)
-
-
-def is_privileged_role(name):
-    if not name:
-        return False
-    lowered = str(name).lower()
-    return any(hint in lowered for hint in PRIVILEGED_ROLE_HINTS)
-
 
 def policy(resource):
     """True = compliant.
@@ -40,8 +24,7 @@ def policy(resource):
     Only the representative account opens the finding, so one person who is an
     admin in four applications is one finding, not four.
     """
-    roles = resource.get("roles") or []
-    if not any(is_privileged_role(role) for role in roles):
+    if not has_privileged_role(resource):
         return True
     cluster = resource.get("cluster") or {}
     apps = cluster.get("privileged_application_types")
@@ -55,8 +38,7 @@ def policy(resource):
     # One finding per person: the cluster names a representative, and every
     # other account defers to it. Rows without a representative (no
     # correlation yet) each stand for themselves.
-    representative = cluster.get("representative_identity_id")
-    if representative and str(resource.get("_subject_id") or "") != str(representative):
+    if not is_representative(resource):
         return True
     return False
 

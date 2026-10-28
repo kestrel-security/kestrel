@@ -27,6 +27,29 @@ started on them.
   `identity_activity` normalized kind an audit-log normalizer can emit.
 - Okta API tokens record the user they were issued to as the service
   account's owner.
+- Policy helpers for cross-application checks: `cluster_accounts`,
+  `idp_account`, `is_representative`, `worker_type_of`, `has_privileged_role`,
+  `in_group`, `trusted_last_active`, and `activity_status` (`active`, `stale`,
+  `never`, or `unknown` when the only timestamp is untrusted or the
+  application, like GitHub, records only administrative actions).
+- Identity rows carry `groups`, the new profile columns, a richer `cluster`
+  (worker type, latest trusted activity, representative flag, per-account
+  lifecycle timestamps), and an `org` block with the connected application
+  types and company email domains; event rows carry `event.actor` and
+  `event.target` identity summaries, including the target's identity-provider
+  status.
+- Nine cross-app pack policies: contractors with an enabled account they have
+  not used in 30 days, accounts still enabled a week after the identity
+  provider disabled the person, administrators whose identity-provider account
+  has no MFA, people dormant in every application, accounts never used after
+  creation, contractors and guests who consented to sensitive OAuth scopes,
+  privilege granted to someone the identity provider disabled, separation of
+  duties between the identity provider and what it governs, and
+  contingent-group members who administer elsewhere. Fixtures are generated
+  from `kestrel.policies.cross_app_fixtures` (`scripts/gen-cross-app-fixtures.py`).
+- Generic `identity:*` capability keys; the coverage service treats the
+  cross-app pack as assessable when any connected connector provides them,
+  and `assess_requires` reports per connected application which cannot.
 - Settings → Identity classification (Admin): ordered rules that classify
   accounts by email domain, org unit path, group name, provider user type, or
   application type into a worker type, with a preview of what would change.

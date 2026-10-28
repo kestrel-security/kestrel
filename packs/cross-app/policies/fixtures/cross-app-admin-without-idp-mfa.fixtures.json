@@ -1,0 +1,1674 @@
+{
+  "rows": [
+    {
+      "_subject_id": "admin-no-mfa-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ann@acme.example.com",
+        "display_name": "Admin No Mfa",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": false,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "admin-no-mfa-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Admin No Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "admin-no-mfa-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Admin No Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "admin-no-mfa-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "admin-no-mfa-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ann@acme.example.com",
+        "display_name": "Admin No Mfa",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "admin-no-mfa-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Admin No Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "admin-no-mfa-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ann@acme.example.com",
+            "display_name": "Admin No Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "admin-no-mfa-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "admin-with-mfa-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ben@acme.example.com",
+        "display_name": "Admin With Mfa",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": true,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "admin-with-mfa-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Admin With Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": true,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "admin-with-mfa-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Admin With Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "admin-with-mfa-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "admin-with-mfa-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ben@acme.example.com",
+        "display_name": "Admin With Mfa",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "admin-with-mfa-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Admin With Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": true,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "admin-with-mfa-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "ben@acme.example.com",
+            "display_name": "Admin With Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "admin-with-mfa-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "mfa-unknown-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "cat@acme.example.com",
+        "display_name": "Mfa Unknown",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "mfa-unknown-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Mfa Unknown",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "mfa-unknown-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Mfa Unknown",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "mfa-unknown-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "mfa-unknown-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "cat@acme.example.com",
+        "display_name": "Mfa Unknown",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "mfa-unknown-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Mfa Unknown",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "mfa-unknown-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "cat@acme.example.com",
+            "display_name": "Mfa Unknown",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "mfa-unknown-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "no-mfa-not-admin-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "dan@acme.example.com",
+        "display_name": "No Mfa Not Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": false,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "no-mfa-not-admin-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "No Mfa Not Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "no-mfa-not-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "No Mfa Not Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "no-mfa-not-admin-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "no-mfa-not-admin-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "dan@acme.example.com",
+        "display_name": "No Mfa Not Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "no-mfa-not-admin-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "No Mfa Not Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "no-mfa-not-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "dan@acme.example.com",
+            "display_name": "No Mfa Not Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "no-mfa-not-admin-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "no-mfa-admin-disabled-app-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "eve@acme.example.com",
+        "display_name": "No Mfa Admin Disabled App",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": false,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "no-mfa-admin-disabled-app-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "No Mfa Admin Disabled App",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "no-mfa-admin-disabled-app-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "No Mfa Admin Disabled App",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "no-mfa-admin-disabled-app-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "no-mfa-admin-disabled-app-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "eve@acme.example.com",
+        "display_name": "No Mfa Admin Disabled App",
+        "is_disabled": true,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "no-mfa-admin-disabled-app-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "No Mfa Admin Disabled App",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "no-mfa-admin-disabled-app-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "eve@acme.example.com",
+            "display_name": "No Mfa Admin Disabled App",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "no-mfa-admin-disabled-app-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "no-idp-admin-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "fay@acme.example.com",
+        "display_name": "No Idp Admin",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "no-idp-admin-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "fay@acme.example.com",
+            "display_name": "No Idp Admin",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "github"
+        ],
+        "idp_status": "absent",
+        "idp_application_types": [],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "other",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "no-idp-admin-github",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github"
+        ],
+        "idp_application_types": [],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "idp-admin-itself-no-mfa-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "gus@acme.example.com",
+        "display_name": "Idp Admin Itself No Mfa",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": false,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [
+        "Super Administrator"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "okta"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "idp-admin-itself-no-mfa-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "gus@acme.example.com",
+            "display_name": "Idp Admin Itself No Mfa",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "Super Administrator"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "okta"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "idp-admin-itself-no-mfa-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "disabled-idp-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "hal@acme.example.com",
+        "display_name": "Disabled Idp",
+        "is_disabled": true,
+        "is_external": false,
+        "mfa_enabled": false,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "disabled-idp-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "hal@acme.example.com",
+            "display_name": "Disabled Idp",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "disabled-idp-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "hal@acme.example.com",
+            "display_name": "Disabled Idp",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "disabled-idp-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "disabled-idp-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "hal@acme.example.com",
+        "display_name": "Disabled Idp",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [
+        "organization_admin"
+      ],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [
+        "github"
+      ],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "disabled-idp-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "hal@acme.example.com",
+            "display_name": "Disabled Idp",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": false,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "disabled-idp-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "hal@acme.example.com",
+            "display_name": "Disabled Idp",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [
+              "organization_admin"
+            ],
+            "privileged": true
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 1,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [
+          "github"
+        ],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "disabled-idp-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "admin-no-mfa-okta",
+    "idp-admin-itself-no-mfa-okta"
+  ]
+}
