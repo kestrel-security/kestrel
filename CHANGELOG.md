@@ -41,11 +41,16 @@ started on them.
   The workbench gains a scope control, cross-app intent chips, a field panel
   for every connector, and the intent analysis; the resource-type list now
   includes `resource` and `oauth_application`.
+- Event rows' `actor` / `target` summaries carry `cluster_idp_disabled_at`;
+  `cross-app-privilege-granted-to-disabled-idp-user` only reports a grant made
+  after the identity provider disabled the person.
 - Policy helpers for cross-application checks: `cluster_accounts`,
   `idp_account`, `is_representative`, `worker_type_of`, `has_privileged_role`,
   `in_group`, `trusted_last_active`, and `activity_status` (`active`, `stale`,
   `never`, or `unknown` when the only timestamp is untrusted or the
-  application, like GitHub, records only administrative actions).
+  application does not report sign-ins per account: GitHub, custom
+  connectors). Okta, Slack and GitHub user-type labels are matched as whole
+  words, so "Internal" staff are not read as interns.
 - Identity rows carry `groups`, the new profile columns, a richer `cluster`
   (worker type, latest trusted activity, representative flag, per-account
   lifecycle timestamps), and an `org` block with the connected application
@@ -92,6 +97,8 @@ started on them.
   checks. The database tiers, web build, and dependency audits are skipped.
   Pushes to `main` and releases still run everything. See
   [`docs/testing.md`](docs/testing.md#tiers).
+- The first sync after upgrading fills the new identity columns and
+  attributes without writing a Changes-feed row per identity.
 - `last_active_at` only moves forward: a trusted source (`login`, `audit`,
   `analytics`) is never replaced by a profile timestamp, and a sync that
   carries no activity keeps the stored value.

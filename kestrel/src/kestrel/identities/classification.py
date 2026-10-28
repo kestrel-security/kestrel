@@ -24,7 +24,7 @@ from sqlalchemy.orm import Session
 
 from kestrel.db.base import is_active
 from kestrel.db.models.access import Group, GroupMembership
-from kestrel.db.models.application import Application, ApplicationInstance
+from kestrel.db.models.application import Application, ApplicationInstance, ApplicationType
 from kestrel.db.models.identity import WORKER_TYPES, Identity, WorkerType, coerce_worker_type
 from kestrel.db.models.identity_classification import MATCH_KINDS, OrgIdentityClassificationRule
 
@@ -67,6 +67,14 @@ def _normalize_domain(value: str) -> str:
     return cleaned
 
 
+def _validate_application_type(value: str, *, field: str) -> str:
+    cleaned = value.strip().lower()
+    known = {member.value for member in ApplicationType}
+    if cleaned not in known:
+        raise ClassificationRuleError(f"{field} must be one of {', '.join(sorted(known))}, got {value!r}")
+    return cleaned
+
+
 def validate_rule(spec: RuleSpec) -> RuleSpec:
     """The spec with its values normalized, or ``ClassificationRuleError``."""
     worker_type = spec.worker_type.strip().lower()
@@ -86,8 +94,10 @@ def validate_rule(spec: RuleSpec) -> RuleSpec:
             raise ClassificationRuleError(f"org_unit_path_prefix must start with '/', got {value!r}")
         value = value.rstrip("/") or "/"
     elif kind == "application_type":
-        value = value.lower()
+        value = _validate_application_type(value, field="match_value")
     application_type = (spec.application_type or "").strip().lower() or None
+    if application_type is not None:
+        application_type = _validate_application_type(application_type, field="application_type")
     label = (spec.label or "").strip() or None
     if label and len(label) > 200:
         raise ClassificationRuleError("label must be at most 200 characters")
@@ -191,12 +201,23 @@ def replace_rules(
     so a bad rule leaves the existing list untouched."""
     validated = [validate_rule(spec) for spec in specs]
     existing = {row.id: row for row in list_rules(session, org_id)}
+    seen: set[uuid.UUID] = set()
+    for spec in validated:
+        if spec.id is None:
+            continue
+        if spec.id in seen:
+            raise ClassificationRuleError(f"rule id {spec.id} appears more than once")
+        if spec.id not in existing:
+            raise ClassificationRuleError(
+                f"rule id {spec.id} is not one of this organization's rules; omit id for a new rule"
+            )
+        seen.add(spec.id)
     kept: list[OrgIdentityClassificationRule] = []
     for position, spec in enumerate(validated):
         row = existing.pop(spec.id, None) if spec.id is not None else None
         if row is None:
             row = OrgIdentityClassificationRule(
-                id=spec.id or uuid.uuid4(),
+                id=uuid.uuid4(),
                 org_id=org_id,
                 created_by_operator_id=actor_operator_id,
             )

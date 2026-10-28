@@ -45,12 +45,16 @@ def policy(resource):
     if identity.get("is_external"):
         return True
     app_type = application.get("type")
-    accounts = cluster_accounts(resource, active_only=True)
+    accounts = cluster_accounts(resource)
     if not any(has_privileged_role(account) and account.get("application_type") == app_type for account in accounts):
         return True
     # An account the *same* application already marks external is that
-    # application's own problem, and its own policy reports it.
-    return not any(account.get("is_external") and account.get("application_type") != app_type for account in accounts)
+    # application's own problem, and its own policy reports it. A disabled
+    # guest account elsewhere no longer marks the person as an outsider.
+    return not any(
+        account.get("is_external") and not account.get("is_disabled") and account.get("application_type") != app_type
+        for account in accounts
+    )
 
 
 def evidence(resource):

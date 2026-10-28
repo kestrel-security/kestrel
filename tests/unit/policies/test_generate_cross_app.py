@@ -180,3 +180,38 @@ def test_single_app_drafts_are_unchanged_by_the_cross_app_machinery(monkeypatch:
     assert draft["source_text"] == CORRECTED_DRAFT
     assert draft["requires"] == []
     assert draft["repair_turns"] == 0
+
+
+def test_assigned_role_intent_still_reaches_the_okta_template_offline():
+    draft = generate.generate_policy_draft(
+        intent="Okta users assigned the super admin role without MFA", connector_hint="okta", scope="single_app"
+    )
+    assert draft["provider"] == "template"
+    assert 'RESOURCE_TYPE = "identity"' in draft["source_text"]
+
+
+def test_a_setting_draft_in_a_cross_app_request_is_not_sent_back_for_its_app_guard(monkeypatch: pytest.MonkeyPatch):
+    setting_draft = """POLICY_ID = "slack-sso"
+TITLE = "t"
+SEVERITY = "medium"
+RESOURCE_TYPE = "tenant_setting"
+DESCRIPTION = "d"
+REMEDIATION = "r"
+
+def policy(resource):
+    application = resource.get("application") or {}
+    setting = resource.get("setting") or {}
+    if application.get("type") != "slack":
+        return True
+    if setting.get("key") != "sso_required":
+        return True
+    return setting.get("value") is not False
+
+def evidence(resource):
+    return {}
+"""
+    calls = _fake_chat(monkeypatch, [setting_draft])
+    draft = generate.generate_policy_draft(intent="SSO not enforced in any app", scope="cross_app", credentials=_CREDS)
+    assert len(calls) == 1
+    assert "scope_errors" not in draft
+    assert "REQUIRES" not in draft["source_text"]

@@ -100,3 +100,28 @@ def test_single_app_guard_spots_the_idiom():
     assert single_app_guard('    if application.get("type") not in ("okta", "slack"):\n') is not None
     assert single_app_guard("    if not application_matches(resource, ['custom']):\n") is not None
     assert single_app_guard('    if application.get("type") in cluster.get("idp_application_types"):\n') is None
+
+
+@pytest.mark.parametrize(
+    ("intent", "hint"),
+    [
+        ("Slack workspace does not enforce SSO through the identity provider", "slack"),
+        ("Slack channels shared across workspaces", "slack"),
+        ("GitHub org allows members to install any app", "github"),
+        ("Okta IdP discovery rules that route to a personal IdP", "okta"),
+        ("GitHub secret scanning disabled across repositories", "github"),
+    ],
+)
+def test_single_app_intents_with_a_hint_stay_single_app(intent, hint):
+    assert resolve_scope(intent, connector_hint=hint).scope == SCOPE_SINGLE_APP
+
+
+def test_contextual_wording_still_means_cross_app_without_a_hint():
+    assert resolve_scope("People disabled in the identity provider who still have accounts").scope == SCOPE_CROSS_APP
+
+
+def test_an_identity_intent_about_assigned_roles_is_not_an_event_policy():
+    analysis = analyze_intent("Okta users assigned the super admin role without MFA", connector_hint="okta")
+    assert analysis.resource_type is None
+    event = analyze_intent("Alert when admin privilege is granted to a user disabled in the identity provider")
+    assert event.resource_type == "event"

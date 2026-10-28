@@ -171,3 +171,28 @@ def test_rules_are_admin_only(db_session):
     client = api_client(db_session, OperatorRole.ANALYST)
     assert client.get("/api/v1/settings/identity-classification").status_code == 403
     assert client.put("/api/v1/settings/identity-classification", json={"rules": []}).status_code == 403
+
+
+def test_unknown_or_duplicate_rule_ids_and_bad_application_types_are_400s(db_session):
+    client = api_client(db_session, OperatorRole.ADMIN)
+    saved = client.put("/api/v1/settings/identity-classification", json={"rules": RULES}).json()["rules"]
+
+    foreign = client.put(
+        "/api/v1/settings/identity-classification",
+        json={"rules": [{**RULES[0], "id": "00000000-0000-0000-0000-000000000001"}]},
+    )
+    assert foreign.status_code == 400
+    duplicate = client.put(
+        "/api/v1/settings/identity-classification",
+        json={"rules": [{**RULES[0], "id": saved[0]["id"]}, {**RULES[1], "id": saved[0]["id"]}]},
+    )
+    assert duplicate.status_code == 400
+    bad_app = client.put(
+        "/api/v1/settings/identity-classification",
+        json={"rules": [{**RULES[0], "application_type": "myspace"}]},
+    )
+    assert bad_app.status_code == 400
+    # Existing ids keep their rows.
+    kept = client.put("/api/v1/settings/identity-classification", json={"rules": [{**RULES[1], "id": saved[1]["id"]}]})
+    assert kept.status_code == 200
+    assert [r["id"] for r in kept.json()["rules"]] == [saved[1]["id"]]

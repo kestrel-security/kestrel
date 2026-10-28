@@ -61,24 +61,44 @@ CONNECTOR_WORDS: dict[str, tuple[str, ...]] = {
     "slack": ("slack",),
 }
 
+# Wording that can only mean several applications. It overrides a selected
+# application, which then becomes the focus.
 _STRONG_CROSS_APP = tuple(
     re.compile(pattern, re.IGNORECASE)
     for pattern in (
         r"\b(any|all|every|each|other|another|multiple|several|two or more)\s+(connected\s+)?"
-        r"(app|apps|application|applications|saas|tenant|tenants)\b",
+        r"(app|apps|application|applications|saas)\b",
         r"\bthat app\b",
-        r"\bacross\b",
+        r"\bacross (apps|applications|all apps|every app|connected apps|saas)\b",
         r"\belsewhere\b",
         r"\bin one app\b",
         r"\bsame person\b",
         r"\bseparation of duties\b",
-        r"\bsod\b",
+        r"\bdormant everywhere\b",
         r"\b(no|without|missing)\s+(an\s+)?(idp|identity[- ]provider)\s+account\b",
+    )
+)
+# "Install any app", "authorize other apps": the apps are third-party
+# integrations inside one tenant, not the connected applications.
+_THIRD_PARTY_APP_VERB = re.compile(
+    r"\b(install|installs|installing|add|adds|authorize|authorizes|approve|approves|connect|connects|"
+    r"request|requests|integrate|integrates|use|uses|grant|grants)\s+$",
+    re.IGNORECASE,
+)
+
+# Wording that suggests several applications but appears in ordinary
+# single-application intents too ("SSO through the identity provider",
+# "channels shared across workspaces", "IdP discovery rules"). It flips the
+# scope only when no application is selected.
+_CONTEXTUAL_CROSS_APP = tuple(
+    re.compile(pattern, re.IGNORECASE)
+    for pattern in (
+        r"\bacross\b",
         r"\bidentity[- ]provider\b",
         r"\bidp\b",
         r"\b(disabled|deprovisioned|deactivated|suspended)\s+in\s+(okta|google|the idp|the identity provider)\b",
-        r"\bdormant everywhere\b",
         r"\bcorrelated\b",
+        r"\b(other|another|multiple)\s+tenants?\b",
     )
 )
 _WEAK_CROSS_APP = tuple(
@@ -121,10 +141,11 @@ def resolve_scope(intent: str, *, connector_hint: str | None = None, scope: str 
     """Decide between one application and all of them.
 
     Precedence: an explicit ``scope``; the ``cross_app`` pseudo-connector;
-    strong cross-application wording ("any app", "across", "elsewhere", the
-    identity provider) even when an application is selected, which then
-    becomes the focus; weak wording ("contractor", "departed") only when no
-    application is selected and none is named; otherwise one application.
+    explicit cross-application wording ("any app", "every app", "elsewhere",
+    "that app") even when an application is selected, which then becomes the
+    focus; contextual wording ("across", "identity provider") only when no
+    application is selected; weak wording ("contractor", "departed") only when
+    no application is selected and none is named; otherwise one application.
     """
     hint = normalize_connector_hint(connector_hint)
     named = named_connectors(intent)
@@ -134,9 +155,15 @@ def resolve_scope(intent: str, *, connector_hint: str | None = None, scope: str 
     if hint == CROSS_APP_CONNECTOR:
         return ScopeResolution(SCOPE_CROSS_APP, "connector_hint", focus, "connector hint is cross_app")
     for pattern in _STRONG_CROSS_APP:
-        match = pattern.search(intent)
-        if match:
+        for match in pattern.finditer(intent):
+            if _THIRD_PARTY_APP_VERB.search(intent[: match.start()]):
+                continue  # "install any app": third-party apps, not connected ones
             return ScopeResolution(SCOPE_CROSS_APP, "intent_wording", focus, f"intent says {match.group(0)!r}")
+    if not hint:
+        for pattern in _CONTEXTUAL_CROSS_APP:
+            match = pattern.search(intent)
+            if match:
+                return ScopeResolution(SCOPE_CROSS_APP, "intent_wording", focus, f"intent says {match.group(0)!r}")
     if not hint and not named:
         for pattern in _WEAK_CROSS_APP:
             match = pattern.search(intent)
@@ -239,6 +266,12 @@ _CONDITIONS: tuple[tuple[str, re.Pattern[str], tuple[str, ...], str | None], ...
     ),
 )
 
+_EVENT_WORDING = re.compile(
+    r"\b(events?|audit|logs?|logged|when|whenever|alert|was granted|were granted|is granted|gets granted|"
+    r"granted (in|to)|grants? (in|to)|promoted|made (an )?admin)\b",
+    re.IGNORECASE,
+)
+
 _SUBJECTS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "contractor",
@@ -329,6 +362,11 @@ def analyze_intent(
             conditions.append(name)
             fields.extend(f for f in condition_fields if f not in fields)
             implied_type = implied_type or implied
+    # "Users assigned the admin role without MFA" is about identities. An
+    # event resource type is only inferred when the intent is about something
+    # that happened: an event, a log entry, a grant at a point in time.
+    if implied_type == "event" and not _EVENT_WORDING.search(intent):
+        implied_type = None
     subject: dict[str, Any] = {"identity_type": "user"}
     for worker_type, pattern in _SUBJECTS:
         if pattern.search(intent):

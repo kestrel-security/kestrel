@@ -148,8 +148,20 @@ def _redact_row(row: dict[str, Any]) -> dict[str, Any]:
         identity = dict(identity)
         identity.pop("raw_source", None)
         identity.pop("provider_object_id", None)
+        identity.pop("attributes", None)
         identity["email"] = _redact_email(identity.get("email"))
+        if "manager_email" in identity:
+            identity["manager_email"] = _redact_email(identity.get("manager_email"))
         row = {**row, "identity": identity}
+    cluster = row.get("cluster")
+    if isinstance(cluster, dict):
+        accounts = [
+            {**account, "email": _redact_email(account.get("email"))}
+            for account in cluster.get("accounts") or []
+            if isinstance(account, dict)
+        ]
+        row = {**row, "cluster": {**cluster, "accounts": accounts}}
+    row.pop("org", None)
     setting = row.get("setting")
     if isinstance(setting, dict):
         row = {**row, "setting": {k: setting[k] for k in ("key", "category", "label", "value_type") if k in setting}}

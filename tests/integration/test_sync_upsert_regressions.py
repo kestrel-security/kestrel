@@ -374,3 +374,25 @@ def test_service_account_owner_is_written_from_the_owner_ref(runs: _Runs):
         if row.identity_id in {_stored_identity(runs, "token-1").id, _stored_identity(runs, "token-2").id}
     }
     assert accounts == {_stored_identity(runs, "token-1").id: owner.id}
+
+
+def test_the_first_sync_after_the_extras_migration_reports_no_changes(runs: _Runs):
+    """A row written before the worker-type migration has empty attributes and
+    no profile columns; filling them in is a backfill, not drift."""
+    runs.sync([_identity_with("a")])
+    row = _stored_identity(runs, "a")
+    row.attributes = {}
+    row.worker_type = "unknown"
+    row.worker_type_source = None
+    runs.session.flush()
+
+    changes = runs.sync([_identity_with("a", worker_type="contractor", department="Platform", org_unit_path="/X")])
+
+    assert not [c for c in changes if c.entity_type == "identity"]
+    row = _stored_identity(runs, "a")
+    assert (row.worker_type, row.department, row.attributes["org_unit_path"]) == ("contractor", "Platform", "/X")
+    # The next real change is reported again.
+    changes = runs.sync([_identity_with("a", worker_type="contractor", department="Sales", org_unit_path="/X")])
+    assert [c.field_changes for c in changes if c.entity_type == "identity"] == [
+        [{"field": "department", "old": "Platform", "new": "Sales"}]
+    ]

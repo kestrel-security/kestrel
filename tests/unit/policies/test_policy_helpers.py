@@ -520,3 +520,24 @@ def test_cluster_helpers_run_inside_the_sandbox() -> None:
     fixtures["expected_match_subject_ids"] = [str(fixtures["rows"][0]["_subject_id"])]
     result = run_fixture_test_dict(source, fixtures)
     assert result.passed, (result.missing, result.unexpected)
+
+
+def test_activity_status_is_never_only_where_the_application_reports_sign_ins() -> None:
+    for app in ("okta", "google_workspace", "slack"):
+        assert activity_status({"application_type": app, "last_active_at": None}, 30) == "never"
+    for app in ("github", "custom", "microsoft_365"):
+        assert activity_status({"application_type": app, "last_active_at": None}, 30) == "unknown"
+    row = {"identity": {"last_active_at": None}, "application": {"type": "custom"}}
+    assert activity_status(row, 30) == "unknown"
+
+
+def test_activity_reporting_types_match_the_connector_manifests() -> None:
+    """Every connector that claims identity:last_sign_in either reports a
+    complete sign-in signal (listed) or a partial one (GitHub)."""
+    from kestrel.connectors.sdk.registry import discover_connectors
+    from kestrel.policies.coverage import load_connector_capabilities
+    from kestrel.policies.vocabulary import ACTIVITY_REPORTING_APPLICATION_TYPES, PARTIAL_ACTIVITY_APPLICATION_TYPES
+
+    claiming = {name for name in discover_connectors() if "identity:last_sign_in" in load_connector_capabilities(name)}
+    assert claiming == ACTIVITY_REPORTING_APPLICATION_TYPES | PARTIAL_ACTIVITY_APPLICATION_TYPES
+    assert not ACTIVITY_REPORTING_APPLICATION_TYPES & PARTIAL_ACTIVITY_APPLICATION_TYPES

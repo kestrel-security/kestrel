@@ -589,7 +589,10 @@ class OktaNormalizer:
                     "is_disabled": False,
                     "mfa_enabled": None,
                     "is_external": False,
+                    # `lastUpdated` is when the token record changed, not when
+                    # it was used; labelled so dormancy checks do not trust it.
                     "last_active_at": _parse_dt(payload.get("lastUpdated")),
+                    "last_active_source": "profile" if payload.get("lastUpdated") else None,
                     "created_at_source": _parse_dt(payload.get("created")),
                     "worker_type": "service",
                     # The user the token was issued to is its owner.

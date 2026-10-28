@@ -738,3 +738,9 @@ def test_api_token_is_a_service_account_owned_by_its_user():
 
     assert attrs["worker_type"] == "service"
     assert attrs["owner_identity_ref"] == "00uowner"
+
+
+def test_api_token_last_updated_is_labelled_as_not_activity():
+    raw = _raw("api_token", "tok1", {"id": "tok1", "name": "CI", "lastUpdated": "2026-07-01T00:00:00Z"})
+    attrs = OktaNormalizer().normalize("api_token", raw)[0].attributes
+    assert attrs["last_active_source"] == "profile"

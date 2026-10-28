@@ -400,13 +400,29 @@ def _reconcile_identity_update(existing: Identity, new_kwargs: dict[str, Any]) -
         new_kwargs["worker_type_source"] = existing.worker_type_source
 
 
+# Columns and attribute keys added by migration m2b3c4d5e6f7. A row written
+# before it has none of them, so its first sync afterwards would otherwise
+# report every identity in the org as changed.
+_BACKFILLED_IDENTITY_FIELDS = frozenset(
+    {"worker_type", "worker_type_source", "department", "title", "manager_email", "disabled_at", "expires_at"}
+)
+# Bookkeeping, not provider data: never a change worth a feed row.
+_UNDIFFED_ATTRIBUTE_KEYS = frozenset({"connector_worker_type"})
+
+
+def _is_backfill(existing: Any) -> bool:
+    """True for an identity last written before the extras existed: the
+    marker key every current write carries is absent."""
+    return "connector_worker_type" not in (getattr(existing, "attributes", None) or {})
+
+
 def _attribute_changes(old: dict[str, Any], new: dict[str, Any]) -> list[dict[str, Any]]:
     """Per-key diff of ``identities.attributes`` so the Changes feed names the
     attribute that moved rather than dumping two JSON blobs."""
     return [
         {"field": f"attributes.{key}", "old": _json_safe(old.get(key)), "new": _json_safe(new.get(key))}
         for key in sorted(set(old) | set(new))
-        if old.get(key) != new.get(key)
+        if key not in _UNDIFFED_ATTRIBUTE_KEYS and old.get(key) != new.get(key)
     ]
 
 
@@ -507,12 +523,16 @@ def upsert_provenance_objects(session: Session, objects: list[NormalizedObject],
             revived = existing.deleted_at is not None
             if obj.kind == "resource":
                 _preserve_sensitivity_override(existing, new_kwargs)
+            backfill = False
             if obj.kind == "identity":
+                backfill = _is_backfill(existing)
                 _reconcile_identity_update(cast("Identity", existing), new_kwargs)
             field_changes = []
             for key, new_value in new_kwargs.items():
                 old_value = getattr(existing, key)
-                if key == "attributes":
+                if backfill and (key == "attributes" or key in _BACKFILLED_IDENTITY_FIELDS):
+                    pass  # first write of fields this row predates: not drift
+                elif key == "attributes":
                     field_changes.extend(_attribute_changes(old_value or {}, new_value or {}))
                 elif old_value != new_value and key not in VOLATILE_FIELDS:
                     field_changes.append(

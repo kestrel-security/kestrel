@@ -34,6 +34,9 @@
           "privileged": false,
           "cluster_worker_type": "employee",
           "cluster_idp_status": "disabled",
+          "cluster_idp_disabled_at": {
+            "$days_ago": 10
+          },
           "representative_identity_id": "kj@acme.example.com"
         }
       },
@@ -76,6 +79,7 @@
           "privileged": false,
           "cluster_worker_type": "employee",
           "cluster_idp_status": "active",
+          "cluster_idp_disabled_at": null,
           "representative_identity_id": "ada@acme.example.com"
         }
       },
@@ -118,6 +122,9 @@
           "privileged": false,
           "cluster_worker_type": "employee",
           "cluster_idp_status": "disabled",
+          "cluster_idp_disabled_at": {
+            "$days_ago": 10
+          },
           "representative_identity_id": "kj@acme.example.com"
         }
       },
@@ -190,6 +197,9 @@
           "privileged": false,
           "cluster_worker_type": "employee",
           "cluster_idp_status": "disabled",
+          "cluster_idp_disabled_at": {
+            "$days_ago": 10
+          },
           "representative_identity_id": "kj@acme.example.com"
         }
       },
@@ -232,7 +242,96 @@
           "privileged": false,
           "cluster_worker_type": "employee",
           "cluster_idp_status": "absent",
+          "cluster_idp_disabled_at": null,
           "representative_identity_id": "ed@acme.example.com"
+        }
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "grant-before-offboarding",
+      "_subject_type": "event",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "admin@acme.example.com",
+        "actor_provider_id": "1",
+        "target_email": "kj@acme.example.com",
+        "target_type": "identity",
+        "target_provider_id": "2",
+        "occurred_at": {
+          "$days_ago": 20
+        },
+        "summary": "privilege.grant on kj@acme.example.com",
+        "attributes": {
+          "permission": "admin"
+        },
+        "actor": {
+          "identity_id": "admin",
+          "email": "admin@acme.example.com",
+          "cluster_idp_status": "active"
+        },
+        "target": {
+          "identity_id": "kj@acme.example.com",
+          "email": "kj@acme.example.com",
+          "display_name": "Kj",
+          "identity_type": "user",
+          "is_disabled": false,
+          "is_external": false,
+          "worker_type": "unknown",
+          "privileged": false,
+          "cluster_worker_type": "employee",
+          "cluster_idp_status": "disabled",
+          "cluster_idp_disabled_at": {
+            "$days_ago": 10
+          },
+          "representative_identity_id": "kj@acme.example.com"
+        }
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      }
+    },
+    {
+      "_subject_id": "grant-disable-time-unknown",
+      "_subject_type": "event",
+      "event": {
+        "action": "privilege.grant",
+        "action_category": "privilege",
+        "actor_email": "admin@acme.example.com",
+        "actor_provider_id": "1",
+        "target_email": "kj@acme.example.com",
+        "target_type": "identity",
+        "target_provider_id": "2",
+        "occurred_at": {
+          "$days_ago": 2
+        },
+        "summary": "privilege.grant on kj@acme.example.com",
+        "attributes": {
+          "permission": "admin"
+        },
+        "actor": {
+          "identity_id": "admin",
+          "email": "admin@acme.example.com",
+          "cluster_idp_status": "active"
+        },
+        "target": {
+          "identity_id": "kj@acme.example.com",
+          "email": "kj@acme.example.com",
+          "display_name": "Kj",
+          "identity_type": "user",
+          "is_disabled": false,
+          "is_external": false,
+          "worker_type": "unknown",
+          "privileged": false,
+          "cluster_worker_type": "employee",
+          "cluster_idp_status": "disabled",
+          "cluster_idp_disabled_at": null,
+          "representative_identity_id": "kj@acme.example.com"
         }
       },
       "application": {

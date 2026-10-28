@@ -638,6 +638,10 @@ def _scope_errors(source_text: str, analysis: IntentAnalysis | None) -> list[str
     the rest."""
     if analysis is None or analysis.scope != SCOPE_CROSS_APP or not source_text.strip():
         return []
+    if _resource_type_from_source(source_text) not in _CLUSTER_RESOURCE_TYPES:
+        # Settings, resources and applications have no cluster: scoping them
+        # to one application is correct even in a cross-app request.
+        return []
     guard = single_app_guard(source_text)
     if guard is None:
         return []
@@ -663,8 +667,14 @@ def _repair_errors(
     return errors
 
 
+#: Resource types whose rows carry cross-application identity context.
+_CLUSTER_RESOURCE_TYPES = frozenset({"identity", "event"})
+
+
 def _declare_requires(source_text: str, analysis: IntentAnalysis) -> str:
     if analysis.scope != SCOPE_CROSS_APP:
+        return source_text
+    if _resource_type_from_source(source_text) not in _CLUSTER_RESOURCE_TYPES:
         return source_text
     return ensure_requires(source_text, analysis.requires)
 
@@ -711,7 +721,10 @@ def generate_policy_draft(
     )
     connector = normalize_connector_hint(resolved_connector or connector_hint)
     analysis = analyze_intent(cleaned_intent, connector_hint=connector, resource_type=resource_type, scope=scope)
-    effective_type = resource_type or analysis.resource_type
+    # The analysis's inferred resource type steers cross-application drafts
+    # only. A single-application request keeps the caller's (or none), so the
+    # established templates and prompts for that path are unchanged.
+    effective_type = resource_type or (analysis.resource_type if analysis.scope == SCOPE_CROSS_APP else None)
     template = match_intent_template(
         cleaned_intent,
         connector_hint=connector,

@@ -36,3 +36,11 @@ PRIVILEGED_ROLE_HINTS: tuple[str, ...] = (
 #: an account with no observation there may be in daily use. ``activity_status``
 #: reports such accounts as ``unknown`` rather than ``never``.
 PARTIAL_ACTIVITY_APPLICATION_TYPES: frozenset[str] = frozenset({"github"})
+
+#: Application types whose connector reports a sign-in per account (it
+#: declares ``identity:last_sign_in`` and the signal is complete). Only for
+#: these does "no timestamp" mean "never signed in"; any other application
+#: (GitHub, a custom connector, one that collects no activity at all) reports
+#: such an account as ``unknown``. A unit test keeps this in step with the
+#: connector manifests.
+ACTIVITY_REPORTING_APPLICATION_TYPES: frozenset[str] = frozenset({"okta", "google_workspace", "slack"})

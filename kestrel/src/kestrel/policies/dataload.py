@@ -679,8 +679,24 @@ def _event_identity_summary(row: dict[str, Any]) -> dict[str, Any]:
         "privileged": any(_is_privileged_role_name(name) for name in row.get("roles") or []),
         "cluster_worker_type": cluster.get("worker_type"),
         "cluster_idp_status": cluster.get("idp_status"),
+        # When the identity provider disabled the person, so an event policy
+        # can tell a grant made after offboarding from one made before it.
+        "cluster_idp_disabled_at": _idp_disabled_at(cluster),
         "representative_identity_id": cluster.get("representative_identity_id"),
     }
+
+
+def _idp_disabled_at(cluster: dict[str, Any]) -> Any:
+    """The latest ``disabled_at`` among the person's disabled IdP accounts,
+    or None when the IdP is not disabled or did not say when."""
+    if cluster.get("idp_status") != "disabled":
+        return None
+    stamps = [
+        account.get("disabled_at")
+        for account in cluster.get("accounts") or []
+        if account.get("application_type") in IDP_APPLICATION_TYPES and account.get("disabled_at") is not None
+    ]
+    return max(stamps) if stamps else None
 
 
 class _EventIdentityIndex:

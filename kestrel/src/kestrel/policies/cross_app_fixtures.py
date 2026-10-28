@@ -377,7 +377,7 @@ def _event_row(subject_id: str, *, action: str, days_ago: float, target: dict[st
     }
 
 
-def _target(email: str, idp_status: str) -> dict[str, Any]:
+def _target(email: str, idp_status: str, disabled_days_ago: float | None = 10) -> dict[str, Any]:
     return {
         "identity_id": email,
         "email": email,
@@ -389,6 +389,9 @@ def _target(email: str, idp_status: str) -> dict[str, Any]:
         "privileged": False,
         "cluster_worker_type": "employee",
         "cluster_idp_status": idp_status,
+        "cluster_idp_disabled_at": (
+            {"$days_ago": disabled_days_ago} if idp_status == "disabled" and disabled_days_ago is not None else None
+        ),
         "representative_identity_id": email,
     }
 
@@ -409,6 +412,20 @@ PRIVILEGE_GRANTED_TO_DISABLED_IDP_USER: dict[str, Any] = {
             "other-action-departed", action="mfa.disable", days_ago=2, target=_target("kj@acme.example.com", "disabled")
         ),
         _event_row("grant-no-idp", action="privilege.grant", days_ago=2, target=_target("ed@acme.example.com", "absent")),
+        # Made admin while employed, offboarded later: a normal grant, not a finding.
+        _event_row(
+            "grant-before-offboarding",
+            action="privilege.grant",
+            days_ago=20,
+            target=_target("kj@acme.example.com", "disabled", disabled_days_ago=10),
+        ),
+        # The IdP did not record when it disabled the account: not assessable.
+        _event_row(
+            "grant-disable-time-unknown",
+            action="privilege.grant",
+            days_ago=2,
+            target=_target("kj@acme.example.com", "disabled", disabled_days_ago=None),
+        ),
     ],
     "expected_match_subject_ids": ["grant-to-departed"],
 }

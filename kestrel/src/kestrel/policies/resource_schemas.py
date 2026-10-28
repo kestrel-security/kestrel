@@ -105,6 +105,7 @@ activity_status(row_or_account, days), trusted_last_active(row_or_account).""",
     "actor": {"identity_id": str, "email": str|None, "display_name": str|None, "identity_type": str,
               "is_disabled": bool, "is_external": bool, "worker_type": str, "privileged": bool,
               "cluster_worker_type": str|None, "cluster_idp_status": "active"|"disabled"|"absent"|None,
+              "cluster_idp_disabled_at": datetime|None,   # when the IdP disabled the person, if known
               "representative_identity_id": str|None} | None,   # the identity the event was done BY
     "target": { same shape } | None                               # the identity the event was done TO
   },

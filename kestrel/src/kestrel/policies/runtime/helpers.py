@@ -43,8 +43,8 @@ from datetime import UTC, date, datetime
 from typing import Any
 
 from kestrel.policies.vocabulary import (
+    ACTIVITY_REPORTING_APPLICATION_TYPES,
     IDP_APPLICATION_TYPES,
-    PARTIAL_ACTIVITY_APPLICATION_TYPES,
     PRIVILEGED_ROLE_HINTS,
     TRUSTED_ACTIVITY_SOURCES,
 )
@@ -383,9 +383,10 @@ def activity_status(value: Any, days: float) -> str:
 
     ``unknown`` means the account cannot be judged: its only timestamp comes
     from an untrusted source (a profile-modified time), or its application
-    records only some activity (GitHub's audit log sees administrative
-    actions, not sign-ins or pushes) and recorded none. ``never`` means the
-    provider does report activity and has none for this account. A dormancy
+    does not report a sign-in per account (GitHub's audit log sees only
+    administrative actions; a custom connector may collect no activity at
+    all) and recorded none. ``never`` means the provider does report sign-ins
+    (Okta, Google Workspace, Slack) and has none for this account. A dormancy
     policy normally treats ``unknown`` as compliant (not assessable) and
     ``never`` like ``stale``. A malformed timestamp raises ``PolicyDataError``.
     """
@@ -399,7 +400,12 @@ def activity_status(value: Any, days: float) -> str:
         return "unknown"
     timestamp = data.get("last_active_at")
     if timestamp in (None, ""):
-        return "unknown" if application_type in PARTIAL_ACTIVITY_APPLICATION_TYPES else "never"
+        # "never" only where the application would have reported a sign-in.
+        # A dict with no application at all (a hand-written check) is taken
+        # at its word.
+        if application_type is None or application_type in ACTIVITY_REPORTING_APPLICATION_TYPES:
+            return "never"
+        return "unknown"
     return "active" if within_last_days(timestamp, days) else "stale"
 
 

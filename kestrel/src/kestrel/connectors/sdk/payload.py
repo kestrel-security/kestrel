@@ -29,6 +29,7 @@ a payload before it is persisted.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from typing import Any
 from urllib.parse import urlsplit
@@ -73,16 +74,31 @@ def reduce_url_to_host(payload: Mapping[str, Any], key: str) -> dict[str, Any]:
     return redacted
 
 
-# Substrings of a provider's user-type field, lowercased, that decide a
-# ``worker_type``. Order matters: the first family with a hit wins, so
-# "contract employee" reads as a contractor rather than staff.
-_WORKER_TYPE_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("contractor", ("contractor", "contingent", "temp", "intern", "cw")),
-    ("vendor_or_partner", ("vendor", "partner", "supplier", "consultant", "agency", "external")),
-    ("guest", ("guest", "visitor")),
-    ("service", ("service", "bot", "system", "integration", "api")),
-    ("employee", ("employee", "staff", "fte", "full-time", "full time", "regular", "permanent")),
+# Whole words of a provider's user-type field, lowercased, that decide a
+# ``worker_type``. Matched as tokens, never substrings: "Internal" must not
+# read as "intern", "Template" as "temp", or "Rapid" as "api". Order matters:
+# the first family with a hit wins, so "Contract Employee" reads as a
+# contractor rather than staff.
+_WORKER_TYPE_HINTS: tuple[tuple[str, frozenset[str]], ...] = (
+    (
+        "contractor",
+        frozenset({"contractor", "contractors", "contract", "contingent", "temporary", "temp", "intern", "cw"}),
+    ),
+    (
+        "vendor_or_partner",
+        frozenset({"vendor", "vendors", "partner", "partners", "supplier", "consultant", "agency", "external"}),
+    ),
+    ("guest", frozenset({"guest", "guests", "visitor"})),
+    ("service", frozenset({"service", "bot", "system", "integration", "api"})),
+    (
+        "employee",
+        frozenset({"employee", "employees", "staff", "fte", "regular", "permanent", "internal"}),
+    ),
 )
+_EMPLOYEE_PHRASES = ("full time", "full-time")
+# "Non-Employee", "Not staff": the negation flips an employee label to
+# "not an employee", which says nothing about which kind of non-employee.
+_NEGATIONS = frozenset({"non", "not", "no"})
 
 
 def classify_worker_type(user_type_raw: object, *, is_guest: bool = False, is_bot: bool = False) -> str:
@@ -103,9 +119,16 @@ def classify_worker_type(user_type_raw: object, *, is_guest: bool = False, is_bo
     label = user_type_raw.strip().lower()
     if not label:
         return "unknown"
+    tokens = re.findall(r"[a-z0-9]+", label)
+    negated = any(token in _NEGATIONS for token in tokens)
+    words = set(tokens)
     for worker_type, hints in _WORKER_TYPE_HINTS:
-        if any(hint in label for hint in hints):
+        if words & hints:
+            if worker_type == "employee" and negated:
+                return "unknown"
             return worker_type
+    if not negated and any(phrase in label for phrase in _EMPLOYEE_PHRASES):
+        return "employee"
     return "unknown"
 
 

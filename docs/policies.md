@@ -138,9 +138,9 @@ the error fails the fixture test.
 - `identity` rows carry `privileged_application_types`: for a privileged identity, the distinct application types where identities sharing the same email (or provider id when email is missing) also hold privileged roles. The cross-app concentration policy uses it.
 - `identity` rows carry `cluster`: the same person's accounts across every connected application (`cluster.accounts[]`, each with `application_type`, `is_disabled`, `mfa_enabled`, `worker_type`, `roles`, `privileged`, `groups`, `last_active_at` / `last_active_source`, `disabled_at`, `expires_at`), plus `idp_status` (`active`, `disabled`, or `absent`), `idp_application_types`, `privileged_application_types`, `worker_type` (the identity provider's account first), `last_active_at` (the latest trusted activity on any account), `representative_identity_id` and `is_representative` (the one row a per-person finding lands on). Read it through `cluster_accounts`, `idp_account`, `worker_type_of` and `is_representative` rather than by hand. Every account is one row, so a cross-application policy runs once per account and must not early-return on `application.type`.
 - `identity` rows carry `groups` (the group names this account is a member of; Google Workspace org units appear too), and `identity.worker_type`, `department`, `title`, `manager_email`, `disabled_at`, `expires_at` and `attributes` (provider extras such as `org_unit_path`, `guest_type`, `is_admin`).
-- `identity.last_active_source` says whether `last_active_at` is activity: `login`, `audit` and `analytics` are; `profile` is a profile-modified time and is not. `activity_status(resource, days)` returns `active`, `stale`, `never`, or `unknown` (an untrusted source, or an application such as GitHub whose audit log only sees administrative actions), and dormancy policies treat `unknown` as not assessable.
+- `identity.last_active_source` says whether `last_active_at` is activity: `login`, `audit` and `analytics` are; `profile` is a profile-modified time and is not. `activity_status(resource, days)` returns `active`, `stale`, `never`, or `unknown`, and dormancy policies treat `unknown` as not assessable. `never` is reported only for applications whose connector reports a sign-in per account (Okta, Google Workspace, Slack: `vocabulary.ACTIVITY_REPORTING_APPLICATION_TYPES`); an untrusted source, GitHub (whose audit log only sees administrative actions), a custom connector, or any application that collects no activity reads as `unknown`.
 - Every row carries `org`: `connected_application_types`, `idp_application_types`, `idp_connected`, and `company_email_domains` (the domains of the identity provider's enabled human accounts).
-- `event` rows carry `event.actor` and `event.target`: a summary of the identity the event names (`email`, `is_disabled`, `worker_type`, `privileged`, `cluster_idp_status`, `cluster_worker_type`), resolved by provider id within the event's application and then by email, or `None`. A cross-application event policy can ask whether the account that was just granted admin belongs to someone the identity provider disabled.
+- `event` rows carry `event.actor` and `event.target`: a summary of the identity the event names (`email`, `is_disabled`, `worker_type`, `privileged`, `cluster_idp_status`, `cluster_idp_disabled_at`, `cluster_worker_type`), resolved by provider id within the event's application and then by email, or `None`. A cross-application event policy can ask whether the account that was just granted admin belongs to someone the identity provider disabled, and compare the event's `occurred_at` with `cluster_idp_disabled_at` so a grant made before offboarding is not reported.
 - `application` evaluates over connected **ApplicationInstance** rows (one per tenant), not catalog entries; matches open findings with `subject_type=application`.
 - `resource` evaluates over `Resource` rows (repositories, shared channels, drives, and other provider objects) via `load_resource_rows`. Each row carries the **subject-scoped settings that govern that one resource**, both as a `settings` list and as `settings_by_key` for direct lookup, so a GitHub policy reads `resource["settings_by_key"]["repo_default_branch_protected"]["value"]` rather than provider-shaped `raw_source`. Both are empty when the connector collects no per-resource settings, so index defensively. Matches open findings with `subject_type=resource`.
 - Subject-scoped settings are `tenant_settings` rows with `subject_type` / `subject_id` set: a branch protection rule belongs to a repository, not to the org with the repo name buried in its key. Connectors declare `subject_type` (a normalized kind) plus `subject_ref` (the subject's provider id) on the normalized setting and emit an `applies_to` relationship alongside it; the upsert resolves the ref through the run's id map regardless of emission order, and a setting whose subject is absent stays tenant-wide. `RESOURCE_TYPE = "tenant_setting"` still loads every setting, scoped or not.
@@ -253,13 +253,19 @@ with no provider involved:
 - **Scope**: `single_app` (the policy scopes itself to one application) or
   `cross_app` (it runs over every application and reads the person's
   `cluster`). An explicit `scope` wins; then the `cross_app` pseudo-connector
-  hint (`all`, `any`, `all apps` are aliases); then strong wording ("any app",
-  "that app", "across", "elsewhere", "identity provider", "separation of
-  duties"), which makes a selected application the *focus* (the catalog and
-  examples still include it) rather than the scope; weak wording
+  hint (`all`, `any`, `all apps` are aliases); then explicit wording ("any
+  app", "every app", "that app", "elsewhere", "separation of duties"), which
+  makes a selected application the *focus* (the catalog and examples still
+  include it) rather than the scope; contextual wording ("across", "identity
+  provider", "IdP") only when no application is selected; weak wording
   ("contractor", "departed") only when no application is selected or named.
-  "Flag Okta contractors who haven't signed in" therefore stays single-app;
-  "contractors active in any app but not signed into that app" is cross-app.
+  "Any app" right after a verb such as install or authorize means
+  third-party apps and does not count. "Flag Okta contractors who haven't
+  signed in" and "Slack SSO through the identity provider" therefore stay
+  single-app; "contractors active in any app but not signed into that app" is
+  cross-app. The analysis's inferred resource type, the `REQUIRES` insertion
+  and the app-guard repair apply to cross-app `identity` and `event` drafts
+  only, so the single-app path and its templates behave as before.
 - **Analysis**: the subject (worker type, privileged), the conditions
   (stale activity, IdP disabled, MFA missing, sensitive OAuth, group member,
   privilege event, ...), the threshold in days, whether the finding is per
