@@ -30,6 +30,11 @@ started on them.
 
 ### Changed
 
+- Pull requests that only change Markdown or documentation images run a
+  shorter CI gate: Tier 1, the documentation checks, gitleaks, and the commit
+  checks. The database tiers, web build, and dependency audits are skipped.
+  Pushes to `main` and releases still run everything. See
+  [`docs/testing.md`](docs/testing.md#tiers).
 - One evaluation pass reads one clock: `now()`, `days_since`,
   `within_last_days`, and `time.time()` in the sandbox are pinned when the
   pass starts, in both runtimes.

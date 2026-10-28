@@ -40,6 +40,18 @@ container image scans run in `nightly.yaml`, also called by the release gate
 alongside the dependency and secret scans. Every release gate tests the tagged
 commit before a GitHub Release is created.
 
+A **docs-only pull request** runs a shorter gate. It qualifies when every
+changed file is Markdown or an image under `docs/images/`, and `docs/api.md`
+is not among them (Tier 0 checks it against the API). Such a pull request
+runs Tier 1, both documentation jobs, gitleaks, and the commit checks, and
+skips Tier 0, Tier 2, the order-independence and coverage runs, the web build,
+and the dependency audits. Tier 1 stays because several unit tests parse the
+Markdown under `docs/`. The skipped jobs report as skipped, which satisfies
+the required checks. `scripts/ci-changes.sh` makes the call and answers "not
+docs-only" for anything uncertain; pushes to `main` and the release gate
+always run everything. When a skipped job starts reading a Markdown file, add
+that file to the script's exceptions.
+
 ## Commands
 
 ```bash

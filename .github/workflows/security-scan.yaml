@@ -17,9 +17,38 @@ permissions:
   contents: read
 
 jobs:
+  # Docs-only pull requests skip the dependency audits; gitleaks always runs.
+  # The weekly schedule is not a pull request, so it audits regardless.
+  # scripts/ci-changes.sh decides; it answers false for anything but a pull
+  # request, so pushes to main and the release gate always run everything.
+  #
+  # Skipped jobs still satisfy the required checks in the main-pr ruleset,
+  # which is why the workflow runs on every pull request instead of using
+  # paths-ignore (a workflow that never starts leaves required checks pending).
+  # Gated jobs use `!cancelled()`, so if this job fails they run rather than
+  # skip: a broken classifier costs time, never coverage.
+  changes:
+    name: Classify changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      docs_only: ${{ steps.classify.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - id: classify
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: bash scripts/ci-changes.sh "$BASE" "$HEAD"
+
   pip-audit:
     name: pip-audit
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.docs_only != 'true' }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -38,6 +67,8 @@ jobs:
   pnpm-audit:
     name: pnpm audit
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.docs_only != 'true' }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

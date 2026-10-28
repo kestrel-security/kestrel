@@ -158,6 +158,7 @@ Write commit messages as a short imperative summary line, optionally followed by
 - Keep PRs reviewable: if a refactor is needed to make a change, land the refactor first.
 - **CI on pull requests from forks waits for a maintainer to approve the run.** This is a GitHub Actions safeguard for public repositories, not a judgement on the change; checks will show as pending until a maintainer clicks *Approve and run*. CI secrets are never available to fork pull requests, and nothing in the required checks needs them.
 - CI must be green. Do not skip or weaken a check to get there; ask in the PR if a check looks wrong.
+- Pull requests that only change Markdown (or images under `docs/images/`) run a shorter CI gate that skips the database tiers, web build, and dependency audits; those checks show as skipped, which counts as passing. Keep documentation fixes in their own pull request to get the faster gate. Details: [`docs/testing.md`](docs/testing.md#tiers).
 - Merging requires one approving review from a code owner ([`.github/CODEOWNERS`](.github/CODEOWNERS)) and every required check passing. Pull requests are squash-merged, so a tidy PR title and description become the commit on `main`; the individual commits do not need to be polished, but each must be signed off.
 - Be responsive to review. Maintainers aim to respond within a few days. Significant changes stay open for at least three working days so other maintainers can object ([`GOVERNANCE.md`](GOVERNANCE.md)).
 
