@@ -30,6 +30,9 @@ def policy(resource):
     cluster = resource.get("cluster") or {}
     if identity.get("identity_type") not in HUMAN_IDENTITY_TYPES:
         return True
+    # A deploy bot provisioned as a regular user is still not a person.
+    if worker_type_of(resource) == "service":
+        return True
     if identity.get("is_disabled"):
         return True
     if application.get("type") in (cluster.get("idp_application_types") or []):

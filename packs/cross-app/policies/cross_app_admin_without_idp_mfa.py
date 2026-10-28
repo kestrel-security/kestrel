@@ -24,6 +24,9 @@ def policy(resource):
     identity = resource.get("identity") or {}
     if identity.get("identity_type") not in HUMAN_IDENTITY_TYPES:
         return True
+    # A deploy bot provisioned as a regular user is still not a person.
+    if worker_type_of(resource) == "service":
+        return True
     if not is_representative(resource):
         return True
     idp = idp_account(resource)

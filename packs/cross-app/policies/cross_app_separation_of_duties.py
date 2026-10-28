@@ -35,6 +35,9 @@ def policy(resource):
     identity = resource.get("identity") or {}
     if identity.get("identity_type") not in HUMAN_IDENTITY_TYPES:
         return True
+    # A deploy bot provisioned as a regular user is still not a person.
+    if worker_type_of(resource) == "service":
+        return True
     if not is_representative(resource):
         return True
     privileged = {a.get("application_type") for a in cluster_accounts(resource, active_only=True) if has_privileged_role(a)}
