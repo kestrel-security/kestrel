@@ -7,9 +7,12 @@ description: >
   the identity provider disabled that is still live somewhere else, a company
   account no identity provider knows about, privilege concentrated on one
   person across applications, an OAuth token that outlived the account that
-  authorized it, and a person who is a guest in one application and an
-  administrator in another. None of these is visible in a single admin
-  console.
+  authorized it, a person who is a guest in one application and an
+  administrator in another, contractors with unused accounts, people dormant
+  everywhere, administrators whose identity-provider account has no MFA,
+  separation of duties between the identity provider and what it governs, and
+  privilege granted to someone the identity provider already disabled. None
+  of these is visible in a single admin console.
 application: cross_app
 categories:
   - privileged_access
@@ -25,3 +28,12 @@ policies:
   - cross-app-no-idp-account
   - cross-app-oauth-grant-outlives-account
   - cross-app-external-privileged-elsewhere
+  - cross-app-contractor-dormant-in-app
+  - cross-app-departed-account-outlived-offboarding
+  - cross-app-admin-without-idp-mfa
+  - cross-app-person-dormant-everywhere
+  - cross-app-never-signed-in-after-creation
+  - cross-app-contractor-sensitive-oauth-consent
+  - cross-app-privilege-granted-to-disabled-idp-user
+  - cross-app-separation-of-duties
+  - cross-app-group-scoped-privilege

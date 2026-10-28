@@ -755,6 +755,10 @@ _OKTA_SUPER_ADMIN_ROLE = "Super Administrator"
 _EXPECTED_POLICY_SLUGS = (
     "cross-app-departed-still-has-access",
     "cross-app-privileged-concentration",
+    "cross-app-contractor-dormant-in-app",
+    "cross-app-departed-account-outlived-offboarding",
+    "cross-app-admin-without-idp-mfa",
+    "cross-app-person-dormant-everywhere",
 )
 
 

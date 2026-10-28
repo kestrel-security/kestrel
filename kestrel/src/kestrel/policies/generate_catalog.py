@@ -4,10 +4,22 @@
 
 from __future__ import annotations
 
+import ast
+import functools
 import hashlib
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
+
+from kestrel.policies.cross_app_fixtures import CROSS_APP_FIXTURE_SETS
+from kestrel.policies.generate_intent import (
+    CROSS_APP_CONNECTOR,
+    SCOPE_CROSS_APP,
+    normalize_connector_hint,
+    resolve_scope,
+)
+from kestrel.policies.packs import get_packs_dir
 
 # Classic Okta admin role display names — must match collector ADMIN_ROLES and the okta-posture pack.
 OKTA_PRIVILEGED_ROLES: tuple[str, ...] = (
@@ -37,17 +49,14 @@ OKTA_EVENT_ACTIONS: tuple[str, ...] = (
     "api.token.create",
 )
 
-_CONNECTOR_ALIASES: dict[str, str] = {
-    "okta": "okta",
-    "idp": "okta",
+#: application.type -> the pack whose reviewed policies describe that connector's surface.
+CONNECTOR_PACKS: dict[str, str] = {
+    "okta": "okta-posture",
+    "github": "github-posture",
+    "google_workspace": "gws-posture",
+    "slack": "slack-posture",
+    CROSS_APP_CONNECTOR: "cross-app",
 }
-
-
-def normalize_connector_hint(hint: str | None) -> str | None:
-    if not hint:
-        return None
-    key = hint.strip().lower().replace(" ", "_").replace("-", "_")
-    return _CONNECTOR_ALIASES.get(key, key)
 
 
 def _slug_from_intent(intent: str) -> str:
@@ -538,7 +547,90 @@ OKTA_EVENT_FIXTURES: dict[str, Any] = {
     "expected_match_subject_ids": ["evt-mfa-off"],
 }
 
+_DAYS_IN_INTENT = re.compile(r"(\d+)\s*days?", re.IGNORECASE)
+
+
+def _pack_policy_source(pack: str, filename: str) -> str:
+    source = (get_packs_dir() / pack / "policies" / filename).read_text()
+    lines = source.splitlines()
+    while lines and lines[0].startswith("#"):
+        lines.pop(0)
+    return "\n".join(lines).strip() + "\n"
+
+
+def _cross_app_template_source(filename: str, days_constant: str, default_days: int) -> Any:
+    """A template whose source is the shipped cross-app policy with the
+    intent's day threshold substituted and a POLICY_ID derived from the intent."""
+
+    def factory(intent: str) -> str:
+        source = _pack_policy_source("cross-app", filename)
+        match = _DAYS_IN_INTENT.search(intent)
+        days = int(match.group(1)) if match else default_days
+        source = re.sub(rf"^{days_constant} = \d+$", f"{days_constant} = {days}", source, count=1, flags=re.MULTILINE)
+        return re.sub(r'^POLICY_ID = "[^"]+"', f'POLICY_ID = "{_slug_from_intent(intent)}"', source, count=1, flags=re.M)
+
+    return factory
+
+
+_CROSS_APP_CONTRACTOR_DORMANT = re.compile(
+    r"(?=.*\b(contractors?|vendors?|contingent|partners?)\b)"
+    r"(?=.*(inactive|dormant|stale|unused|signed? ?in|logged? ?in|log ?in|login|sign-?in|activity|\d+\s*days))",
+    re.IGNORECASE | re.DOTALL,
+)
+_CROSS_APP_DEPARTED_OUTLIVED = re.compile(
+    r"(?=.*\b(disabled|deprovisioned|deactivated|departed|offboarded|terminated|left)\b)"
+    r"(?=.*(still|remain|survive|enabled|active|other app|another app|elsewhere|any app))"
+    r"(?=.*(\d+\s*days|week|older|longer|more than|after|grace))",
+    re.IGNORECASE | re.DOTALL,
+)
+_CROSS_APP_ADMIN_NO_IDP_MFA = re.compile(
+    r"(?=.*\b(admins?|administrators?|owners?|privileged)\b)"
+    r"(?=.*(without|no|missing|lack(s|ing)?)\s+(mfa|2fa|multi-?factor|two-?factor))"
+    r"(?=.*(idp|identity provider|okta|google|any app|another app|other app|elsewhere|across))",
+    re.IGNORECASE | re.DOTALL,
+)
+# "Everywhere" is the whole person; "any app" / "that app" is per account and
+# belongs to the contractor-dormant set, so those words are deliberately absent.
+_CROSS_APP_DORMANT_EVERYWHERE = re.compile(
+    r"(?=.*(inactive|dormant|stale|unused|signed? ?in|logged? ?in|activity))"
+    r"(?=.*(everywhere|every app|all apps|all connected|in all|no app|anywhere))",
+    re.IGNORECASE | re.DOTALL,
+)
+_CROSS_APP_NEVER_SIGNED_IN = re.compile(
+    r"(?=.*never\s+(signed|logged|log|sign)[\s-]*(in|on)|never used)(?=.*(created|provisioned|creation|days|weeks))",
+    re.IGNORECASE | re.DOTALL,
+)
+_CROSS_APP_SENSITIVE_OAUTH = re.compile(
+    r"(?=.*\b(contractors?|vendors?|guests?|external|contingent)\b)(?=.*(oauth|consent|third[- ]party|scopes?))",
+    re.IGNORECASE | re.DOTALL,
+)
+_CROSS_APP_PRIVILEGE_EVENT = re.compile(
+    r"(?=.*\b(granted|grant|grants|made|promoted|assigned)\b)(?=.*\b(admin|privilege|owner|role)\b)"
+    r"(?=.*(disabled|deprovisioned|departed|offboarded|terminated|left))",
+    re.IGNORECASE | re.DOTALL,
+)
+_CROSS_APP_SOD = re.compile(r"separation of duties|\bsod\b|(?=.*\bboth\b)(?=.*\badmin)", re.IGNORECASE | re.DOTALL)
+_CROSS_APP_GROUP = re.compile(
+    r"(?=.*\b(groups?|org unit|ou)\b)(?=.*\b(admins?|administrators?|owners?|privileged)\b)", re.IGNORECASE | re.DOTALL
+)
+
 INTENT_TEMPLATES: tuple[IntentTemplate, ...] = (
+    IntentTemplate(
+        name="cross-app-contractor-dormant-in-app",
+        resource_type="identity",
+        connector=CROSS_APP_CONNECTOR,
+        pattern=_CROSS_APP_CONTRACTOR_DORMANT,
+        source_factory=_cross_app_template_source("cross_app_contractor_dormant_in_app.py", "STALE_DAYS", 30),
+        fixtures=CROSS_APP_FIXTURE_SETS["cross-app-contractor-dormant-in-app"],
+    ),
+    IntentTemplate(
+        name="cross-app-departed-account-outlived-offboarding",
+        resource_type="identity",
+        connector=CROSS_APP_CONNECTOR,
+        pattern=_CROSS_APP_DEPARTED_OUTLIVED,
+        source_factory=_cross_app_template_source("cross_app_departed_account_outlived_offboarding.py", "GRACE_DAYS", 7),
+        fixtures=CROSS_APP_FIXTURE_SETS["cross-app-departed-account-outlived-offboarding"],
+    ),
     IntentTemplate(
         name="okta-admin-without-mfa",
         resource_type="identity",
@@ -637,6 +729,27 @@ class IntentFixtures:
 
 
 INTENT_FIXTURES: tuple[IntentFixtures, ...] = (
+    # Cross-application intents first: a cross-app scope only considers these.
+    *(
+        IntentFixtures(
+            name=slug,
+            connector=CROSS_APP_CONNECTOR,
+            resource_type=resource_type,
+            pattern=pattern,
+            fixtures=CROSS_APP_FIXTURE_SETS[slug],
+        )
+        for slug, resource_type, pattern in (
+            ("cross-app-contractor-dormant-in-app", "identity", _CROSS_APP_CONTRACTOR_DORMANT),
+            ("cross-app-departed-account-outlived-offboarding", "identity", _CROSS_APP_DEPARTED_OUTLIVED),
+            ("cross-app-admin-without-idp-mfa", "identity", _CROSS_APP_ADMIN_NO_IDP_MFA),
+            ("cross-app-person-dormant-everywhere", "identity", _CROSS_APP_DORMANT_EVERYWHERE),
+            ("cross-app-never-signed-in-after-creation", "identity", _CROSS_APP_NEVER_SIGNED_IN),
+            ("cross-app-contractor-sensitive-oauth-consent", "identity", _CROSS_APP_SENSITIVE_OAUTH),
+            ("cross-app-privilege-granted-to-disabled-idp-user", "event", _CROSS_APP_PRIVILEGE_EVENT),
+            ("cross-app-separation-of-duties", "identity", _CROSS_APP_SOD),
+            ("cross-app-group-scoped-privilege", "identity", _CROSS_APP_GROUP),
+        )
+    ),
     IntentFixtures(
         name="okta-stale-external-users",
         connector="okta",
@@ -662,14 +775,38 @@ INTENT_FIXTURES: tuple[IntentFixtures, ...] = (
 )
 
 
-def fixtures_for_intent(intent: str, *, connector_hint: str | None, resource_type: str | None) -> dict[str, Any] | None:
+def _effective_connector(intent: str, connector_hint: str | None, scope: str | None) -> str | None:
+    """The connector whose templates and fixtures apply: ``cross_app`` for a
+    cross-application scope, else the hinted or named application."""
+    resolution = resolve_scope(intent, connector_hint=connector_hint, scope=scope)
+    if resolution.scope == SCOPE_CROSS_APP:
+        return CROSS_APP_CONNECTOR
+    return resolution.focus_connector
+
+
+def fixtures_for_intent(
+    intent: str, *, connector_hint: str | None, resource_type: str | None, scope: str | None = None
+) -> dict[str, Any] | None:
     """Fixtures whose expectations fit ``intent``, or None when nothing does
     (the caller then falls back to a generic scaffold and treats its fixture
-    test as advisory)."""
-    connector = normalize_connector_hint(connector_hint)
+    test as advisory).
+
+    A cross-application scope only considers the cross-app sets; a single
+    application only its own, since the rows are connector-shaped and an
+    unscoped intent would rightly match the other-app row they expect it to skip.
+    An intent that names no application and asks for no cross-app scope gets
+    nothing: nothing can be said about rows it was not written for.
+    """
+    hint = normalize_connector_hint(connector_hint)
+    if hint is None and scope is None:
+        connector: str | None = None
+        if resolve_scope(intent, connector_hint=None, scope=None).scope == SCOPE_CROSS_APP:
+            connector = CROSS_APP_CONNECTOR
+    else:
+        connector = _effective_connector(intent, hint, scope)
+    if connector is None:
+        return None
     for entry in INTENT_FIXTURES:
-        # The rows are connector-shaped: an unscoped intent would rightly
-        # match the other-app row these fixtures expect it to skip.
         if entry.connector != connector:
             continue
         if resource_type and entry.resource_type != resource_type:
@@ -684,31 +821,151 @@ def match_intent_template(
     *,
     connector_hint: str | None = None,
     resource_type: str | None = None,
+    scope: str | None = None,
 ) -> IntentTemplate | None:
-    """Return a high-confidence template for known posture intents, else None."""
-    connector = normalize_connector_hint(connector_hint)
+    """Return a high-confidence template for known posture intents, else None.
+
+    Scope is resolved first: a cross-application intent only sees the
+    cross-app templates, so an Okta dormancy template cannot hijack
+    "contractors who haven't signed into any app". A single-application
+    intent sees the templates of the hinted application, or of the one it
+    names ("Okta admins without MFA" with no hint still routes).
+    """
+    connector = _effective_connector(intent, connector_hint, scope)
+    if connector is None:
+        return None
     for template in INTENT_TEMPLATES:
         if resource_type and template.resource_type != resource_type:
             continue
-        if template.connector and connector and template.connector != connector:
+        if template.connector != connector:
             continue
         if template.pattern.search(intent):
             return template
-    # Okta admin-without-MFA is common enough to match without explicit connector hint.
-    if connector in (None, "okta"):
-        for template in INTENT_TEMPLATES:
-            if (
-                template.name == "okta-admin-without-mfa"
-                and template.pattern.search(intent)
-                and (resource_type is None or template.resource_type == resource_type)
-            ):
-                return template
     return None
+
+
+@dataclass(frozen=True)
+class PackCatalog:
+    """What a connector's reviewed pack policies read: the vocabulary a draft
+    for that connector should use. Derived from the pack sources, so it cannot
+    drift from what shipped policies actually reference."""
+
+    connector: str
+    privileged_roles: tuple[str, ...]
+    setting_keys: tuple[str, ...]
+    event_actions: tuple[str, ...]
+    identity_fields: tuple[str, ...]
+    policy_count: int
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "connector": self.connector,
+            "privileged_roles": list(self.privileged_roles),
+            "tenant_setting_keys": list(self.setting_keys),
+            "event_actions": list(self.event_actions),
+            "identity_fields": list(self.identity_fields),
+            "policy_count": self.policy_count,
+        }
+
+
+_CATALOG_CAP = 24
+
+
+def _string_items(node: ast.AST) -> list[str]:
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return [elt.value for elt in node.elts if isinstance(elt, ast.Constant) and isinstance(elt.value, str)]
+    return []
+
+
+def _scan_pack_source(source: str, roles: set[str], keys: set[str], actions: set[str], fields: set[str]) -> None:
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            name = node.targets[0].id
+            items = _string_items(node.value)
+            if name.endswith("ROLES"):
+                roles.update(items)
+            elif name.endswith("ACTIONS"):
+                actions.update(items)
+            elif name.endswith(("KEYS", "SETTINGS")):
+                keys.update(items)
+        if isinstance(node, ast.Compare) and isinstance(node.left, ast.Call):
+            call = node.left
+            receiver = None
+            if isinstance(call.func, ast.Attribute) and isinstance(call.func.value, ast.Name):
+                receiver = call.func.value.id
+            attr = call.func.attr if isinstance(call.func, ast.Attribute) else None
+            key = call.args[0].value if call.args and isinstance(call.args[0], ast.Constant) else None
+            literals = [c.value for c in node.comparators if isinstance(c, ast.Constant) and isinstance(c.value, str)]
+            for comparator in node.comparators:
+                literals.extend(_string_items(comparator))
+            if attr == "get" and receiver == "setting" and key == "key":
+                keys.update(literals)
+            elif attr == "get" and receiver == "event" and key == "action":
+                actions.update(literals)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "get":
+            receiver = node.func.value.id if isinstance(node.func.value, ast.Name) else None
+            if receiver == "identity" and node.args and isinstance(node.args[0], ast.Constant):
+                fields.add(str(node.args[0].value))
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "startswith"
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "key"
+            and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and isinstance(node.args[0].value, str)
+        ):
+            keys.add(node.args[0].value + "*")
+
+
+@functools.lru_cache(maxsize=16)
+def _pack_catalog_cached(packs_dir: Path, connector: str) -> PackCatalog | None:
+    pack = CONNECTOR_PACKS.get(connector)
+    if pack is None:
+        return None
+    policies_dir = packs_dir / pack / "policies"
+    if not policies_dir.is_dir():
+        return None
+    roles: set[str] = set()
+    keys: set[str] = set()
+    actions: set[str] = set()
+    fields: set[str] = set()
+    count = 0
+    for path in sorted(policies_dir.glob("*.py")):
+        try:
+            source = path.read_text()
+        except OSError:
+            continue
+        count += 1
+        _scan_pack_source(source, roles, keys, actions, fields)
+    return PackCatalog(
+        connector=connector,
+        privileged_roles=tuple(sorted(roles))[:_CATALOG_CAP],
+        setting_keys=tuple(sorted(keys))[: _CATALOG_CAP * 2],
+        event_actions=tuple(sorted(actions))[:_CATALOG_CAP],
+        identity_fields=tuple(sorted(fields))[:_CATALOG_CAP],
+        policy_count=count,
+    )
+
+
+def pack_catalog(connector: str | None) -> PackCatalog | None:
+    """The vocabulary a connector's shipped pack uses, or None without a pack."""
+    connector = normalize_connector_hint(connector)
+    if not connector:
+        return None
+    return _pack_catalog_cached(get_packs_dir(), connector)
 
 
 def few_shot_for_connector(connector: str | None, resource_type: str | None) -> str:
     """Return a short example policy for the LLM prompt."""
     connector = normalize_connector_hint(connector)
+    if connector == CROSS_APP_CONNECTOR:
+        return _pack_policy_source("cross-app", "cross_app_contractor_dormant_in_app.py")
     if connector != "okta":
         return ""
     if resource_type == "tenant_setting":
@@ -736,20 +993,38 @@ def evidence(resource):
 
 
 def connector_catalog_for_prompt(connector: str | None, resource_type: str | None = None) -> str:
-    """Extra context injected into LLM prompts for a connected app."""
-    connector = normalize_connector_hint(connector)
-    if connector != "okta":
-        return ""
+    """Extra context injected into LLM prompts for a connected app, or for the
+    cross-application scope."""
+    from kestrel.policies.resource_schemas import CROSS_APP_CATALOG
 
-    lines = [
-        'Okta connector catalog (application.type == "okta"):',
-        f"- Privileged admin role names (resource.roles[]): {', '.join(repr(r) for r in OKTA_PRIVILEGED_ROLES)}",
-        f"- tenant_setting keys: {', '.join(OKTA_TENANT_SETTING_KEYS)}",
-        f"- event.action values: {', '.join(OKTA_EVENT_ACTIONS)}",
-        "- identity fields: email, display_name, mfa_enabled, is_disabled, is_external, last_active_at",
-        "- Return True if compliant; False opens a finding.",
-    ]
-    example = few_shot_for_connector("okta", resource_type)
-    if example:
-        lines.append("\nExample policy for this connector:\n" + example)
+    connector = normalize_connector_hint(connector)
+    if connector == CROSS_APP_CONNECTOR:
+        return CROSS_APP_CATALOG + "\n\nExample cross-application policy:\n" + few_shot_for_connector(connector, None)
+    if connector == "okta":
+        lines = [
+            'Okta connector catalog (application.type == "okta"):',
+            f"- Privileged admin role names (resource.roles[]): {', '.join(repr(r) for r in OKTA_PRIVILEGED_ROLES)}",
+            f"- tenant_setting keys: {', '.join(OKTA_TENANT_SETTING_KEYS)}",
+            f"- event.action values: {', '.join(OKTA_EVENT_ACTIONS)}",
+            "- identity fields: email, display_name, mfa_enabled, is_disabled, is_external, worker_type, "
+            "last_active_at, last_active_source, department, title, disabled_at",
+            "- Return True if compliant; False opens a finding.",
+        ]
+        example = few_shot_for_connector("okta", resource_type)
+        if example:
+            lines.append("\nExample policy for this connector:\n" + example)
+        return "\n".join(lines)
+    catalog = pack_catalog(connector)
+    if catalog is None:
+        return ""
+    lines = [f'{connector} connector catalog (application.type == "{connector}"), from its shipped pack:']
+    if catalog.privileged_roles:
+        lines.append(f"- Privileged role names (resource.roles[]): {', '.join(repr(r) for r in catalog.privileged_roles)}")
+    if catalog.setting_keys:
+        lines.append(f"- tenant_setting keys: {', '.join(catalog.setting_keys)}")
+    if catalog.event_actions:
+        lines.append(f"- event.action values: {', '.join(catalog.event_actions)}")
+    if catalog.identity_fields:
+        lines.append(f"- identity fields the pack reads: {', '.join(catalog.identity_fields)}")
+    lines.append("- Return True if compliant; False opens a finding.")
     return "\n".join(lines)

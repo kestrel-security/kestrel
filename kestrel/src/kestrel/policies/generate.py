@@ -25,6 +25,15 @@ from kestrel.policies.generate_catalog import (
     normalize_connector_hint,
 )
 from kestrel.policies.generate_context import resolve_connector_hint
+from kestrel.policies.generate_intent import (
+    CROSS_APP_CONNECTOR,
+    SCOPE_CROSS_APP,
+    IntentAnalysis,
+    analyze_intent,
+    ensure_requires,
+    render_plan,
+    single_app_guard,
+)
 from kestrel.policies.llm_settings import (
     DEFAULT_LLM_BASE_URL,
     DEFAULT_LLM_MODEL,
@@ -93,8 +102,12 @@ _ERROR_PROVIDER = "error"
 
 _UNCONFIGURED_MESSAGE = (
     "AI is not configured. Set up Settings → AI (Admin) or KESTREL_LLM_API_KEY, "
-    "or use a supported intent template (e.g. Okta admins without MFA)."
+    "or use a supported intent chip (Okta admins without MFA, contractors dormant in an app, "
+    "accounts that outlived offboarding)."
 )
+#: Repair turns after the first draft. Two: the first repair fixes what the
+#: checks named, the second catches a repair that broke something else.
+_MAX_REPAIR_TURNS = 2
 
 _RESOURCE_TYPE_RE = re.compile(r"^RESOURCE_TYPE\s*=\s*[\"']([a-z_]+)[\"']", re.MULTILINE)
 _MAX_LLM_RETRIES = 2
@@ -283,14 +296,40 @@ def _pack_examples_block(connector: str | None, resource_type: str | None) -> st
     examples = pack_examples(connector, resource_type)
     if not examples:
         return ""
-    return "Shipped pack policies for this connector (match their style):\n\n" + "\n\n".join(examples)
+    heading = (
+        "Shipped cross-application policies (match their style)"
+        if connector == CROSS_APP_CONNECTOR
+        else "Shipped pack policies for this connector (match their style)"
+    )
+    return heading + ":\n\n" + "\n\n".join(examples)
 
 
-def _system_prompt(*, resource_type: str | None, connector_hint: str | None) -> str:
+def _prompt_connectors(connector: str | None, scope: str | None, focus_connector: str | None) -> list[str]:
+    """The catalogs a draft needs: the cross-app one for a cross-app scope,
+    plus the focus application's (the identity provider, usually)."""
+    if scope == SCOPE_CROSS_APP or connector == CROSS_APP_CONNECTOR:
+        return [CROSS_APP_CONNECTOR, *([focus_connector] if focus_connector else [])]
+    return [connector] if connector else []
+
+
+def _catalog_block(connector: str | None, resource_type: str | None, scope: str | None, focus: str | None) -> str:
+    names = _prompt_connectors(connector, scope, focus)
+    blocks = [connector_catalog_for_prompt(name, resource_type) for name in names]
+    return "\n\n".join(block for block in blocks if block)
+
+
+def _system_prompt(
+    *,
+    resource_type: str | None,
+    connector_hint: str | None,
+    scope: str | None = None,
+    focus_connector: str | None = None,
+) -> str:
     connector = normalize_connector_hint(connector_hint)
-    catalog = connector_catalog_for_prompt(connector, resource_type)
-    system = _LLM_SYSTEM.replace("__SCHEMAS__", schema_docs_for_prompt(resource_type))
-    system = system.replace("__PACK_EXAMPLES__", _pack_examples_block(connector, resource_type))
+    catalog = _catalog_block(connector, resource_type, scope, focus_connector)
+    system = _LLM_SYSTEM.replace("__SCHEMAS__", schema_docs_for_prompt(resource_type, scope=scope))
+    example_connector = CROSS_APP_CONNECTOR if scope == SCOPE_CROSS_APP else connector
+    system = system.replace("__PACK_EXAMPLES__", _pack_examples_block(example_connector, resource_type))
     return system.replace("__CONNECTOR_CATALOG__", catalog or "")
 
 
@@ -401,16 +440,23 @@ def _llm_draft(
     intent: str,
     resource_type: str | None,
     connector_hint: str | None,
+    analysis: IntentAnalysis | None = None,
 ) -> str:
     user_parts = [f"Intent:\n{intent}"]
+    if analysis is not None:
+        user_parts.append(render_plan(analysis))
     if resource_type:
         user_parts.append(f"Preferred RESOURCE_TYPE: {resource_type}")
     connector = normalize_connector_hint(connector_hint)
-    if connector:
+    scope = analysis.scope if analysis else None
+    focus = analysis.focus_connector if analysis else None
+    if scope == SCOPE_CROSS_APP:
+        user_parts.append("Scope: every connected application (cross-application policy reading resource['cluster']).")
+    elif connector:
         user_parts.append(f"Connector / app hint: {connector}")
-        catalog = connector_catalog_for_prompt(connector, resource_type)
-        if catalog:
-            user_parts.append(catalog)
+    catalog = _catalog_block(connector, resource_type, scope, focus)
+    if catalog:
+        user_parts.append(catalog)
 
     return chat_completion(
         api_key=creds.api_key,
@@ -418,7 +464,12 @@ def _llm_draft(
         model=creds.model,
         provider=creds.provider,
         messages=[
-            {"role": "system", "content": _system_prompt(resource_type=resource_type, connector_hint=connector_hint)},
+            {
+                "role": "system",
+                "content": _system_prompt(
+                    resource_type=resource_type, connector_hint=connector_hint, scope=scope, focus_connector=focus
+                ),
+            },
             {"role": "user", "content": "\n\n".join(user_parts)},
         ],
     )
@@ -439,7 +490,7 @@ def _fixture_failure_report(fixture_test: dict[str, Any], fixtures: dict[str, An
         want = "False (finding)" if subject in expected else "True (compliant)"
         got = "False (finding)" if subject in actual else "True (compliant)"
         mark = "ok" if (subject in expected) == (subject in actual) else "WRONG"
-        data = {k: v for k, v in row.items() if not k.startswith("_")}
+        data = _compact_row(row)
         lines.append(f"- {subject}: must return {want}, returned {got} [{mark}]  row={json.dumps(data, default=str)}")
     if expected and actual and not expected & actual:
         lines.append(
@@ -449,6 +500,38 @@ def _fixture_failure_report(fixture_test: dict[str, Any], fixtures: dict[str, An
         )
     lines.append('{"$days_ago": n} in a row is a timestamp n days before now.')
     return "\n".join(lines)
+
+
+def _compact_row(row: dict[str, Any]) -> dict[str, Any]:
+    """A fixture row as the repair prompt shows it: the cluster reduced to what
+    decides the outcome, the org block dropped."""
+    data = {k: v for k, v in row.items() if not k.startswith("_") and k != "org"}
+    cluster = data.get("cluster")
+    if isinstance(cluster, dict):
+        data["cluster"] = {
+            "idp_status": cluster.get("idp_status"),
+            "worker_type": cluster.get("worker_type"),
+            "is_representative": cluster.get("is_representative"),
+            "last_active_at": cluster.get("last_active_at"),
+            "accounts": [
+                {
+                    key: account.get(key)
+                    for key in (
+                        "application_type",
+                        "is_disabled",
+                        "mfa_enabled",
+                        "worker_type",
+                        "privileged",
+                        "last_active_at",
+                        "last_active_source",
+                        "disabled_at",
+                    )
+                }
+                for account in cluster.get("accounts") or []
+                if isinstance(account, dict)
+            ],
+        }
+    return data
 
 
 def _repair_draft(
@@ -461,16 +544,21 @@ def _repair_draft(
     errors: list[str],
     fixture_test: dict[str, Any] | None = None,
     fixtures: dict[str, Any] | None = None,
+    analysis: IntentAnalysis | None = None,
 ) -> str:
-    """One optional repair chat turn after validation, probe, or fixture-test failure."""
+    """One repair chat turn after validation, probe, fixture-test, or scope failure."""
     error_block = "\n".join(f"- {e}" for e in errors) or "- (unknown error)"
     user = f"Intent:\n{intent}\n\nErrors:\n{error_block}\n\nPrevious source:\n{source_text}"
     if fixture_test and not fixture_test.get("passed") and not fixture_test.get("advisory"):
         user += "\n\n" + _fixture_failure_report(fixture_test, fixtures)
+    if analysis is not None:
+        user += "\n\n" + render_plan(analysis)
     if resource_type:
         user += f"\n\nPreferred RESOURCE_TYPE: {resource_type}"
-    system = _REPAIR_SYSTEM.replace("__SCHEMAS__", schema_docs_for_prompt(resource_type))
-    catalog = connector_catalog_for_prompt(normalize_connector_hint(connector_hint), resource_type)
+    scope = analysis.scope if analysis else None
+    focus = analysis.focus_connector if analysis else None
+    system = _REPAIR_SYSTEM.replace("__SCHEMAS__", schema_docs_for_prompt(resource_type, scope=scope))
+    catalog = _catalog_block(normalize_connector_hint(connector_hint), resource_type, scope, focus)
     system = system.replace("__CONNECTOR_CATALOG__", catalog or "")
     return chat_completion(
         api_key=creds.api_key,
@@ -493,6 +581,7 @@ def _resolve_fixtures(
     source_text: str,
     connector_hint: str | None,
     template: Any,
+    scope: str | None = None,
 ) -> tuple[dict[str, Any] | None, bool]:
     """Fixtures for the draft, and whether their expected matches fit the intent.
 
@@ -506,10 +595,11 @@ def _resolve_fixtures(
     if template is not None:
         return dict(template.fixtures), True
     rt = resource_type or _resource_type_from_source(source_text)
-    matched = fixtures_for_intent(intent, connector_hint=connector_hint, resource_type=rt)
+    matched = fixtures_for_intent(intent, connector_hint=connector_hint, resource_type=rt, scope=scope)
     if matched is not None:
         return json.loads(json.dumps(matched)), True
-    return scaffold_fixtures(resource_type=rt, source_text=source_text, connector_hint=connector_hint), False
+    scaffold_hint = CROSS_APP_CONNECTOR if scope == SCOPE_CROSS_APP else connector_hint
+    return scaffold_fixtures(resource_type=rt, source_text=source_text, connector_hint=scaffold_hint), False
 
 
 def _checks(
@@ -528,13 +618,73 @@ def _checks(
 
 
 def _needs_repair(
-    validation: dict[str, Any], fixture_test: dict[str, Any] | None, probe_test: dict[str, Any] | None
+    validation: dict[str, Any],
+    fixture_test: dict[str, Any] | None,
+    probe_test: dict[str, Any] | None,
+    scope_errors: list[str] | None = None,
 ) -> bool:
     if not validation["valid"]:
+        return True
+    if scope_errors:
         return True
     if probe_test is not None and not probe_test["passed"]:
         return True
     return fixture_test is not None and not fixture_test.get("passed") and not fixture_test.get("advisory")
+
+
+def _scope_errors(source_text: str, analysis: IntentAnalysis | None) -> list[str]:
+    """What the draft got wrong about its scope: a single-app guard in a
+    cross-application policy evaluates one application and silently passes
+    the rest."""
+    if analysis is None or analysis.scope != SCOPE_CROSS_APP or not source_text.strip():
+        return []
+    if _resource_type_from_source(source_text) not in _CLUSTER_RESOURCE_TYPES:
+        # Settings, resources and applications have no cluster: scoping them
+        # to one application is correct even in a cross-app request.
+        return []
+    guard = single_app_guard(source_text)
+    if guard is None:
+        return []
+    return [
+        f"the draft returns early on the application type ({guard}); a cross-application policy must evaluate "
+        "every application's rows and read resource['cluster'] (skip bots by identity_type, and the identity "
+        "provider's own account only when its state is the correct end state)"
+    ]
+
+
+def _repair_errors(
+    validation: dict[str, Any],
+    fixture_test: dict[str, Any] | None,
+    probe_test: dict[str, Any] | None,
+    scope_errors: list[str],
+) -> list[str]:
+    errors = list(validation["errors"])
+    errors.extend(scope_errors)
+    if probe_test and not probe_test["passed"]:
+        errors.extend(f"edge-case row failed: {err}" for err in probe_test["errors"])
+    if fixture_test and not fixture_test.get("passed") and not fixture_test.get("advisory"):
+        errors.append(f"fixture test failed: expected {fixture_test.get('expected')}, got {fixture_test.get('actual')}")
+    return errors
+
+
+#: Resource types whose rows carry cross-application identity context.
+_CLUSTER_RESOURCE_TYPES = frozenset({"identity", "event"})
+
+
+def _declare_requires(source_text: str, analysis: IntentAnalysis) -> str:
+    if analysis.scope != SCOPE_CROSS_APP:
+        return source_text
+    if _resource_type_from_source(source_text) not in _CLUSTER_RESOURCE_TYPES:
+        return source_text
+    return ensure_requires(source_text, analysis.requires)
+
+
+def _assessability(session: Session | None, org_id: uuid.UUID | None, requires: list[str]) -> list[dict[str, Any]] | None:
+    if session is None or org_id is None or not requires:
+        return None
+    from kestrel.policies.coverage import assess_requires
+
+    return [row.to_dict() for row in assess_requires(session, org_id, requires)]
 
 
 def generate_policy_draft(
@@ -547,6 +697,7 @@ def generate_policy_draft(
     session: Session | None = None,
     org_id: uuid.UUID | None = None,
     credentials: LlmCredentials | None = None,
+    scope: str | None = None,
 ) -> dict[str, Any]:
     """Return draft + validation (+ optional fixtures). Never persists or enables.
 
@@ -554,6 +705,9 @@ def generate_policy_draft(
     1. High-confidence intent template (works offline)
     2. Org Settings → AI / ``KESTREL_LLM_*`` env → LLM draft
     3. Unconfigured (no silent ``return True`` stub)
+
+    ``scope`` is ``single_app`` or ``cross_app``; left unset, it is read from
+    the connector hint and the intent's wording (``generate_intent``).
     """
     cleaned_intent = intent.strip()
     if not cleaned_intent:
@@ -566,10 +720,16 @@ def generate_policy_draft(
         application_instance_id=application_instance_id,
     )
     connector = normalize_connector_hint(resolved_connector or connector_hint)
+    analysis = analyze_intent(cleaned_intent, connector_hint=connector, resource_type=resource_type, scope=scope)
+    # The analysis's inferred resource type steers cross-application drafts
+    # only. A single-application request keeps the caller's (or none), so the
+    # established templates and prompts for that path are unchanged.
+    effective_type = resource_type or (analysis.resource_type if analysis.scope == SCOPE_CROSS_APP else None)
     template = match_intent_template(
         cleaned_intent,
         connector_hint=connector,
-        resource_type=resource_type,
+        resource_type=effective_type,
+        scope=analysis.scope,
     )
 
     creds = credentials
@@ -597,9 +757,14 @@ def generate_policy_draft(
             source_text = _llm_draft(
                 creds=creds,
                 intent=cleaned_intent,
-                resource_type=resource_type,
+                resource_type=effective_type,
                 connector_hint=connector,
+                analysis=analysis,
             )
+            # A cross-application draft reads fields some connectors never
+            # collect; it must say so, or a tenant missing them reports
+            # "monitored" and finds nothing.
+            source_text = _declare_requires(source_text, analysis)
             provider = creds.provider
             used_model = creds.model
             used_llm = True
@@ -622,57 +787,71 @@ def generate_policy_draft(
     fixtures, fixtures_fit_intent = _resolve_fixtures(
         include_fixtures=include_fixtures,
         intent=cleaned_intent,
-        resource_type=resource_type,
+        resource_type=effective_type,
         source_text=source_text,
         connector_hint=connector,
         template=template,
+        scope=analysis.scope,
     )
     # Probe rows only for model output: templates are reviewed and tested.
     fixture_test, probe_test = _checks(
         source_text, fixtures, fixtures_fit_intent=fixtures_fit_intent, probe=used_llm and validation["valid"]
     )
+    scope_errors = _scope_errors(source_text, analysis) if used_llm else []
 
-    # Repair pass: compile errors, a probe-row crash, or a fixture mismatch
-    # when the LLM was used. The `creds is not None` test stays in the `if`
-    # so the type narrowing reaches _repair_draft below.
-    if used_llm and creds is not None and _needs_repair(validation, fixture_test, probe_test):
-        repair_errors = list(validation["errors"])
-        if probe_test and not probe_test["passed"]:
-            repair_errors.extend(f"edge-case row failed: {err}" for err in probe_test["errors"])
-        if fixture_test and not fixture_test.get("passed") and not fixture_test.get("advisory"):
-            repair_errors.append(
-                f"fixture test failed: expected {fixture_test.get('expected')}, got {fixture_test.get('actual')}"
-            )
+    # Repair passes: compile errors, a single-app guard in a cross-app draft, a
+    # probe-row crash, or a fixture mismatch when the LLM was used. The
+    # `creds is not None` test stays in the `if` so the type narrowing reaches
+    # _repair_draft below. A second turn runs only when the first still fails
+    # and produced something different (a model that returns the same source
+    # again will not do better a third time).
+    repair_turns = 0
+    while (
+        used_llm
+        and creds is not None
+        and repair_turns < _MAX_REPAIR_TURNS
+        and _needs_repair(validation, fixture_test, probe_test, scope_errors)
+    ):
+        repair_turns += 1
         try:
             repaired = _repair_draft(
                 creds=creds,
                 intent=cleaned_intent,
-                resource_type=resource_type,
+                resource_type=effective_type,
                 connector_hint=connector,
                 source_text=source_text,
-                errors=repair_errors,
+                errors=_repair_errors(validation, fixture_test, probe_test, scope_errors),
                 fixture_test=fixture_test,
                 fixtures=fixtures,
-            )
-            source_text = repaired
-            validation = _validation_payload(source_text)
-            fixtures, fixtures_fit_intent = _resolve_fixtures(
-                include_fixtures=include_fixtures,
-                intent=cleaned_intent,
-                resource_type=resource_type,
-                source_text=source_text,
-                connector_hint=connector,
-                template=template,
-            )
-            fixture_test, probe_test = _checks(
-                source_text, fixtures, fixtures_fit_intent=fixtures_fit_intent, probe=validation["valid"]
+                analysis=analysis,
             )
         except Exception:
             logger.warning(
                 "LLM policy draft repair failed; returning prior draft with errors",
                 exc_info=True,
             )
+            break
+        repaired = _declare_requires(repaired, analysis)
+        no_progress = repaired.strip() == source_text.strip()
+        source_text = repaired
+        validation = _validation_payload(source_text)
+        fixtures, fixtures_fit_intent = _resolve_fixtures(
+            include_fixtures=include_fixtures,
+            intent=cleaned_intent,
+            resource_type=effective_type,
+            source_text=source_text,
+            connector_hint=connector,
+            template=template,
+            scope=analysis.scope,
+        )
+        fixture_test, probe_test = _checks(
+            source_text, fixtures, fixtures_fit_intent=fixtures_fit_intent, probe=validation["valid"]
+        )
+        scope_errors = _scope_errors(source_text, analysis)
+        if no_progress:
+            break
 
+    requires = analysis.requires if (used_llm or template is not None) and analysis.scope == SCOPE_CROSS_APP else []
     result: dict[str, Any] = {
         "source_text": source_text,
         "provider": provider,
@@ -682,7 +861,20 @@ def generate_policy_draft(
         "fixtures": fixtures,
         "fixture_test": fixture_test,
         "probe_test": probe_test,
+        "scope": analysis.scope,
+        "scope_source": analysis.scope_source,
+        "intent_analysis": analysis.to_dict(),
+        "requires": requires,
+        "assessability": _assessability(session, org_id, requires),
+        "repair_turns": repair_turns,
     }
+    if scope_errors:
+        result["scope_errors"] = scope_errors
+    not_assessable = [row["name"] for row in result["assessability"] or [] if not row["assessable"]]
+    if not_assessable and not message:
+        result["message"] = (
+            "Not assessable in " + ", ".join(not_assessable) + ": the connector does not collect " + ", ".join(requires)
+        )
     if llm_error:
         result["error"] = llm_error
     return result

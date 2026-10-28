@@ -312,6 +312,13 @@ provides_capabilities:
   - github:dependabot_alerts
   - github:code_scanning
   - github:packages
+  # Generic identity capabilities (kestrel.policies.coverage.GENERIC_CAPABILITIES):
+  # cross-application policies REQUIRE these and are assessable wherever a
+  # connected connector provides them.
+  - identity:last_sign_in
+  - identity:worker_type
+  - identity:groups
+  - identity:oauth_grants
 change_classes:
   - admin_granted
   - mfa_disabled

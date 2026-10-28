@@ -234,6 +234,14 @@ An action outside the map still produces an event if its payload shows a
 privileged permission being handed out — whatever GitHub decides to call the
 action next.
 
+Every entry with an actor, mapped or not, is also a sign of life for that
+member: the latest one per actor becomes the identity's `last_active_at`
+(source `audit`), and a Copilot seat's `last_activity_at` does the same
+(source `analytics`). GitHub exposes no sign-in time per member, so "last
+sign-in" on GitHub means "last org-visible action". Without audit-log access
+members keep no activity timestamp and dormancy policies report them as not
+assessable rather than dormant.
+
 Repository visibility is the one action read from its payload rather than its
 name: `repo.access` fires in both directions, and only the transition to public
 is recorded.

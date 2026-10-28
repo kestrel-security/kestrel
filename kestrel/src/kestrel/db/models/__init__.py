@@ -71,7 +71,9 @@ from kestrel.db.models.identity import (
     IdentityType,
     ServiceAccount,
     User,
+    WorkerType,
 )
+from kestrel.db.models.identity_classification import OrgIdentityClassificationRule
 from kestrel.db.models.identity_link import IdentityLink
 from kestrel.db.models.in_app_notification import OperatorInAppNotification
 from kestrel.db.models.llm_settings import OrgLlmSettings
@@ -160,6 +162,7 @@ __all__ = [
     "OperatorNotificationPreferences",
     "OperatorRole",
     "OperatorSession",
+    "OrgIdentityClassificationRule",
     "OrgLlmSettings",
     "OrgSmtpSettings",
     "Organization",
@@ -185,4 +188,5 @@ __all__ = [
     "WebhookDelivery",
     "WebhookDeliveryStatus",
     "WebhookEndpoint",
+    "WorkerType",
 ]

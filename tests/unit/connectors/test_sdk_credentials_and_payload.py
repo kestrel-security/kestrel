@@ -81,3 +81,40 @@ def test_reduce_url_to_host_leaves_non_urls_unchanged(payload: dict[str, Any]) -
     redacted = reduce_url_to_host(payload, "url")
     assert redacted == payload
     assert redacted is not payload
+
+
+@pytest.mark.parametrize(
+    ("label", "expected"),
+    [
+        ("Contractor", "contractor"),
+        ("Contract Employee", "contractor"),
+        ("contingent worker", "contractor"),
+        ("CW", "contractor"),
+        ("Intern", "contractor"),
+        ("Vendor", "vendor_or_partner"),
+        ("Employee", "employee"),
+        ("FTE", "employee"),
+        ("Full-Time", "employee"),
+        ("Internal", "employee"),
+        ("Internal Employee", "employee"),
+        # Substrings must not decide: these used to read as contractor/service.
+        ("Template", "unknown"),
+        ("Rapid", "unknown"),
+        ("Systematic", "unknown"),
+        # A negated employee label says only "not an employee".
+        ("Non-Employee", "unknown"),
+        ("Not staff", "unknown"),
+        ("", "unknown"),
+    ],
+)
+def test_classify_worker_type_matches_whole_words(label, expected):
+    from kestrel.connectors.sdk.payload import classify_worker_type
+
+    assert classify_worker_type(label) == expected
+
+
+def test_classify_worker_type_structural_facts_win():
+    from kestrel.connectors.sdk.payload import classify_worker_type
+
+    assert classify_worker_type("Employee", is_bot=True) == "service"
+    assert classify_worker_type("Employee", is_guest=True) == "guest"

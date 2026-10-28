@@ -181,6 +181,14 @@ provides_capabilities:
   - slack:channel_retention
   - slack:invite_requests
   - slack:member_analytics
+  # Generic identity capabilities (kestrel.policies.coverage.GENERIC_CAPABILITIES):
+  # cross-application policies REQUIRE these and are assessable wherever a
+  # connected connector provides them.
+  - identity:last_sign_in
+  - identity:worker_type
+  - identity:groups
+  - identity:expires_at
+  - identity:oauth_grants
 change_classes:
   - admin_granted
   - oauth_app_installed

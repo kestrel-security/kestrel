@@ -218,6 +218,13 @@ provides_capabilities:
   - google_workspace:admin_activity   # admin_activity (privilege grants, DWD, SSO changes)
   - google_workspace:drive_activity   # drive_activity (external sharing)
   - google_workspace:dwd_clients      # dwd_client
+  # Generic identity capabilities (kestrel.policies.coverage.GENERIC_CAPABILITIES):
+  # cross-application policies REQUIRE these and are assessable wherever a
+  # connected connector provides them.
+  - identity:last_sign_in
+  - identity:groups
+  - identity:department
+  - identity:oauth_grants
 change_classes:
   - admin_granted
   - group_member_added

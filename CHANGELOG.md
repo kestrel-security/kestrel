@@ -15,6 +15,68 @@ started on them.
 
 ### Added
 
+- Identities carry `worker_type` (employee, contractor, vendor_or_partner,
+  guest, service, unknown) with its source, `department`, `title`,
+  `manager_email`, `disabled_at`, `expires_at`, and an `attributes` JSON of
+  provider extras that used to survive only in `raw_source` (org unit path,
+  guest tier, admin flags). Okta profiles, Slack guest tiers, and GitHub
+  outside collaborators classify the worker type; Google Workspace leaves it
+  unknown for classification rules.
+- GitHub members get `last_active_at` from the org audit log (source
+  `audit`) and Copilot seat usage (`analytics`), through a new
+  `identity_activity` normalized kind an audit-log normalizer can emit.
+- Okta API tokens record the user they were issued to as the service
+  account's owner.
+- AI policy drafts understand scope: `POST /policies/generate` takes
+  `scope` (`single_app` or `cross_app`), reads it from the hint and wording
+  otherwise, and analyzes the intent deterministically (subject, conditions,
+  threshold, per account or per person, fields, `REQUIRES`) before drafting.
+  Cross-app drafts are grounded in the full identity row shape, a
+  cross-application catalog, the cross-app pack's policies and fixture
+  scenarios, get `REQUIRES` inserted when the model forgets it, are sent back
+  when they early-return on `application.type`, and report per connected
+  application whether the draft is assessable. Connector catalogs for GitHub,
+  Google Workspace and Slack are derived from their shipped packs. Two offline
+  templates cover the headline cross-app intents. Up to two repair turns.
+  The workbench gains a scope control, cross-app intent chips, a field panel
+  for every connector, and the intent analysis; the resource-type list now
+  includes `resource` and `oauth_application`.
+- Event rows' `actor` / `target` summaries carry `cluster_idp_disabled_at`;
+  `cross-app-privilege-granted-to-disabled-idp-user` only reports a grant made
+  after the identity provider disabled the person.
+- Policy helpers for cross-application checks: `cluster_accounts`,
+  `idp_account`, `is_representative`, `worker_type_of`, `has_privileged_role`,
+  `in_group`, `trusted_last_active`, and `activity_status` (`active`, `stale`,
+  `never`, or `unknown` when the only timestamp is untrusted or the
+  application does not report sign-ins per account: GitHub, custom
+  connectors). Okta, Slack and GitHub user-type labels are matched as whole
+  words, so "Internal" staff are not read as interns.
+- Identity rows carry `groups`, the new profile columns, a richer `cluster`
+  (worker type, latest trusted activity, representative flag, per-account
+  lifecycle timestamps), and an `org` block with the connected application
+  types and company email domains; event rows carry `event.actor` and
+  `event.target` identity summaries, including the target's identity-provider
+  status.
+- Nine cross-app pack policies: contractors with an enabled account they have
+  not used in 30 days, accounts still enabled a week after the identity
+  provider disabled the person, administrators whose identity-provider account
+  has no MFA, people dormant in every application, accounts never used after
+  creation, contractors and guests who consented to sensitive OAuth scopes,
+  privilege granted to someone the identity provider disabled, separation of
+  duties between the identity provider and what it governs, and
+  contingent-group members who administer elsewhere. Fixtures are generated
+  from `kestrel.policies.cross_app_fixtures` (`scripts/gen-cross-app-fixtures.py`).
+- Generic `identity:*` capability keys; the coverage service treats the
+  cross-app pack as assessable when any connected connector provides them,
+  and `assess_requires` reports per connected application which cannot.
+- Settings → Identity classification (Admin): ordered rules that classify
+  accounts by email domain, org unit path, group name, provider user type, or
+  application type into a worker type, with a preview of what would change.
+  Saving reclassifies every identity without a sync; rules outrank the
+  provider's own label and never relabel bots. The Identities list filters on
+  worker type and shows Contractor / Vendor / Guest badges; identity detail
+  shows the worker type with its source, department, title, and manager.
+
 - Policy helpers `now`, `duration_seconds`, `get_path`, `email_domain`,
   `domain_matches`, `ip_in_networks`, and `matches_any`. The two Google
   Workspace duration policies use `duration_seconds` and now read every ISO
@@ -35,6 +97,13 @@ started on them.
   checks. The database tiers, web build, and dependency audits are skipped.
   Pushes to `main` and releases still run everything. See
   [`docs/testing.md`](docs/testing.md#tiers).
+- The first sync after upgrading fills the new identity columns and
+  attributes without writing a Changes-feed row per identity.
+- `last_active_at` only moves forward: a trusted source (`login`, `audit`,
+  `analytics`) is never replaced by a profile timestamp, and a sync that
+  carries no activity keeps the stored value.
+- Identity attribute changes appear in the Changes feed per key
+  (`attributes.org_unit_path`), not as one JSON blob.
 - One evaluation pass reads one clock: `now()`, `days_since`,
   `within_last_days`, and `time.time()` in the sandbox are pinned when the
   pass starts, in both runtimes.

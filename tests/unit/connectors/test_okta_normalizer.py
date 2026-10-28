@@ -657,3 +657,90 @@ def test_system_log_uses_category_for_to_compute_action_category():
     }
     objects = OktaNormalizer().normalize("system_log", _raw("system_log", "uuid-1", payload))
     assert objects[0].attributes["action_category"] == "device"
+
+
+@pytest.mark.parametrize(
+    ("profile", "expected"),
+    [
+        ({"userType": "Contractor"}, "contractor"),
+        ({"userType": "contingent worker"}, "contractor"),
+        ({"userType": "Vendor"}, "vendor_or_partner"),
+        ({"userType": "Employee"}, "employee"),
+        ({"userType": "FTE"}, "employee"),
+        ({"isExternal": True}, "contractor"),
+        ({"userType": "Employee", "isExternal": True}, "employee"),
+        ({}, "unknown"),
+        ({"userType": ""}, "unknown"),
+    ],
+)
+def test_user_worker_type_comes_from_user_type_then_is_external(profile, expected):
+    raw = _raw("user", "1", {"id": 1, "status": "ACTIVE", "profile": {"login": "x@example.com", **profile}})
+
+    identity = OktaNormalizer().normalize("user", raw)[0]
+
+    assert identity.attributes["worker_type"] == expected
+    # The legacy flag keeps its original meaning for the shipped packs.
+    assert identity.attributes["is_external"] is bool(profile.get("userType") == "Contractor" or profile.get("isExternal"))
+
+
+def test_user_profile_fields_are_carried_and_the_manager_is_only_an_email_when_address_shaped():
+    raw = _raw(
+        "user",
+        "1",
+        {
+            "id": 1,
+            "status": "ACTIVE",
+            "profile": {
+                "login": "x@example.com",
+                "department": "Platform",
+                "title": "SRE",
+                "managerId": "lead@example.com",
+                "employeeNumber": "E-42",
+                "organization": "Acme",
+                "userType": "Employee",
+            },
+        },
+    )
+
+    attrs = OktaNormalizer().normalize("user", raw)[0].attributes
+
+    assert (attrs["department"], attrs["title"], attrs["manager_email"]) == ("Platform", "SRE", "lead@example.com")
+    assert attrs["manager_ref"] is None
+    assert (attrs["employee_number"], attrs["organization"], attrs["user_type"]) == ("E-42", "Acme", "Employee")
+
+    raw.payload["profile"]["managerId"] = "00u-manager-id"
+    attrs = OktaNormalizer().normalize("user", raw)[0].attributes
+    assert attrs["manager_email"] is None
+    assert attrs["manager_ref"] == "00u-manager-id"
+
+
+def test_user_disabled_at_is_status_changed_only_while_disabled():
+    disabled = _raw(
+        "user",
+        "1",
+        {"id": 1, "status": "DEPROVISIONED", "statusChanged": "2026-05-01T00:00:00Z", "profile": {"login": "x@example.com"}},
+    )
+    active = _raw(
+        "user",
+        "2",
+        {"id": 2, "status": "ACTIVE", "statusChanged": "2026-05-01T00:00:00Z", "profile": {"login": "y@example.com"}},
+    )
+
+    assert OktaNormalizer().normalize("user", disabled)[0].attributes["disabled_at"] == datetime(2026, 5, 1, tzinfo=UTC)
+    assert OktaNormalizer().normalize("user", active)[0].attributes["disabled_at"] is None
+    assert OktaNormalizer().normalize("user", disabled)[0].attributes["status"] == "DEPROVISIONED"
+
+
+def test_api_token_is_a_service_account_owned_by_its_user():
+    raw = _raw("api_token", "tok1", {"id": "tok1", "name": "CI", "userId": "00uowner", "created": "2026-01-01T00:00:00Z"})
+
+    attrs = OktaNormalizer().normalize("api_token", raw)[0].attributes
+
+    assert attrs["worker_type"] == "service"
+    assert attrs["owner_identity_ref"] == "00uowner"
+
+
+def test_api_token_last_updated_is_labelled_as_not_activity():
+    raw = _raw("api_token", "tok1", {"id": "tok1", "name": "CI", "lastUpdated": "2026-07-01T00:00:00Z"})
+    attrs = OktaNormalizer().normalize("api_token", raw)[0].attributes
+    assert attrs["last_active_source"] == "profile"

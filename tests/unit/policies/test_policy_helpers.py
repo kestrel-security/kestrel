@@ -15,19 +15,27 @@ from kestrel.policies.runtime.helpers import (
     POLICY_HELPERS,
     POLICY_TIME,
     PolicyDataError,
+    activity_status,
     application_matches,
+    cluster_accounts,
     days_since,
     domain_matches,
     duration_seconds,
     email_domain,
     get_path,
     has_admin_grant,
+    has_privileged_role,
+    idp_account,
+    in_group,
     ip_in_networks,
+    is_representative,
     matches_any,
     now,
     parse_timestamp,
     pinned_now,
+    trusted_last_active,
     within_last_days,
+    worker_type_of,
 )
 from kestrel.policies.runtime.serialize import rows_to_jsonable
 from kestrel.policies.testing import run_fixture_test_dict
@@ -388,3 +396,148 @@ def test_matches_any() -> None:
     assert not matches_any(None, ["*"])
     with pytest.raises(PolicyDataError):
         matches_any(5, ["*"])
+
+
+# --- cluster, activity, and worker-type helpers ------------------------------
+
+
+def _cluster_row(**overrides) -> dict:
+    base = {
+        "_subject_id": "self-id",
+        "identity": {"worker_type": "unknown", "last_active_at": _ago(10), "last_active_source": "login"},
+        "application": {"type": "slack", "name": "Slack"},
+        "roles": [],
+        "groups": ["contractors-emea", "Everyone"],
+        "cluster": {
+            "representative_identity_id": "okta-id",
+            "worker_type": "contractor",
+            "accounts": [
+                {"identity_id": "okta-id", "application_type": "okta", "is_disabled": True, "privileged": False},
+                {"identity_id": "self-id", "application_type": "slack", "is_disabled": False, "privileged": True},
+                {
+                    "identity_id": "gh-id",
+                    "application_type": "github",
+                    "is_disabled": False,
+                    "roles": ["organization_admin"],
+                },
+            ],
+        },
+    }
+    base.update(overrides)
+    return base
+
+
+def test_trusted_last_active_rejects_profile_timestamps_and_takes_unlabeled_ones_at_face_value() -> None:
+    stamp = _ago(3)
+    assert trusted_last_active({"last_active_at": stamp, "last_active_source": "login"}) == stamp
+    assert trusted_last_active({"last_active_at": stamp, "last_active_source": "analytics"}) == stamp
+    assert trusted_last_active({"last_active_at": stamp, "last_active_source": "profile"}) is None
+    assert trusted_last_active({"last_active_at": stamp}) == stamp
+    assert trusted_last_active({"last_active_at": None, "last_active_source": "login"}) is None
+    assert trusted_last_active(None) is None
+
+
+def test_activity_status_distinguishes_never_from_unknown() -> None:
+    assert activity_status({"last_active_at": _ago(3), "last_active_source": "login"}, 30) == "active"
+    assert activity_status({"last_active_at": _ago(90), "last_active_source": "audit"}, 30) == "stale"
+    assert activity_status({"last_active_at": None}, 30) == "never"
+    assert activity_status({"last_active_at": _ago(1), "last_active_source": "profile"}, 30) == "unknown"
+    assert activity_status({}, 30) == "never"
+    # A whole row works too, and GitHub's audit log is only a lower bound.
+    row = {"identity": {"last_active_at": None}, "application": {"type": "github"}}
+    assert activity_status(row, 30) == "unknown"
+    assert activity_status({"identity": {"last_active_at": _ago(3)}, "application": {"type": "github"}}, 30) == "active"
+    assert activity_status({"application_type": "github", "last_active_at": None}, 30) == "unknown"
+    assert activity_status({"application_type": "slack", "last_active_at": None}, 30) == "never"
+    with pytest.raises(PolicyDataError):
+        activity_status({"last_active_at": "yesterday"}, 30)
+
+
+def test_cluster_accounts_filters_by_application_self_and_state() -> None:
+    row = _cluster_row()
+    assert [a["identity_id"] for a in cluster_accounts(row)] == ["okta-id", "self-id", "gh-id"]
+    assert [a["identity_id"] for a in cluster_accounts(row, include_self=False)] == ["okta-id", "gh-id"]
+    assert [a["identity_id"] for a in cluster_accounts(row, "github")] == ["gh-id"]
+    assert [a["identity_id"] for a in cluster_accounts(row, ["okta", "github"], active_only=True)] == ["gh-id"]
+    assert cluster_accounts({"identity": {}}) == []
+    assert cluster_accounts({"cluster": {"accounts": None}}) == []
+
+
+def test_is_representative_gates_one_finding_per_person() -> None:
+    assert is_representative(_cluster_row()) is False
+    assert is_representative(_cluster_row(_subject_id="okta-id")) is True
+    assert is_representative({"identity": {}}) is True
+    assert is_representative({"cluster": {"representative_identity_id": None}}) is True
+
+
+def test_worker_type_of_prefers_the_cluster_then_the_row_then_unknown() -> None:
+    assert worker_type_of(_cluster_row()) == "contractor"
+    assert worker_type_of(_cluster_row(cluster={"worker_type": "unknown"}, identity={"worker_type": "guest"})) == "guest"
+    assert worker_type_of({"identity": {"worker_type": None}}) == "unknown"
+    assert worker_type_of({}) == "unknown"
+
+
+def test_has_privileged_role_reads_the_flag_or_the_role_names() -> None:
+    assert has_privileged_role({"privileged": True}) is True
+    assert has_privileged_role({"privileged": False, "roles": ["organization_admin"]}) is False
+    assert has_privileged_role({"roles": ["Super Administrator"]}) is True
+    assert has_privileged_role({"roles": [{"name": "Org Owner"}]}) is True
+    assert has_privileged_role({"roles": ["member"]}) is False
+    assert has_privileged_role({}) is False
+
+
+def test_in_group_matches_globs_against_group_names() -> None:
+    assert in_group(_cluster_row(), "contractors-*") is True
+    assert in_group(_cluster_row(), ["staff", "EVERYONE"]) is True
+    assert in_group(_cluster_row(), "admins") is False
+    assert in_group({"groups": None}, "*") is False
+
+
+def test_idp_account_prefers_an_enabled_identity_provider_account() -> None:
+    assert idp_account(_cluster_row())["identity_id"] == "okta-id"
+    row = _cluster_row()
+    row["cluster"]["accounts"].append(
+        {"identity_id": "gws-id", "application_type": "google_workspace", "is_disabled": False}
+    )
+    assert idp_account(row)["identity_id"] == "gws-id"
+    assert idp_account({"cluster": {"accounts": [{"application_type": "github"}]}}) is None
+    assert idp_account({}) is None
+
+
+def test_cluster_helpers_run_inside_the_sandbox() -> None:
+    source = (
+        'POLICY_ID = "cluster-helpers"\nTITLE = "t"\nSEVERITY = "low"\nRESOURCE_TYPE = "identity"\n'
+        'DESCRIPTION = "d"\nREMEDIATION = "r"\n\n'
+        "def policy(resource):\n"
+        '    if worker_type_of(resource) != "contractor":\n'
+        "        return True\n"
+        "    if not cluster_accounts(resource, include_self=False):\n"
+        "        return True\n"
+        '    return activity_status(resource.get("identity"), 30) == "active"\n'
+    )
+    fixtures = {"rows": [_cluster_row(_subject_id=uuid.uuid4())], "expected_match_subject_ids": []}
+    fixtures["rows"][0]["identity"]["last_active_at"] = {"$days_ago": 120}
+    fixtures["expected_match_subject_ids"] = [str(fixtures["rows"][0]["_subject_id"])]
+    result = run_fixture_test_dict(source, fixtures)
+    assert result.passed, (result.missing, result.unexpected)
+
+
+def test_activity_status_is_never_only_where_the_application_reports_sign_ins() -> None:
+    for app in ("okta", "google_workspace", "slack"):
+        assert activity_status({"application_type": app, "last_active_at": None}, 30) == "never"
+    for app in ("github", "custom", "microsoft_365"):
+        assert activity_status({"application_type": app, "last_active_at": None}, 30) == "unknown"
+    row = {"identity": {"last_active_at": None}, "application": {"type": "custom"}}
+    assert activity_status(row, 30) == "unknown"
+
+
+def test_activity_reporting_types_match_the_connector_manifests() -> None:
+    """Every connector that claims identity:last_sign_in either reports a
+    complete sign-in signal (listed) or a partial one (GitHub)."""
+    from kestrel.connectors.sdk.registry import discover_connectors
+    from kestrel.policies.coverage import load_connector_capabilities
+    from kestrel.policies.vocabulary import ACTIVITY_REPORTING_APPLICATION_TYPES, PARTIAL_ACTIVITY_APPLICATION_TYPES
+
+    claiming = {name for name in discover_connectors() if "identity:last_sign_in" in load_connector_capabilities(name)}
+    assert claiming == ACTIVITY_REPORTING_APPLICATION_TYPES | PARTIAL_ACTIVITY_APPLICATION_TYPES
+    assert not ACTIVITY_REPORTING_APPLICATION_TYPES & PARTIAL_ACTIVITY_APPLICATION_TYPES

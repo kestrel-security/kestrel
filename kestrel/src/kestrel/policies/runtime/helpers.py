@@ -42,7 +42,24 @@ from collections.abc import Iterable, Iterator
 from datetime import UTC, date, datetime
 from typing import Any
 
+from kestrel.policies.vocabulary import (
+    ACTIVITY_REPORTING_APPLICATION_TYPES,
+    IDP_APPLICATION_TYPES,
+    PRIVILEGED_ROLE_HINTS,
+    TRUSTED_ACTIVITY_SOURCES,
+)
+
 SECONDS_PER_DAY = 86400.0
+
+__all__ = [
+    "IDP_APPLICATION_TYPES",
+    "POLICY_HELPERS",
+    "POLICY_TIME",
+    "PRIVILEGED_ROLE_HINTS",
+    "TRUSTED_ACTIVITY_SOURCES",
+    "PolicyDataError",
+    "pinned_now",
+]
 
 
 class PolicyDataError(ValueError):
@@ -333,6 +350,171 @@ def matches_any(value: Any, patterns: str | Iterable[str]) -> bool:
     return any(fnmatch.fnmatchcase(text, pattern.casefold()) for pattern in _as_tuple(patterns))
 
 
+def _as_dict(value: Any) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def trusted_last_active(value: Any) -> Any:
+    """The ``last_active_at`` of an identity row, its ``identity`` dict, or a
+    cluster account, or ``None`` when its ``last_active_source`` is not real
+    activity.
+
+    ``login``, ``audit`` and ``analytics`` record something the account did;
+    ``profile`` is when the profile last changed and says nothing about use.
+    A dict with a timestamp and no source at all (a hand-written fixture) is
+    taken at face value. Pass the result to ``within_last_days`` or
+    ``days_since``; use ``activity_status`` when "no trusted source" must be
+    told apart from "never active".
+    """
+    data = _as_dict(value)
+    if "identity" in data:
+        data = _as_dict(data.get("identity"))
+    source = data.get("last_active_source")
+    if source is not None and source not in TRUSTED_ACTIVITY_SOURCES:
+        return None
+    timestamp = data.get("last_active_at")
+    return None if timestamp in (None, "") else timestamp
+
+
+def activity_status(value: Any, days: float) -> str:
+    """``"active"``, ``"stale"``, ``"never"`` or ``"unknown"`` for a whole
+    identity row, its ``identity`` dict, or a cluster account against a window
+    of ``days``.
+
+    ``unknown`` means the account cannot be judged: its only timestamp comes
+    from an untrusted source (a profile-modified time), or its application
+    does not report a sign-in per account (GitHub's audit log sees only
+    administrative actions; a custom connector may collect no activity at
+    all) and recorded none. ``never`` means the provider does report sign-ins
+    (Okta, Google Workspace, Slack) and has none for this account. A dormancy
+    policy normally treats ``unknown`` as compliant (not assessable) and
+    ``never`` like ``stale``. A malformed timestamp raises ``PolicyDataError``.
+    """
+    data = _as_dict(value)
+    application_type = data.get("application_type")
+    if "identity" in data:
+        application_type = _as_dict(data.get("application")).get("type")
+        data = _as_dict(data.get("identity"))
+    source = data.get("last_active_source")
+    if source is not None and source not in TRUSTED_ACTIVITY_SOURCES:
+        return "unknown"
+    timestamp = data.get("last_active_at")
+    if timestamp in (None, ""):
+        # "never" only where the application would have reported a sign-in.
+        # A dict with no application at all (a hand-written check) is taken
+        # at its word.
+        if application_type is None or application_type in ACTIVITY_REPORTING_APPLICATION_TYPES:
+            return "never"
+        return "unknown"
+    return "active" if within_last_days(timestamp, days) else "stale"
+
+
+def cluster_accounts(
+    resource: dict[str, Any],
+    application_types: str | Iterable[str] | None = None,
+    include_self: bool = True,
+    active_only: bool = False,
+) -> list[dict[str, Any]]:
+    """The same person's accounts across applications, from
+    ``resource["cluster"]["accounts"]``, filtered.
+
+    ``application_types`` keeps accounts in those application types only;
+    ``include_self=False`` drops this row's own account; ``active_only``
+    drops disabled accounts. Rows without a cluster yield ``[]``. Each
+    account carries ``application_type``, ``is_disabled``, ``mfa_enabled``,
+    ``worker_type``, ``roles``, ``privileged``, ``last_active_at`` and
+    ``last_active_source``, among others.
+    """
+    cluster = _as_dict(resource.get("cluster"))
+    accounts = [account for account in (cluster.get("accounts") or []) if isinstance(account, dict)]
+    if not include_self:
+        self_id = str(resource.get("_subject_id") or "")
+        accounts = [account for account in accounts if str(account.get("identity_id") or "") != self_id]
+    if application_types is not None:
+        wanted = set(_as_tuple(application_types))
+        accounts = [account for account in accounts if account.get("application_type") in wanted]
+    if active_only:
+        accounts = [account for account in accounts if not account.get("is_disabled")]
+    return accounts
+
+
+def is_representative(resource: dict[str, Any]) -> bool:
+    """True when this row is the account that should carry a one-per-person
+    finding: the cluster's representative, or any row that has no cluster.
+
+    Identity rows are one per account, so a check about the *person* (admin in
+    two applications, dormant everywhere) would otherwise open one finding
+    per account. Gate it with ``if not is_representative(resource): return True``.
+    """
+    cluster = _as_dict(resource.get("cluster"))
+    representative = cluster.get("representative_identity_id")
+    if not representative:
+        return True
+    return str(resource.get("_subject_id") or "") == str(representative)
+
+
+def worker_type_of(resource: dict[str, Any]) -> str:
+    """The person's worker type: ``employee``, ``contractor``,
+    ``vendor_or_partner``, ``guest``, ``service`` or ``unknown``.
+
+    Reads the cluster-level value (the identity provider's account wins over
+    an application's guest flag), then this account's own. ``unknown`` is a
+    real answer, from a provider that records no employment type and no
+    operator classification rule matching; a policy must decide what it
+    means and say so, usually "not shown to be a contractor".
+    """
+    cluster_value = _as_dict(resource.get("cluster")).get("worker_type")
+    if cluster_value and cluster_value != "unknown":
+        return str(cluster_value)
+    own = _as_dict(resource.get("identity")).get("worker_type")
+    return str(own) if own else "unknown"
+
+
+def has_privileged_role(value: dict[str, Any]) -> bool:
+    """True when an identity row or a cluster account holds a privileged role.
+
+    A cluster account carries ``privileged`` directly; a row is judged by its
+    ``roles`` names against the shared hints (admin, owner, super_admin, ...).
+    """
+    data = _as_dict(value)
+    flagged = data.get("privileged")
+    if flagged is not None:
+        return bool(flagged)
+    for role in data.get("roles") or []:
+        name = str(role.get("name") if isinstance(role, dict) else role or "").lower()
+        if name and any(hint in name for hint in PRIVILEGED_ROLE_HINTS):
+            return True
+    return False
+
+
+def in_group(resource: dict[str, Any], patterns: str | Iterable[str]) -> bool:
+    """True when one of the row's ``groups`` names matches a shell-style glob
+    in ``patterns`` (case-insensitive).
+
+    ``groups`` lists the group names this account is a member of in its own
+    application; Google Workspace org units appear there too.
+    """
+    return any(matches_any(name, patterns) for name in resource.get("groups") or [] if isinstance(name, str))
+
+
+def idp_account(resource: dict[str, Any]) -> dict[str, Any] | None:
+    """The person's identity-provider account (Okta, Google Workspace) from the
+    cluster, preferring an enabled one, or ``None`` when they have none.
+
+    Its ``is_disabled``, ``mfa_enabled``, ``disabled_at`` and ``worker_type``
+    are the facts offboarding and MFA policies compare the other accounts to.
+    """
+    candidates = [
+        account for account in cluster_accounts(resource) if account.get("application_type") in IDP_APPLICATION_TYPES
+    ]
+    if not candidates:
+        return None
+    for account in candidates:
+        if not account.get("is_disabled"):
+            return account
+    return candidates[0]
+
+
 # Every name injected into the policy namespace. Adding a helper here makes it
 # part of the authoring contract: document it in docs/policies.md and keep it
 # pure (no I/O, no access to anything outside the row it is handed).
@@ -350,6 +532,14 @@ POLICY_HELPERS: dict[str, Any] = {
     "domain_matches": domain_matches,
     "ip_in_networks": ip_in_networks,
     "matches_any": matches_any,
+    "trusted_last_active": trusted_last_active,
+    "activity_status": activity_status,
+    "cluster_accounts": cluster_accounts,
+    "is_representative": is_representative,
+    "worker_type_of": worker_type_of,
+    "has_privileged_role": has_privileged_role,
+    "in_group": in_group,
+    "idp_account": idp_account,
 }
 
 # The sandbox's ``time``: the pure clock and formatting functions only, with

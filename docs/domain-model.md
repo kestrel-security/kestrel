@@ -15,6 +15,7 @@ domain group, and how they relate. Every tenant-owned table carries `org_id`
 | `OperatorNotificationPreferences` | `notification_prefs.py` | Per-operator channel mutes and severity thresholds |
 | `OperatorInAppNotification` | `in_app_notification.py` | Per-operator inbox rows written by `notifications/dispatch.py`; `GET /notifications` |
 | `OrgLlmSettings` | `llm_settings.py` | Org-scoped LLM provider, model, and envelope-encrypted key for policy drafts |
+| `OrgIdentityClassificationRule` | `identity_classification.py` | Ordered operator rules (`email_domain`, `org_unit_path_prefix`, `group_name`, `user_type`, `application_type` → `worker_type`) that outrank the connector's own classification; applied by `kestrel.identities.classification.reclassify_identities` after every directory sync and on save (`GET`/`PUT /settings/identity-classification`, `POST .../preview`). A rule never relabels a `service` account |
 
 ## Applications and connectors
 
@@ -33,7 +34,7 @@ run that produced it, the untouched provider payload as `raw_source`, and a
 
 | Model | Module | Role |
 |-------|--------|------|
-| `Identity` with `User`, `ServiceAccount`, `ExternalIdentity` | `identity.py` | Human and non-human accounts per application instance; `IdentityType`, `EmploymentStatus`, `mfa_enabled`, `is_external`, `is_disabled`, `last_active_at` |
+| `Identity` with `User`, `ServiceAccount`, `ExternalIdentity` | `identity.py` | Human and non-human accounts per application instance; `IdentityType`, `mfa_enabled`, `is_external`, `is_disabled`, `last_active_at` with its `last_active_source` (`login`, `audit`, `analytics` are activity; `profile` is not), `worker_type` (`WorkerType`: employee, contractor, vendor_or_partner, guest, service, unknown) with `worker_type_source` (`connector` or `rule:<id>`), `department`, `title`, `manager_email`, `disabled_at`, `expires_at`, and `attributes` (JSONB of provider extras such as `org_unit_path`, `guest_type`, `is_admin`, the raw `user_type`). `ServiceAccount.owner_identity_id` is written when the provider names an owner (Okta API tokens); `EmploymentStatus` is unused |
 | `Group`, `GroupMembership` | `access.py` | Groups and membership with an optional `membership_role` |
 | `Role`, `Permission`, `RolePermission`, `Grant` | `access.py` | Roles (`is_privileged`), permissions, and grants to an identity or a group (`identity_id` nullable) with `permission_level` and `GrantedVia` |
 | `Resource` | `resource.py` | Repositories, channels, shared drives, SharePoint sites, and `ResourceType.custom`; `ResourceVisibility` |
@@ -77,4 +78,5 @@ run that produced it, the untouched provider payload as `raw_source`, and a
 - Prefer additive columns and tables with Alembic migrations; irreversible migrations need explicit approval.
 - Keep the graph derived; never make it the source of truth.
 - Preserve `raw_source` for evidence and re-normalization; trim it with `kestrel retention trim-raw-source` on a retention window ([`operations/data-retention.md`](operations/data-retention.md)).
+- `identities.last_active_at` only moves forward. A normalizer may emit it on the identity (Okta `lastLogin`, Google `lastLoginTime`, Slack audit sign-ins) or as a separate `identity_activity` object (`{identity_ref, observed_at, source}`, no table of its own) from an audit log or usage report; the sync keeps the latest trusted observation per account (`sync.upsert.merge_last_active`), so a directory re-sync that carries no sign-in field, or an events-only incremental poll, never erases what an earlier run learned.
 - Scope every query by `org_id`.

@@ -99,6 +99,14 @@ class Persona:
             return False
         return self.archetype not in {Archetype.SERVICE_ACCOUNT, Archetype.EXTERNAL}
 
+    @property
+    def title(self) -> str:
+        if self.archetype is Archetype.SERVICE_ACCOUNT:
+            return "Service account"
+        if self.is_external:
+            return "Contract engineer"
+        return f"{self.department} engineer" if self.department != "Sales" else "Account executive"
+
     def github_login(self) -> str:
         return f"{self.first_name}-{self.last_name}".lower().replace(" ", "-")
 

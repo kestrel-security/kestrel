@@ -50,9 +50,10 @@ def evidence(resource):
     cluster = resource.get("cluster") or {}
     disabled_in = [
         account.get("application_name") or account.get("application_type")
-        for account in (cluster.get("accounts") or [])
+        for account in cluster_accounts(resource)
         if account.get("is_disabled")
     ]
+    idp = idp_account(resource) or {}
     return {
         "identity.email": identity.get("email"),
         "identity.display_name": identity.get("display_name"),
@@ -60,6 +61,7 @@ def evidence(resource):
         "application.name": application.get("name"),
         "cluster.idp_status": cluster.get("idp_status"),
         "cluster.disabled_in": disabled_in,
+        "idp.disabled_at": idp.get("disabled_at"),
         "cluster.application_types": cluster.get("application_types"),
         "cluster.roles_here": resource.get("roles") or [],
     }

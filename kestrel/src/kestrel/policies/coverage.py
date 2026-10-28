@@ -26,6 +26,37 @@ _APP_TO_CONNECTOR: dict[str, tuple[str, ApplicationType]] = {
 
 _CONNECTORS_ROOT = Path(__file__).resolve().parents[4] / "connectors"
 
+#: Packs whose policies read every connected application at once. They are
+#: "connected" when anything is, and a generic capability is satisfied when
+#: any connected connector provides it.
+CROSS_APP_APPLICATION = "cross_app"
+
+#: Capabilities that describe identity data rather than one connector's
+#: surface. Any connector may declare them; a policy that REQUIRES one is
+#: assessable wherever a connected connector provides it. The descriptions
+#: are shown to policy authors (the generate prompt, the workbench).
+GENERIC_CAPABILITIES: dict[str, str] = {
+    "identity:last_sign_in": "a trusted last-activity timestamp per account (sign-in, audit action, or usage report)",
+    "identity:worker_type": "an employment classification from the provider's own profile (contractor, guest, bot)",
+    "identity:groups": "group membership names on identity rows",
+    "identity:department": "department, title, and manager from the directory profile",
+    "identity:disabled_at": "when the provider disabled the account",
+    "identity:expires_at": "when a guest account is due to expire",
+    "identity:owner": "the person a service account belongs to",
+    "identity:oauth_grants": "the OAuth authorizations each account consented to",
+}
+
+
+def is_generic_capability(key: str) -> bool:
+    return key in GENERIC_CAPABILITIES
+
+
+def _connector_name_for_type(app_type: ApplicationType) -> str | None:
+    for name, (connector_name, candidate) in _APP_TO_CONNECTOR.items():
+        if candidate is app_type:
+            return connector_name or name
+    return None
+
 
 def _connector_manifest_path(name: str) -> Path | None:
     path = _CONNECTORS_ROOT / name / "manifest.yaml"
@@ -99,15 +130,71 @@ def _assess_policy(
     available_capabilities: frozenset[str],
     *,
     connected: bool,
+    cross_app: bool = False,
 ) -> tuple[str, str | None]:
     if not requires:
         return "monitored", None
     if not connected:
-        return "not_assessable", "No connected integration for this application"
+        reason = "No connected integration" if cross_app else "No connected integration for this application"
+        return "not_assessable", reason
     missing = [req for req in requires if req not in available_capabilities]
     if missing:
+        if cross_app:
+            return "not_assessable", f"No connected integration provides: {', '.join(missing)}"
         return "not_assessable", f"Connector does not collect: {', '.join(missing)}"
     return "monitored", None
+
+
+@dataclass
+class InstanceAssessability:
+    """Whether one connected application can assess a set of requirements."""
+
+    application_type: str
+    name: str
+    assessable: bool
+    missing: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {
+            "application_type": self.application_type,
+            "name": self.name,
+            "assessable": self.assessable,
+            "missing": list(self.missing),
+        }
+
+
+def assess_requires(
+    session: Session, org_id: uuid.UUID, requires: tuple[str, ...] | list[str]
+) -> list[InstanceAssessability]:
+    """Per connected application instance, whether its connector provides
+    every capability in ``requires``.
+
+    This is what a custom or AI-drafted policy's ``REQUIRES`` means in
+    practice: "GitHub (acme) cannot assess this: identity:last_sign_in is not
+    collected". Coverage is static, from the manifest; a per-run skip (an
+    audit log the token cannot read) does not show here.
+    """
+    wanted = tuple(requires)
+    rows = session.execute(
+        select(Application.application_type, ApplicationInstance.display_name)
+        .join(ApplicationInstance, ApplicationInstance.application_id == Application.id)
+        .where(ApplicationInstance.org_id == org_id)
+        .order_by(ApplicationInstance.display_name)
+    ).all()
+    out: list[InstanceAssessability] = []
+    for app_type, display_name in rows:
+        connector_name = _connector_name_for_type(app_type)
+        capabilities = load_connector_capabilities(connector_name) if connector_name else frozenset()
+        missing = [key for key in wanted if key not in capabilities]
+        out.append(
+            InstanceAssessability(
+                application_type=str(getattr(app_type, "value", app_type)),
+                name=str(display_name or app_type),
+                assessable=not missing,
+                missing=missing,
+            )
+        )
+    return out
 
 
 def compute_pack_coverage(
@@ -126,11 +213,18 @@ def compute_pack_coverage(
         connector_name, app_type = _APP_TO_CONNECTOR[app]
 
     connected_types = org_connected_application_types(session, org_id)
-    connected = app_type in connected_types if app_type else False
+    cross_app = app == CROSS_APP_APPLICATION
+    connected = bool(connected_types) if cross_app else (app_type in connected_types if app_type else False)
 
     capabilities: frozenset[str] = frozenset()
     if connector_name:
         capabilities = load_connector_capabilities(connector_name)
+    elif cross_app:
+        # Any connected connector can satisfy a cross-app requirement.
+        for connected_type in connected_types:
+            name = _connector_name_for_type(connected_type)
+            if name:
+                capabilities |= load_connector_capabilities(name)
 
     rows: list[PolicyCoverageRow] = []
     for lp in loaded:
@@ -141,6 +235,7 @@ def compute_pack_coverage(
             contract.requires,
             capabilities,
             connected=connected,
+            cross_app=cross_app,
         )
         rows.append(
             PolicyCoverageRow(

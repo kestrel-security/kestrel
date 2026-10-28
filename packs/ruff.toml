@@ -8,19 +8,27 @@
 extend = "../pyproject.toml"
 builtins = [
     "PolicyDataError",
+    "activity_status",
     "application_matches",
+    "cluster_accounts",
     "days_since",
     "domain_matches",
     "duration_seconds",
     "email_domain",
     "get_path",
     "has_admin_grant",
+    "has_privileged_role",
+    "idp_account",
+    "in_group",
     "ip_in_networks",
+    "is_representative",
     "matches_any",
     "now",
     "parse_timestamp",
     "time",
+    "trusted_last_active",
     "within_last_days",
+    "worker_type_of",
 ]
 
 [lint]

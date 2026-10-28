@@ -1,0 +1,1582 @@
+{
+  "rows": [
+    {
+      "_subject_id": "gone-quiet-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ivy@acme.example.com",
+        "display_name": "Gone Quiet",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "gone-quiet-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ivy@acme.example.com",
+            "display_name": "Gone Quiet",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "gone-quiet-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ivy@acme.example.com",
+            "display_name": "Gone Quiet",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "gone-quiet-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "gone-quiet-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ivy@acme.example.com",
+        "display_name": "Gone Quiet",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "gone-quiet-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ivy@acme.example.com",
+            "display_name": "Gone Quiet",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "gone-quiet-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ivy@acme.example.com",
+            "display_name": "Gone Quiet",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "gone-quiet-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "active-somewhere-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "jan@acme.example.com",
+        "display_name": "Active Somewhere",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "active-somewhere-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "jan@acme.example.com",
+            "display_name": "Active Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "active-somewhere-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "jan@acme.example.com",
+            "display_name": "Active Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "audit",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "active-somewhere-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "active-somewhere-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "jan@acme.example.com",
+        "display_name": "Active Somewhere",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "audit",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "active-somewhere-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "jan@acme.example.com",
+            "display_name": "Active Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "active-somewhere-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "jan@acme.example.com",
+            "display_name": "Active Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "audit",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "audit",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "active-somewhere-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "unknown-somewhere-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "kai@acme.example.com",
+        "display_name": "Unknown Somewhere",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "unknown-somewhere-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "kai@acme.example.com",
+            "display_name": "Unknown Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "unknown-somewhere-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "kai@acme.example.com",
+            "display_name": "Unknown Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "unknown-somewhere-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "unknown-somewhere-github",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "kai@acme.example.com",
+        "display_name": "Unknown Somewhere",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "github",
+        "name": "GitHub"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "unknown-somewhere-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "kai@acme.example.com",
+            "display_name": "Unknown Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "unknown-somewhere-github",
+            "application_type": "github",
+            "application_name": "GitHub",
+            "application_display_name": "GitHub",
+            "identity_type": "user",
+            "email": "kai@acme.example.com",
+            "display_name": "Unknown Somewhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "unknown-somewhere-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "github",
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "profile-only-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "lou@acme.example.com",
+        "display_name": "Profile Only",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "profile-only-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "lou@acme.example.com",
+            "display_name": "Profile Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "profile-only-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "lou@acme.example.com",
+            "display_name": "Profile Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "profile",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "profile-only-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "profile-only-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "lou@acme.example.com",
+        "display_name": "Profile Only",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 3
+        },
+        "last_active_source": "profile",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "profile-only-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "lou@acme.example.com",
+            "display_name": "Profile Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "profile-only-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "lou@acme.example.com",
+            "display_name": "Profile Only",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 3
+            },
+            "last_active_source": "profile",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "profile-only-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "all-disabled-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "mia@acme.example.com",
+        "display_name": "All Disabled",
+        "is_disabled": true,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "all-disabled-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "mia@acme.example.com",
+            "display_name": "All Disabled",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "all-disabled-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "mia@acme.example.com",
+            "display_name": "All Disabled",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 0,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "all-disabled-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "all-disabled-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "mia@acme.example.com",
+        "display_name": "All Disabled",
+        "is_disabled": true,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "all-disabled-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "mia@acme.example.com",
+            "display_name": "All Disabled",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "all-disabled-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "mia@acme.example.com",
+            "display_name": "All Disabled",
+            "is_disabled": true,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 0,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "disabled",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "all-disabled-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "never-anywhere-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ned@acme.example.com",
+        "display_name": "Never Anywhere",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "never-anywhere-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ned@acme.example.com",
+            "display_name": "Never Anywhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "never-anywhere-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ned@acme.example.com",
+            "display_name": "Never Anywhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "never-anywhere-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "never-anywhere-slack",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "user",
+        "email": "ned@acme.example.com",
+        "display_name": "Never Anywhere",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "employee",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "slack",
+        "name": "Slack"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "never-anywhere-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "user",
+            "email": "ned@acme.example.com",
+            "display_name": "Never Anywhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          },
+          {
+            "identity_id": "never-anywhere-slack",
+            "application_type": "slack",
+            "application_name": "Slack",
+            "application_display_name": "Slack",
+            "identity_type": "user",
+            "email": "ned@acme.example.com",
+            "display_name": "Never Anywhere",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": null,
+            "last_active_source": null,
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "employee",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 2,
+        "active_account_count": 2,
+        "application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "employee",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": null,
+        "last_active_source": null,
+        "match_kind": "email",
+        "idp_connected": true,
+        "representative_identity_id": "never-anywhere-okta",
+        "is_representative": false
+      },
+      "org": {
+        "connected_application_types": [
+          "okta",
+          "slack"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    },
+    {
+      "_subject_id": "bot-okta",
+      "_subject_type": "identity",
+      "identity": {
+        "identity_type": "service_account",
+        "email": null,
+        "display_name": "Bot",
+        "is_disabled": false,
+        "is_external": false,
+        "mfa_enabled": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "created_at_source": {
+          "$days_ago": 400
+        },
+        "disabled_at": null,
+        "expires_at": null,
+        "worker_type": "service",
+        "department": null,
+        "title": null,
+        "manager_email": null,
+        "attributes": {}
+      },
+      "application": {
+        "type": "okta",
+        "name": "Okta"
+      },
+      "roles": [],
+      "groups": [],
+      "oauth_grants": [],
+      "privileged_application_types": [],
+      "cluster": {
+        "accounts": [
+          {
+            "identity_id": "bot-okta",
+            "application_type": "okta",
+            "application_name": "Okta",
+            "application_display_name": "Okta",
+            "identity_type": "service_account",
+            "email": null,
+            "display_name": "Bot",
+            "is_disabled": false,
+            "is_external": false,
+            "mfa_enabled": null,
+            "last_active_at": {
+              "$days_ago": 200
+            },
+            "last_active_source": "login",
+            "created_at_source": {
+              "$days_ago": 400
+            },
+            "disabled_at": null,
+            "expires_at": null,
+            "worker_type": "service",
+            "department": null,
+            "title": null,
+            "groups": [],
+            "roles": [],
+            "privileged": false
+          }
+        ],
+        "member_count": 1,
+        "active_account_count": 1,
+        "application_types": [
+          "okta"
+        ],
+        "idp_status": "active",
+        "idp_application_types": [
+          "okta"
+        ],
+        "privileged_application_types": [],
+        "worker_type": "service",
+        "worker_type_source": "idp",
+        "department": null,
+        "last_active_at": {
+          "$days_ago": 200
+        },
+        "last_active_source": "login",
+        "match_kind": "self",
+        "idp_connected": true,
+        "representative_identity_id": "bot-okta",
+        "is_representative": true
+      },
+      "org": {
+        "connected_application_types": [
+          "okta"
+        ],
+        "idp_application_types": [
+          "okta"
+        ],
+        "idp_connected": true,
+        "company_email_domains": []
+      }
+    }
+  ],
+  "expected_match_subject_ids": [
+    "gone-quiet-okta",
+    "never-anywhere-okta"
+  ]
+}

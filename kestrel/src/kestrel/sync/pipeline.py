@@ -183,6 +183,13 @@ def run_sync(
             changes.extend(upsert_relationship_objects(session, collection.normalized_objects, ctx))
             session.flush()
 
+            # Operator classification rules read group membership, so they run
+            # once both passes have written. The audit-log poll touches neither.
+            if any(obj.kind in ("identity", "group_membership") for obj in collection.normalized_objects):
+                from kestrel.identities.classification import reclassify_identities
+
+                reclassify_identities(session, instance.org_id)
+
             upsert_edges(session, collection.normalized_objects, ctx, node_id_maps)
             if ctx.skipped_unresolved:
                 skipped = dict(ctx.skipped_unresolved)

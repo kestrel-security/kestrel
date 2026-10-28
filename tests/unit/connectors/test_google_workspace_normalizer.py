@@ -876,3 +876,32 @@ def test_is_sensitive_dwd_scope_gmail_is_sensitive():
     assert is_sensitive_dwd_scope("https://www.googleapis.com/auth/admin.directory.user") is True
     assert is_sensitive_dwd_scope("openid") is False
     assert is_sensitive_dwd_scope("") is False
+
+
+def test_user_department_title_and_manager_come_from_organizations_and_relations():
+    raw = _raw(
+        "user",
+        "1",
+        {
+            "id": "1",
+            "primaryEmail": "ada@acme.example.com",
+            "organizations": [
+                {"department": "Legacy", "title": "Old title"},
+                {"primary": True, "department": "Engineering", "title": "Staff Engineer"},
+            ],
+            "relations": [{"type": "manager", "value": "grace@acme.example.com"}],
+        },
+    )
+
+    attrs = GoogleWorkspaceNormalizer().normalize("user", raw)[0].attributes
+
+    assert (attrs["department"], attrs["title"]) == ("Engineering", "Staff Engineer")
+    assert attrs["manager_email"] == "grace@acme.example.com"
+    # The directory has no employment field; rules or another connector classify.
+    assert attrs["worker_type"] == "unknown"
+
+
+def test_user_without_organizations_has_no_department_and_no_manager():
+    raw = _raw("user", "1", {"id": "1", "primaryEmail": "ada@acme.example.com"})
+    attrs = GoogleWorkspaceNormalizer().normalize("user", raw)[0].attributes
+    assert (attrs["department"], attrs["title"], attrs["manager_email"]) == (None, None, None)

@@ -25,6 +25,7 @@ const ORG_ITEMS: NavItem[] = [
   { href: "/settings/ticketing", label: "Ticketing", adminOnly: true },
   { href: "/settings/email", label: "Email", adminOnly: true },
   { href: "/settings/ai", label: "AI", adminOnly: true },
+  { href: "/settings/identity-classification", label: "Identity classification", adminOnly: true },
   { href: "/settings/audit", label: "Audit log", adminOnly: true },
 ];
 

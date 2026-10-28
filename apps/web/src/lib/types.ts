@@ -1,6 +1,51 @@
 // Copyright 2026 The Kestrel Authors
 // SPDX-License-Identifier: Apache-2.0
 
+export type WorkerType = "employee" | "contractor" | "vendor_or_partner" | "guest" | "service" | "unknown";
+
+export type ClassificationMatchKind =
+  | "email_domain"
+  | "org_unit_path_prefix"
+  | "group_name"
+  | "user_type"
+  | "application_type";
+
+/** One operator rule that assigns a worker type; `priority` is its position. */
+export interface ClassificationRule {
+  id: string;
+  priority: number;
+  is_enabled: boolean;
+  worker_type: WorkerType;
+  match_kind: ClassificationMatchKind;
+  match_value: string;
+  application_type: string | null;
+  label: string | null;
+}
+
+/** A rule as submitted: a new row has no id yet. */
+export interface ClassificationRuleInput {
+  id?: string;
+  is_enabled: boolean;
+  worker_type: WorkerType;
+  match_kind: ClassificationMatchKind;
+  match_value: string;
+  application_type: string | null;
+  label: string | null;
+}
+
+export interface ClassificationRules {
+  rules: ClassificationRule[];
+  match_kinds: ClassificationMatchKind[];
+  worker_types: WorkerType[];
+  reclassified?: number | null;
+}
+
+export interface ClassificationPreview {
+  counts: Record<string, number>;
+  changed: number;
+  matched_by_rule: number[];
+}
+
 export interface Identity {
   id: string;
   identity_type: string;
@@ -13,9 +58,18 @@ export interface Identity {
    * definition the API's `?privileged=` filter and Python policy `roles` checks use. */
   privileged: boolean;
   last_active_at?: string | null;
-  /** Where `last_active_at` came from: `login`, `audit`, or `profile`
-   * (a profile-updated timestamp, which is not activity). */
+  /** Where `last_active_at` came from: `login`, `audit`, `analytics` (activity),
+   * or `profile` (a profile-updated timestamp, which is not activity). */
   last_active_source?: string | null;
+  /** employee, contractor, vendor_or_partner, guest, service, or unknown. */
+  worker_type?: WorkerType | string;
+  /** `connector` (the provider's profile) or `rule:<id>` (a classification rule). */
+  worker_type_source?: string | null;
+  department?: string | null;
+  title?: string | null;
+  manager_email?: string | null;
+  disabled_at?: string | null;
+  expires_at?: string | null;
   application_instance_id?: string | null;
   /** Present when the list was requested with `collapse=true`. */
   application_types?: string[];
@@ -1475,6 +1529,32 @@ export interface PolicyGenerateProbeTest {
   errors: string[];
 }
 
+export type PolicyGenerateScope = "single_app" | "cross_app";
+
+/** What the generator understood before drafting (deterministic, no model). */
+export interface PolicyGenerateIntentAnalysis {
+  scope: PolicyGenerateScope;
+  scope_source: string;
+  scope_reason: string;
+  focus_connector: string | null;
+  resource_type: string | null;
+  subject: Record<string, unknown>;
+  conditions: string[];
+  days: number | null;
+  per: "account" | "person";
+  fields_needed: string[];
+  requires: string[];
+  notes: string[];
+}
+
+/** Per connected application: can its connector assess the draft's REQUIRES? */
+export interface PolicyGenerateAssessability {
+  application_type: string;
+  name: string;
+  assessable: boolean;
+  missing: string[];
+}
+
 export interface PolicyGenerateResult {
   source_text: string;
   provider: string;
@@ -1489,6 +1569,13 @@ export interface PolicyGenerateResult {
   } | null;
   fixture_test?: PolicyGenerateFixtureTest | null;
   probe_test?: PolicyGenerateProbeTest | null;
+  scope?: PolicyGenerateScope | null;
+  scope_source?: string | null;
+  intent_analysis?: PolicyGenerateIntentAnalysis | null;
+  requires?: string[];
+  assessability?: PolicyGenerateAssessability[] | null;
+  repair_turns?: number;
+  scope_errors?: string[] | null;
 }
 
 export interface PolicyGenerateIntentChip {
@@ -1496,15 +1583,39 @@ export interface PolicyGenerateIntentChip {
   intent: string;
   connector_hint?: string;
   resource_type?: string;
+  scope?: PolicyGenerateScope;
+}
+
+export interface PolicyGenerateConnectorCatalog {
+  connector: string;
+  privileged_roles: string[];
+  tenant_setting_keys: string[];
+  event_actions: string[];
+  identity_fields: string[];
+  policy_count: number;
+}
+
+export interface PolicyGenerateCrossAppCatalog {
+  cluster_fields: string[];
+  worker_types: string[];
+  trusted_activity_sources: string[];
+  idp_application_types: string[];
+  helpers: string[];
+  capabilities: Record<string, string>;
+  prompt_catalog: string;
 }
 
 export interface PolicyGenerateCatalog {
   connector: string | null;
+  scope?: PolicyGenerateScope | null;
   intent_chips: PolicyGenerateIntentChip[];
   template_names: string[];
   fields: {
     resource_types: string[];
     schemas: Record<string, string>;
+    scopes?: PolicyGenerateScope[];
+    connectors?: Record<string, PolicyGenerateConnectorCatalog>;
+    cross_app?: PolicyGenerateCrossAppCatalog;
     okta?: {
       privileged_roles: string[];
       tenant_setting_keys: string[];

@@ -25,7 +25,7 @@ from kestrel.policies.resource_schemas import RESOURCE_SCHEMAS
 from kestrel.policies.runtime.helpers import POLICY_HELPERS, POLICY_TIME
 from kestrel.policies.runtime.restricted import _policy_safe_builtins
 
-CONTRACT_VERSION = 2
+CONTRACT_VERSION = 3
 
 RULES: tuple[str, ...] = (
     "Define POLICY_ID, TITLE, SEVERITY, RESOURCE_TYPE, DESCRIPTION, REMEDIATION, policy(resource) "
@@ -42,9 +42,25 @@ RULES: tuple[str, ...] = (
     '`return within_last_days(identity.get("last_active_at"), 30)` flags both stale and never-active '
     "accounts. Check for None first if absence should mean compliant.",
     'Use duration_seconds for ISO 8601 (P30D, PT12H) and protobuf ("86400s") durations.',
-    "Return True early for rows from other applications: "
+    "A single-application policy returns True early for rows from other applications: "
     '`if application.get("type") != "okta": return True`. Use application_matches only to scope '
     "custom connectors by name.",
+    "A cross-application policy (contractors in any app, a person disabled in the identity provider, admin "
+    "in two apps) runs once per account in every application and must NOT early-return on "
+    "application.type. Skip bots by identity_type and, when the identity provider's own account is the "
+    'correct end state, rows whose application.type is in cluster["idp_application_types"].',
+    "Report a finding on the account an operator must act on (the surviving or privileged account), "
+    "never on the identity-provider account that is already disabled. For a per-person check gate with "
+    "`if not is_representative(resource): return True` so one person is one finding.",
+    "worker_type comes from the provider's profile and operator classification rules and may be 'unknown'. "
+    "Use worker_type_of(resource); decide what unknown means (usually: not shown to be a contractor, "
+    "return True) and say so in DESCRIPTION. is_external is the application's guest flag, not 'contractor'.",
+    "Only last_active_source login, audit and analytics are activity; profile is not, and GitHub's audit log "
+    "sees only administrative actions. Use activity_status(resource, DAYS) and treat 'unknown' as not "
+    "assessable (return True), 'never' like stale.",
+    "Set REQUIRES to the identity:* capability keys the policy reads (identity:last_sign_in, "
+    "identity:worker_type, identity:groups, identity:disabled_at, identity:expires_at, identity:oauth_grants).",
+    "Comprehensions and lambdas are fine inside functions; only the module body is restricted to constants and def.",
     "Treat only an explicit False as a violation for tri-state flags such as mfa_enabled: None means "
     "the connector could not read it.",
     'Read nested fields with .get() and `or {}`, or with get_path(resource, "a.b.c").',
@@ -116,6 +132,78 @@ IDIOMS: tuple[Idiom, ...] = (
         example="gws-posture/policies/gws_session_too_long.py",
         uses="duration_seconds(",
     ),
+    Idiom(
+        name="cross-app-skip-non-human",
+        when="Cross-application policies: skip bots, never skip by application.type.",
+        snippet=(
+            'HUMAN_IDENTITY_TYPES = ("user",)\n'
+            'if identity.get("identity_type") not in HUMAN_IDENTITY_TYPES:\n    return True'
+        ),
+        example="cross-app/policies/cross_app_departed_still_has_access.py",
+        uses='identity.get("identity_type") not in HUMAN_IDENTITY_TYPES',
+    ),
+    Idiom(
+        name="report-on-surviving-account",
+        when="The identity provider disabled the person: report the account still enabled elsewhere.",
+        snippet=(
+            'cluster = resource.get("cluster") or {}\n'
+            'if application.get("type") in (cluster.get("idp_application_types") or []):\n'
+            "    return True  # the IdP account being disabled is the correct end state\n"
+            'return cluster.get("idp_status") != "disabled"'
+        ),
+        example="cross-app/policies/cross_app_departed_still_has_access.py",
+        uses='cluster.get("idp_status") != "disabled"',
+    ),
+    Idiom(
+        name="one-finding-per-person",
+        when="A check about the person (admin in two apps, dormant everywhere): one finding, not one per account.",
+        snippet="if not is_representative(resource):\n    return True",
+        example="cross-app/policies/cross_app_privileged_concentration.py",
+        uses="is_representative(",
+    ),
+    Idiom(
+        name="other-accounts-of-person",
+        when="Look at the same person's other enabled accounts.",
+        snippet=(
+            "elsewhere = cluster_accounts(resource, include_self=False, active_only=True)\n"
+            "return not any(has_privileged_role(a) for a in elsewhere)"
+        ),
+        example="cross-app/policies/cross_app_group_scoped_privilege.py",
+        uses="cluster_accounts(resource, include_self=False, active_only=True)",
+    ),
+    Idiom(
+        name="worker-type",
+        when="Contractors, vendors, guests: read the person's classification, and decide what unknown means.",
+        snippet=(
+            'CONTINGENT_WORKER_TYPES = ("contractor", "vendor_or_partner")\n'
+            "if worker_type_of(resource) not in CONTINGENT_WORKER_TYPES:\n"
+            "    return True  # unknown is not shown to be a contractor"
+        ),
+        example="cross-app/policies/cross_app_contractor_dormant_in_app.py",
+        uses="worker_type_of(resource) not in CONTINGENT_WORKER_TYPES",
+    ),
+    Idiom(
+        name="trusted-activity",
+        when="Dormancy on any application: only trusted sources count, unknown is not assessable.",
+        snippet=(
+            "status = activity_status(resource, STALE_DAYS)\n"
+            'if status == "unknown":\n    return True\n'
+            'return status == "active"'
+        ),
+        example="cross-app/policies/cross_app_contractor_dormant_in_app.py",
+        uses="activity_status(resource, STALE_DAYS)",
+    ),
+    Idiom(
+        name="idp-account-state",
+        when="Compare an account to the person's identity-provider account (MFA, disabled, disabled_at).",
+        snippet=(
+            "idp = idp_account(resource)\n"
+            'if idp is None or idp.get("is_disabled"):\n    return True\n'
+            'if idp.get("mfa_enabled") is not False:\n    return True'
+        ),
+        example="cross-app/policies/cross_app_admin_without_idp_mfa.py",
+        uses="idp = idp_account(resource)",
+    ),
 )
 
 #: Endpoints an outside agent uses to check a draft, in order.
@@ -165,12 +253,14 @@ def time_attributes() -> list[str]:
 
 
 _RESOURCE_TYPE_RE = re.compile(r"^RESOURCE_TYPE\s*=\s*[\"']([a-z_]+)[\"']", re.MULTILINE)
-#: application.type -> the pack holding that connector's reviewed policies.
+#: application.type -> the pack holding that connector's reviewed policies
+#: (``cross_app`` -> the cross-app pack).
 _CONNECTOR_PACKS = {
     "okta": "okta-posture",
     "github": "github-posture",
     "google_workspace": "gws-posture",
     "slack": "slack-posture",
+    "cross_app": "cross-app",
 }
 
 
