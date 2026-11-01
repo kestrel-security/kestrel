@@ -36,7 +36,7 @@ google_workspace = "kestrel_connector_google_workspace.connector:GoogleWorkspace
 kestrel = { workspace = true }
 
 [build-system]
-requires = ["hatchling>=1.32.4"]
+requires = ["hatchling>=1.33.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
